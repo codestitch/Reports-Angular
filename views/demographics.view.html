@@ -1,0 +1,41 @@
+<div>
+	<h1>Demographics</h1>  
+ 
+ 	<div class="row">
+ 		<div class="col-md-12" > 
+
+ 			<div id="reportrange" class="pull-left" style="background: #fff; cursor: pointer; padding: 5px 10px; border: 1px solid #ccc;">
+			    <i class="glyphicon glyphicon-calendar fa fa-calendar"></i>&nbsp;
+			    <span>Select Date Here</span> <b class="caret"></b>
+			</div>
+			
+			<!-- <input type="text" name="daterange" placeholder="Enter Start date and End date" class="form-control"/>
+			<input type="text" name="daterange2" placeholder="Enter Start date and End date" class="form-control"/> -->
+			<button type="button" class="btn btn-default pull-right" ng-click="vm.GetCustomerSummary()">Search</button> 
+		</div>   
+ 	</div> 
+
+	<table ng-table="vm.tableParams" class="table" show-filter="false">
+	    <tr ng-repeat="item in $data" class="even">
+	        <td title="'Restaurant'" filter="{ Mobile: 'text'}" sortable="'Mobile'" header-class="'bg-grey-left'"> 
+						 {{item.Mobile}} 
+	        </td>
+	        <td title="'email'" filter="{ email: 'text'}" sortable="'email'" header-class="'bg-grey-left'"> 
+						 {{item.email}} </a>  
+	        </td>
+	        <td title="'No. of Transactions'" filter="{ totalMember: 'text'}" sortable="'totalMember'" header-class="'bg-grey'" style="text-align:center;">
+	        	{{item.totalMember | number}}
+	        </td> 
+	        <td title="'Total Earned Points'" filter="{ earnedpoints: 'text'}" sortable="'earnedpoints'" header-class="'bg-grey'" style="text-align:center;">
+	        	{{item.earnedpoints | number}}
+	        </td> 
+	        <td title="'Total Redeemed Points'" filter="{ redeemedpoints: 'text'}" sortable="'redeemedpoints'" header-class="'bg-grey'" style="text-align:center;">
+	        	{{item.redeemedpoints | number}}
+	        </td>    
+	    </tr>
+	</table> 
+
+	<img ng-if="vm.dataLoading" src="data:image/gif;base64,R0lGODlhEAAQAPIAAP///wAAAMLCwkJCQgAAAGJiYoKCgpKSkiH/C05FVFNDQVBFMi4wAwEAAAAh/hpDcmVhdGVkIHdpdGggYWpheGxvYWQuaW5mbwAh+QQJCgAAACwAAAAAEAAQAAADMwi63P4wyklrE2MIOggZnAdOmGYJRbExwroUmcG2LmDEwnHQLVsYOd2mBzkYDAdKa+dIAAAh+QQJCgAAACwAAAAAEAAQAAADNAi63P5OjCEgG4QMu7DmikRxQlFUYDEZIGBMRVsaqHwctXXf7WEYB4Ag1xjihkMZsiUkKhIAIfkECQoAAAAsAAAAABAAEAAAAzYIujIjK8pByJDMlFYvBoVjHA70GU7xSUJhmKtwHPAKzLO9HMaoKwJZ7Rf8AYPDDzKpZBqfvwQAIfkECQoAAAAsAAAAABAAEAAAAzMIumIlK8oyhpHsnFZfhYumCYUhDAQxRIdhHBGqRoKw0R8DYlJd8z0fMDgsGo/IpHI5TAAAIfkECQoAAAAsAAAAABAAEAAAAzIIunInK0rnZBTwGPNMgQwmdsNgXGJUlIWEuR5oWUIpz8pAEAMe6TwfwyYsGo/IpFKSAAAh+QQJCgAAACwAAAAAEAAQAAADMwi6IMKQORfjdOe82p4wGccc4CEuQradylesojEMBgsUc2G7sDX3lQGBMLAJibufbSlKAAAh+QQJCgAAACwAAAAAEAAQAAADMgi63P7wCRHZnFVdmgHu2nFwlWCI3WGc3TSWhUFGxTAUkGCbtgENBMJAEJsxgMLWzpEAACH5BAkKAAAALAAAAAAQABAAAAMyCLrc/jDKSatlQtScKdceCAjDII7HcQ4EMTCpyrCuUBjCYRgHVtqlAiB1YhiCnlsRkAAAOwAAAAAAAAAAAA==" />
+
+	<p><a href="#/login" class="btn btn-primary">Logout</a></p>
+</div>
