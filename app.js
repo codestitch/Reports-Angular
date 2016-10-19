@@ -2,9 +2,9 @@
     'use strict';
 
     angular
-        .module('app', ['ngRoute', 'ngCookies', 'ngTable'])
+        .module('app', ['ngRoute', 'ngCookies', 'ngTable', 'ngAnimate'])
         .config(config)
-        .run(run);
+        .run(run); 
 
     config.$inject = ['$routeProvider', '$locationProvider'];
     function config($routeProvider, $locationProvider) {
@@ -15,10 +15,52 @@
                 activetab: 'downloads',
                 controllerAs: 'vm'
             })
+            .when('/registration', {
+                controller: 'RegistrationController',
+                templateUrl: 'views/registration.view.html',
+                activetab: 'registration',
+                controllerAs: 'vm'
+            })
             .when('/demographics', {
                 controller: 'DemographicsController',
                 templateUrl: 'views/demographics.view.html',
                 activetab: 'demographics',
+                controllerAs: 'vm'
+            })
+            .when('/sales', { 
+                controller: 'SalesController',
+                templateUrl: 'views/sales.view.html',
+                activetab: 'sales',
+                controllerAs: 'vm'
+            })
+            .when('/spend', { 
+                controller: 'SpendController',
+                templateUrl: 'views/spend.view.html',
+                activetab: 'spend',
+                controllerAs: 'vm'
+            })
+            .when('/branches', { 
+                controller: 'BranchesController',
+                templateUrl: 'views/branches.view.html',
+                activetab: 'branches',
+                controllerAs: 'vm'
+            })
+            .when('/customers', { 
+                controller: 'DustomersController',
+                templateUrl: 'views/customers.view.html',
+                activetab: 'customers',
+                controllerAs: 'vm'
+            })
+            .when('/vouchers', { 
+                controller: 'VouchersController',
+                templateUrl: 'views/vouchers.view.html',
+                activetab: 'vouchers',
+                controllerAs: 'vm'
+            })
+            .when('/redemption', { 
+                controller: 'RedemptionController',
+                templateUrl: 'views/redemption.view.html',
+                activetab: 'redemption',
                 controllerAs: 'vm'
             })
             .when('/home', { 
@@ -63,13 +105,7 @@
             if (restrictedPage && !loggedIn) {
                 $location.path('/login');
             }
-        });
-
-        // Set Global Links
-        $rootScope.globals.merchant_domain = "http://familymartsnap.appsolutely.ph/";
-        $rootScope.globals.report_link = "php/api.data.php?";
-        // $rootScope.globals.report_link = "http://familymartsnap.appsolutely.ph/reportdata.php?";
-        $rootScope.globals.export_link = "http://familymartsnap.appsolutely.ph/exportreportsdata.php?"; 
+        }); 
 
         toastr.options.closeButton = true;
         toastr.options.showMethod = 'slideDown';
@@ -77,7 +113,9 @@
         toastr.options.closeDuration = 200;
 
         $rootScope.$route = $route;
-    }
- 
+
+        
+    } 
+
 
 })();

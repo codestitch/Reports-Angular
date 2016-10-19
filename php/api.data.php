@@ -55,37 +55,101 @@
 			break;
 
 
-		/********** Demographics **********/
+		/********** Registration **********/
 
-		case 'get_customerSummary': 
+		case 'get_cardregistration_daily': 
 
-			$sql = "SELECT (CASE
-                       WHEN mem.regtype = 'app' and mem.platform = 'android' THEN 'Android'
-                       WHEN mem.regtype = 'app' and mem.platform = 'ios' THEN 'IOS'
-                       else 'Card'
-                   END) AS 'TYPE', mem.qrCard,
-                   mem.memberid as 'memberID', mem.email as 'email', concat(mem.fname, ' ', mem.lname) as 'name',
-                   DATE_FORMAT(mem.datereg, '%d-%M-%Y') as 'dateReg', mem.dateofbirth as 'birthdate', CONCAT(UCASE(MID(mem.gender,1,1)),MID(mem.gender,2))as 'gender', mem.mobilenum as 'Mobile', sum(e.amount) as 'loyaltySales', count(e.transactionid) as 'loyaltyTrans', DATE_FORMAT(MAX(e.dateAdded), '%d-%M-%Y') as 'lastPurchase'
-                   FROM memberstable mem left join earntable e 
-                   on mem.memberid = e.memberid
-                   where mem.activation is null and 
-							DATE_FORMAT(mem.datereg, '%Y/%m/%d') >= '".$startDate."'
-						AND DATE_FORMAT(mem.datereg, '%Y/%m/%d') <= '".$endDate."'
-                   group by mem.memberid";  
+			$sql = "SELECT FORMAT(SUM(IF(activation IS NULL, 1, 0)),0) AS 'activatedCard',
+				FORMAT(SUM(IF(activation IS NULL, 2500, 0)),0) AS 'cardSales',
+				FORMAT(SUM(IF(activation IS NOT NULL, 1, 0)),0) AS 'unactivatedCard', 
+				FORMAT(SUM(IF(NOW() > expiration, 1, 0)),0) AS 'expiredCard'
+				FROM memberstable where date(datereg) = date(now())";  
                    
 			break;
 
-		case 'get_customerTransactionHistory':
+		case 'get_cardregistration_weekly': 
 
-			$sql = "SELECT e.transactiontype AS 'type', e.memberid AS 'acctNo', e.transactionid AS 'transID', 
-						IFNULL(CONCAT(m.fname, ' ', m.lname),e.email) AS 'memName', locname AS 'branch', dateAdded AS 'transDate', amount AS 'amount'
-						FROM earntable e INNER JOIN memberstable m ON e.memberid = m.memberid
-						WHERE e.amount > 0 AND e.memberid = '".$memberID."' ";
- 
+			$sql = "SELECT FORMAT(SUM(IF(activation IS NULL, 1, 0)),0) AS 'activatedCard',
+				FORMAT(SUM(IF(activation IS NULL, 2500, 0)),0) AS 'cardSales',
+				FORMAT(SUM(IF(activation IS NOT NULL, 1, 0)),0) AS 'unactivatedCard', 
+				FORMAT(SUM(IF(NOW() > expiration, 1, 0)),0) AS 'expiredCard'
+				FROM memberstable where week(datereg) = week(now())";  
+                   
 			break;
 
-		/********** Downloads **********/
+		case 'get_cardregistration_monthly': 
 
+			$sql = "SELECT FORMAT(SUM(IF(activation IS NULL, 1, 0)),0) AS 'activatedCard',
+				FORMAT(SUM(IF(activation IS NULL, 2500, 0)),0) AS 'cardSales',
+				FORMAT(SUM(IF(activation IS NOT NULL, 1, 0)),0) AS 'unactivatedCard', 
+				FORMAT(SUM(IF(NOW() > expiration, 1, 0)),0) AS 'expiredCard'
+				FROM memberstable where month(datereg) = month(now())";  
+                   
+			break;
+
+		case 'get_cardregistration_quarterly': 
+
+			$sql = "SELECT FORMAT(SUM(IF(activation IS NULL, 1, 0)),0) AS 'activatedCard',
+				FORMAT(SUM(IF(activation IS NULL, 2500, 0)),0) AS 'cardSales',
+				FORMAT(SUM(IF(activation IS NOT NULL, 1, 0)),0) AS 'unactivatedCard', 
+				FORMAT(SUM(IF(NOW() > expiration, 1, 0)),0) AS 'expiredCard'
+				FROM memberstable where quarter(datereg) = quarter(now())";  
+                   
+			break;
+
+		case 'get_cardregistration_yearly': 
+
+			$sql = "SELECT FORMAT(SUM(IF(activation IS NULL, 1, 0)),0) AS 'activatedCard',
+				FORMAT(SUM(IF(activation IS NULL, 2500, 0)),0) AS 'cardSales',
+				FORMAT(SUM(IF(activation IS NOT NULL, 1, 0)),0) AS 'unactivatedCard', 
+				FORMAT(SUM(IF(NOW() > expiration, 1, 0)),0) AS 'expiredCard'
+				FROM memberstable where year(datereg) = year(now())";  
+                   
+			break;
+
+		case 'get_cardregistration':
+			
+			$sql = "SELECT  b.name, l.name as 'branch', SUM(IF(m.activation IS NULL, 1, 0)) AS registered, SUM(IF(m.activation IS NOT NULL, 1, 0)) AS notactivated, SUM(IF(m.activation IS NULL, 2500, 0)) AS cardsales 
+			 FROM memberstable m INNER JOIN loctable l ON m.locid = l.locid
+			 LEFT JOIN brandtable b ON l.brandid = b.brandid
+			 WHERE DATE(m.datereg) >= '".$startDate."' AND DATE(m.datereg) <= '".$endDate."'
+			 GROUP BY b.name, l.name
+			 ORDER BY cardsales DESC";
+
+			break;
+
+		case 'get_cardhistory_active':
+			
+			$sql = "SELECT m.image, m.qrcard, m.email, concat(m.fname, ' ',m.lname) as name, m.dateofbirth, m.gender, m.datereg, m.expiration, m.servername, m.totalpoints, m.lasttransaction, b.name, l.name
+				from memberstable m inner join loctable l on m.locid = l.locid
+				left join brandtable b on l.brandid = b.brandid 
+				where date(m.datereg) >= '".$startDate."' and date(m.datereg) <= '".$endDate."'
+				and m.activation is null";
+
+			break; 
+
+		case 'get_cardhistory_inactive':
+			
+			$sql = "SELECT m.image, m.qrcard, m.email, concat(m.fname, ' ',m.lname) as name, m.dateofbirth, m.gender, m.datereg, m.expiration, m.servername, m.totalpoints, m.lasttransaction, b.name, l.name
+				from memberstable m inner join loctable l on m.locid = l.locid
+				left join brandtable b on l.brandid = b.brandid 
+				where date(m.datereg) >= '".$startDate."' and date(m.datereg) <= '".$endDate."'
+				and m.activation is not null";
+
+			break;
+
+		case 'get_cardhistory_expired':
+			
+			$sql = "SELECT m.image, m.qrcard, m.email, concat(m.fname, ' ',m.lname), m.dateofbirth, m.gender, m.datereg, m.expiration, m.servername, m.totalpoints, m.lasttransaction, b.name, l.name
+				from memberstable m inner join loctable l on m.locid = l.locid
+				left join brandtable b on l.brandid = b.brandid 
+				where date(m.datereg) >= '".$startDate."' and date(m.datereg) <= '".$endDate."'
+				and now() > m.expiration";
+
+			break;
+
+
+		/********** Demographics **********/
 		case 'get_userplatformRegistration':
 
 			$sql = "SELECT `platform` AS 'v_platform', 
@@ -129,6 +193,36 @@
 				GROUP BY `label`";
  
 			break;
+			
+
+		case 'get_customerSummary': 
+
+			$sql = "SELECT (CASE
+                       WHEN mem.regtype = 'app' and mem.platform = 'android' THEN 'Android'
+                       WHEN mem.regtype = 'app' and mem.platform = 'ios' THEN 'IOS'
+                       else 'Card'
+                   END) AS 'TYPE', mem.qrCard,
+                   mem.memberid as 'memberID', mem.email as 'email', concat(mem.fname, ' ', mem.lname) as 'name',
+                   DATE_FORMAT(mem.datereg, '%d-%M-%Y') as 'dateReg', mem.dateofbirth as 'birthdate', CONCAT(UCASE(MID(mem.gender,1,1)),MID(mem.gender,2))as 'gender', mem.mobilenum as 'Mobile', sum(e.amount) as 'loyaltySales', count(e.transactionid) as 'loyaltyTrans', DATE_FORMAT(MAX(e.dateAdded), '%d-%M-%Y') as 'lastPurchase'
+                   FROM memberstable mem left join earntable e 
+                   on mem.memberid = e.memberid
+                   where mem.activation is null and 
+							DATE_FORMAT(mem.datereg, '%Y/%m/%d') >= '".$startDate."'
+						AND DATE_FORMAT(mem.datereg, '%Y/%m/%d') <= '".$endDate."'
+                   group by mem.memberid";  
+                   
+			break;
+
+		case 'get_customerTransactionHistory':
+
+			$sql = "SELECT e.transactiontype AS 'type', e.memberid AS 'acctNo', e.transactionid AS 'transID', 
+						IFNULL(CONCAT(m.fname, ' ', m.lname),e.email) AS 'memName', locname AS 'branch', dateAdded AS 'transDate', amount AS 'amount'
+						FROM earntable e INNER JOIN memberstable m ON e.memberid = m.memberid
+						WHERE e.amount > 0 AND e.memberid = '".$memberID."' ";
+ 
+			break;
+
+		/********** Downloads **********/ 
 
 		case 'get_downloads_yearly':
 			$sql = "SELECT monthname(dateAdded) as Month, 
@@ -160,6 +254,28 @@
 			break;
 
 		/********** Sales **********/
+		case 'get_salesprogress': 
+
+			$sql = "SELECT m.month as month, IFNULL(sum(e.points),0) as points, IFNULL(sum(e.amount),0) as sales
+					 FROM (
+					 SELECT 'January' AS MONTH
+					 UNION SELECT 'February' AS MONTH
+					 UNION SELECT 'March' AS MONTH
+					 UNION SELECT 'April' AS MONTH
+					 UNION SELECT 'May' AS MONTH
+					 UNION SELECT 'June' AS MONTH
+					 UNION SELECT 'July' AS MONTH
+					 UNION SELECT 'August' AS MONTH
+					 UNION SELECT 'September' AS MONTH
+					 UNION SELECT 'October' AS MONTH
+					 UNION SELECT 'November' AS MONTH
+					 UNION SELECT 'December' AS MONTH
+					 ) AS m
+					 LEFT JOIN earntable e ON m.month = DATE_FORMAT(e.dateadded, '%M') and year(e.dateadded) = year(now())
+					 group by month order by STR_TO_DATE(m.month, '%M')"; 
+
+			break;  
+
 		case 'get_salesreportsummary': 
 
 			$sql = "SELECT tmp.brandname, tmp.locname, COUNT(DISTINCT(tmp.memberid)) AS totalMember, SUM(tmp.amount) AS totalAmount, 
@@ -208,8 +324,55 @@
  
 			break; 
 
-
+ 
 		/********** Redemption **********/ 
+		case 'get_rewards_comparison' :
+
+			$sql = " select u.m as 'month', sum(IF(u.tag='E',u.p,0)) as epoints, sum(IF(u.tag='R',u.p,0)) as rpoints
+			 FROM 
+			 (
+			  SELECT m.month as m, IFNULL(sum(e.points),0) as p, 'E' as tag
+			  FROM 
+			  (
+			  SELECT 'January' AS MONTH
+			  UNION SELECT 'February' AS MONTH
+			  UNION SELECT 'March' AS MONTH
+			  UNION SELECT 'April' AS MONTH
+			  UNION SELECT 'May' AS MONTH
+			  UNION SELECT 'June' AS MONTH
+			  UNION SELECT 'July' AS MONTH
+			  UNION SELECT 'August' AS MONTH
+			  UNION SELECT 'September' AS MONTH
+			  UNION SELECT 'October' AS MONTH
+			  UNION SELECT 'November' AS MONTH
+			  UNION SELECT 'December' AS MONTH
+			  ) AS m
+			  LEFT JOIN earntable e ON m.month = DATE_FORMAT(e.dateadded, '%M')
+			  group by m  
+			UNION
+			  SELECT m.month as m, IFNULL(sum(r.points),0) as p, 'R' as tag
+			  FROM 
+			  (
+			  SELECT 'January' AS MONTH
+			  UNION SELECT 'February' AS MONTH
+			  UNION SELECT 'March' AS MONTH
+			  UNION SELECT 'April' AS MONTH
+			  UNION SELECT 'May' AS MONTH
+			  UNION SELECT 'June' AS MONTH
+			  UNION SELECT 'July' AS MONTH
+			  UNION SELECT 'August' AS MONTH
+			  UNION SELECT 'September' AS MONTH
+			  UNION SELECT 'October' AS MONTH
+			  UNION SELECT 'November' AS MONTH
+			  UNION SELECT 'December' AS MONTH
+			  ) AS m
+			  LEFT JOIN redeemtable r ON m.month = DATE_FORMAT(r.dateadded, '%M')
+			  group by m 
+			 ) as u
+			 group by u.m ORDER BY STR_TO_DATE(u.m, '%M')";
+
+			break;
+
 
 		case 'get_redemptionSummary':
 
@@ -265,22 +428,44 @@
 				break; 
 
 
-		/********** Customers **********/
-		case 'get_customerStatistics_points':
+		/********** Customers **********/ 
 
-			$sql = "SELECT email, SUM(points) AS earnedPoints, SUM(amount) AS totalSales, COUNT(*) AS earnTransactions, dateAdded
-					FROM earntable WHERE DATE(dateAdded) = DATE(NOW()) GROUP BY email ORDER BY email ASC;";  
+		case 'get_customers_quarterlysales':
+				
+				$sql = "SELECT m.image, m.qrcard, e.email, sum(e.amount) as sales
+						 from earntable e inner join memberstable m on e.memberid=m.memberid
+						 where quarter(e.dateadded) = quarter(now())
+						 group by m.qrcard
+						 order by sales desc limit 20";
 
 			break;
 
-		case 'get_customerTopdaily':
+		case 'get_customers_quarterlyvisits':
+				
+				$sql = "SELECT m.image, m.qrcard, e.email, count(e.earnid) as visit
+						from earntable e inner join memberstable m on e.memberid=m.memberid
+						where quarter(e.dateadded) = quarter(now())
+						group by m.qrcard
+						order by visit desc limit 20"; 
+			break;
+
+
+		/********** Branches **********/
+
+		case 'get_branch_quarterlysales':
+				
+			$sql = "SELECT brandname, locname, sum(amount) as sales from earntable where quarter(dateadded) = quarter(now())
+					 group by brandname, locname 
+					 order by sales desc limit 10";
+
+			break;
+
+		case 'get_branch_quarterlyvisits':
 			
-			$sql = "SELECT email AS email,  SUM(points) AS points, COUNT(DISTINCT(DATE(dateAdded))) AS 'visits', MAX(dateAdded) AS 'lastVisit' 
-			FROM earntable WHERE transactionid IS NOT NULL AND DATE(dateAdded) = DATE(NOW())
-			GROUP BY email ORDER BY Points DESC LIMIT 100";
-
+			$sql = "SELECT brandname, locname, count(transactionid) as visit from earntable where quarter(dateadded) = quarter(now())
+					 group by brandname, locname 
+					 order by visit desc limit 10"; 
 			break;
-
 
 
 		/********** Vouchers **********/ 
@@ -303,6 +488,52 @@
 			break;
 
 			
+
+		/********** Spent **********/ 
+
+		case 'get_spent_daily' :
+
+			$sql = "SELECT format(SUM(`amount`),0) AS `totalSales`, FORMAT(COUNT(distinct(memberID)),0) AS `totalMember`, FORMAT(COUNT(`memberID`),0) AS `totalTransaction`, FORMAT(SUM(`amount`)/COUNT(`memberID`),0) AS `averageSpend` FROM `earntable` WHERE BINARY `amount` > 0 and date(dateadded) = date(now())"; 
+
+			break;
+
+		case 'get_spent_weekly' :
+
+			$sql = "SELECT format(SUM(`amount`),0) AS `totalSales`, FORMAT(COUNT(distinct(memberID)),0) AS `totalMember`, FORMAT(COUNT(`memberID`),0) AS `totalTransaction`, FORMAT(SUM(`amount`)/COUNT(`memberID`),0) AS `averageSpend` FROM `earntable` WHERE BINARY `amount` > 0 and week(dateadded) = week(now())"; 
+
+			break;
+
+		case 'get_spent_monthly' :
+
+			$sql = "SELECT format(SUM(`amount`),0) AS `totalSales`, FORMAT(COUNT(distinct(memberID)),0) AS `totalMember`, FORMAT(COUNT(`memberID`),0) AS `totalTransaction`, FORMAT(SUM(`amount`)/COUNT(`memberID`),0) AS `averageSpend` FROM `earntable` WHERE BINARY `amount` > 0 and month(dateadded) = month(now())"; 
+
+			break;
+
+		case 'get_spent_quarterly' :
+
+			$sql = "SELECT format(SUM(`amount`),0) AS `totalSales`, FORMAT(COUNT(distinct(memberID)),0) AS `totalMember`, FORMAT(COUNT(`memberID`),0) AS `totalTransaction`, FORMAT(SUM(`amount`)/COUNT(`memberID`),0) AS `averageSpend` FROM `earntable` WHERE BINARY `amount` > 0 and quarter(dateadded) = quarter(now())"; 
+
+			break;
+
+		case 'get_spent_yearly' :
+
+			$sql = "SELECT format(SUM(`amount`),0) AS `totalSales`, FORMAT(COUNT(distinct(memberID)),0) AS `totalMember`, FORMAT(COUNT(`memberID`),0) AS `totalTransaction`, FORMAT(SUM(`amount`)/COUNT(`memberID`),0) AS `averageSpend` FROM `earntable` WHERE BINARY `amount` > 0 and year(dateadded) = year(now())"; 
+
+			break;
+
+		case 'get_spent_summary':
+
+			$sql = "SELECT tmp.image, tmp.qrcard, tmp.email, SUM(tmp.amount) AS 'totalSpend', COUNT(*) AS 'totalTransaction', FORMAT(AVG(TMP.amount),0) AS 'averageSpend'
+			    FROM
+			    (
+			     SELECT m.image, m.qrcard, e.email, e.amount, e.points FROM earntable e INNER JOIN memberstable m ON e.memberid=m.memberid 
+			     WHERE e.amount > 0 AND DATE(e.dateadded) >= '".$startDate."' AND DATE(e.dateadded) <= '".$endDate."' AND e.amount > 0 
+			    )
+			   AS tmp
+				GROUP BY tmp.email  ORDER BY SUM(tmp.amount) DESC";
+
+			break;
+
 
 
 		/********** SPECIAL REPORTS **********/ 

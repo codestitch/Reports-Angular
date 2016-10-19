@@ -1,41 +1,309 @@
-<div>
-	<h1>Demographics</h1>  
+<!-- BEGIN PAGE CONTENT -->
+<div class="page-content">
+  <div class="container-fluid">  
+    <div class="row">
+      <div class="col-md-12">  
+
+
+      	<!-- START OVERVIEW -->
+      	<div class="row widget-row">
+           <div class="col-md-3">
+               <!-- BEGIN WIDGET THUMB -->
+               <div class="widget-thumb widget-bg-color-white text-uppercase margin-bottom-20 ">
+                   <h4 class="widget-thumb-heading">Registration</h4>
+                   <div class="widget-thumb-wrap">
+                       <i class="widget-thumb-icon bg-green icon-bulb"></i>
+                       <div class="widget-thumb-body">
+                           <span class="widget-thumb-subtitle">Android</span>
+                           <span class="widget-thumb-body-stat" data-counter="counterup" data-value="{{ vm.platform.android }}"> {{ vm.platform.android | number }}</span>
+                       </div>
+                   </div> 
+
+                   <div class="margin-bottom-20"></div>
  
- 	<div class="row">
- 		<div class="col-md-12" > 
+                   <div class="widget-thumb-wrap">
+                       <i class="widget-thumb-icon bg-red icon-layers"></i>
+                       <div class="widget-thumb-body">
+                           <span class="widget-thumb-subtitle">IOS</span>
+                           <span class="widget-thumb-body-stat" data-counter="counterup" data-value="{{ vm.platform.ios }}">{{ vm.platform.ios | number }}</span>
+                       </div>
+                   </div>
 
- 			<div id="reportrange" class="pull-left" style="background: #fff; cursor: pointer; padding: 5px 10px; border: 1px solid #ccc;">
-			    <i class="glyphicon glyphicon-calendar fa fa-calendar"></i>&nbsp;
-			    <span>Select Date Here</span> <b class="caret"></b>
+                   <div class="margin-bottom-20"></div>
+ 
+                   <div class="widget-thumb-wrap">
+                       <i class="widget-thumb-icon bg-purple icon-layers"></i>
+                       <div class="widget-thumb-body">
+                           <span class="widget-thumb-subtitle">Web</span>
+                           <span class="widget-thumb-body-stat" data-counter="counterup" data-value="{{ vm.platform.web }}">{{ vm.platform.web | number}}</span>
+                       </div>
+                   </div>
+               </div>
+
+               <!-- END WIDGET THUMB -->
+           </div>
+           <div class="col-md-6">
+               <!-- BEGIN WIDGET THUMB -->
+               <div class="widget-thumb widget-bg-color-white text-uppercase margin-bottom-20 ">
+                  <h4 class="widget-thumb-heading">Age Group</h4> 
+                  <div id="ageChart"></div>
+               </div>
+               <!-- END WIDGET THUMB -->
+           </div>
+           <div class="col-md-3">
+               <!-- BEGIN WIDGET THUMB -->
+               <div class="widget-thumb widget-bg-color-white text-uppercase margin-bottom-20 ">
+
+                   <h4 class="widget-thumb-heading">Gender Group</h4>
+                   <div class="widget-thumb-wrap">
+                       <i class="widget-thumb-icon bg-purple icon-screen-desktop"></i>
+                       <div class="widget-thumb-body">
+                           <span class="widget-thumb-subtitle">Male</span>
+                           <span class="widget-thumb-body-stat" data-counter="counterup" data-value="{{vm.gendercount.male}}">{{vm.gendercount.male | number}}</span>
+                       </div>
+                   </div>
+
+                   <div class="margin-bottom-20"></div>
+ 
+                   <div class="widget-thumb-wrap">
+                       <i class="widget-thumb-icon bg-red icon-layers"></i>
+                       <div class="widget-thumb-body">
+                           <span class="widget-thumb-subtitle">Female</span>
+                           <span class="widget-thumb-body-stat" data-counter="counterup" data-value="{{vm.gendercount.female}}">{{vm.gendercount.female | number}}</span>
+                       </div>
+                   </div>
+
+                   <div class="margin-bottom-20"></div>
+ 
+                   <div class="widget-thumb-wrap">
+                       <i class="widget-thumb-icon bg-green icon-layers"></i>
+                       <div class="widget-thumb-body">
+                           <span class="widget-thumb-subtitle">Total</span>
+                           <span class="widget-thumb-body-stat" data-counter="counterup" data-value="{{vm.gendercount.male + vm.gendercount.female}}">{{vm.gendercount.male + vm.gendercount.female | number}}</span>
+                       </div>
+                   </div>
+
+               </div>
+               <!-- END WIDGET THUMB -->
+           </div> 
+       	</div>
+
+      	<!-- START PORTLET -->
+      	<div class="portlet light">
+
+            <div class="portlet-title">
+               <div class="caption">
+                   <i class="icon-bar-chart font-dark hide"></i>
+                   <span class="caption-subject font-dark bold uppercase">Demographics</span>
+                   <span class="caption-helper">special reports...</span>
+               </div>
+               <div class="actions">
+                   <div class="btn-group btn-group-devided" data-toggle="buttons">  
+								<a ng-click="vm.GetCustomerSummary()" class="btn btn-lg red"> <i class="fa fa-search"></i> Search </a>
+								<a ng-click="vm.GetCustomerSummary()" class="btn btn-lg red"> <i class="fa fa-cloud-download"></i> Export </a> 
+                   </div>
+               </div>
+            </div>
+            <div class="portlet-body">  
+
+					<div class="row"> 
+						<div class="col-md-12">  
+						
+							<div id="reportrange" class="pull-left calendar-style " >
+							   <i class="glyphicon glyphicon-calendar fa fa-calendar"></i>&nbsp;
+							   <span>Select Date</span> <b class="caret"></b>
+							</div>  
+
+							<div class="col-md-2"> 
+								<div class="form-group"> 
+									<div class="input-group">
+										<span class="input-group-addon">
+										<i class="fa fa-envelope"></i>
+										</span>
+										<input type="text" class="form-control" placeholder="Email Address">
+									</div>
+								</div>
+							</div>  
+
+							<div class="pull-left margin-right-10">  
+								<div class="btn-group">
+									<button class="btn btn-default dropdown-toggle" type="button" data-toggle="dropdown" aria-expanded="false">
+									{{ vm.gender.title }} <i class="fa fa-angle-down"></i>
+									</button>
+									<ul class="dropdown-menu" role="menu">
+										<li> <a ng-click="vm.SelectGender('None')"> None </a> </li>
+										<li> <a ng-click="vm.SelectGender('Male')"> Male </a> </li>
+										<li> <a ng-click="vm.SelectGender('Female')"> Female </a> </li>  
+									</ul>
+								</div> 	
+							</div>  
+
+							<div class="pull-left margin-right-10"> 
+								<div class="btn-group">
+									<button class="btn btn-default dropdown-toggle" type="button" data-toggle="dropdown" aria-expanded="false">
+									{{ vm.bday.title }} <i class="fa fa-angle-down"></i>
+									</button>
+									<ul class="dropdown-menu" role="menu">
+										<li> <a ng-click="vm.SelectBirthday(0)"> None </a> </li>
+										<li> <a ng-click="vm.SelectBirthday(1)"> January </a> </li>  
+										<li> <a ng-click="vm.SelectBirthday(2)"> February </a> </li>  
+										<li> <a ng-click="vm.SelectBirthday(3)"> March </a> </li>  
+										<li> <a ng-click="vm.SelectBirthday(4)"> April </a> </li>  
+										<li> <a ng-click="vm.SelectBirthday(5)"> May </a> </li>  
+										<li> <a ng-click="vm.SelectBirthday(6)"> June </a> </li>  
+										<li> <a ng-click="vm.SelectBirthday(7)"> July </a> </li>  
+										<li> <a ng-click="vm.SelectBirthday(8)"> August </a> </li>  
+										<li> <a ng-click="vm.SelectBirthday(9)"> September </a> </li>  
+										<li> <a ng-click="vm.SelectBirthday(10)"> October </a> </li>  
+										<li> <a ng-click="vm.SelectBirthday(11)"> November </a> </li>  
+										<li> <a ng-click="vm.SelectBirthday(12)"> December </a> </li>  
+									</ul>
+								</div> 				
+							</div> 
+
+							<div class="pull-left margin-right-10"> 
+								<div class="btn-group">
+									<button class="btn btn-default dropdown-toggle" type="button" data-toggle="dropdown" aria-expanded="false">
+									{{ vm.agerange.title }} <i class="fa fa-angle-down"></i>
+									</button>
+									<ul class="dropdown-menu" role="menu">
+										<li> <a ng-click="vm.SelectAgeRange(0)"> None </a> </li>
+										<li> <a ng-click="vm.SelectAgeRange(1)"> 18 to 25 </a> </li>  
+										<li> <a ng-click="vm.SelectAgeRange(2)"> 26 to 35 </a> </li>  
+										<li> <a ng-click="vm.SelectAgeRange(3)"> 36 to 45 </a> </li>  
+										<li> <a ng-click="vm.SelectAgeRange(4)"> 46 to 59 </a> </li>   
+									</ul>
+								</div> 				
+							</div> 
+						</div>   
+
+						<div class="col-md-12">   
+
+							<table ng-table="vm.tableParams" class="table" show-filter="false">
+								<tr ng-repeat="item in $data" class="even">
+						        	  <td title="'Email'" filter="{ email: 'text'}" sortable="'email'" header-class="'bg-red-sunglo'"> 
+											<img ng-if="item.image != ''" src="{{ item.image }}" width="20%" class="imgcircle" onError="this.src='assets/img/logo.png';">
+											<img ng-if="item.image == ''" src="assets/img/logo.png" width="20%" class="imgcircle">  
+							        	{{item.email}}
+							        </td>
+							        <td title="'Name'" filter="{ lname: 'text'}" sortable="'lname'" header-class="'bg-red-sunglo'">
+							        		<div ng-if="item.lname == '' &&  item.fname == ''  &&  item.mname == '' "></div>
+							        		<div ng-if="item.lname != '' ||  item.fname != ''  ||  item.mname != '' ">
+							        			{{ item.name }}
+							        		</div> 
+							        </td>
+							        <td title="'Birthday'" filter="{ dateOfBirth: 'text'}" sortable="'dateOfBirth'" header-class="'bg-red-sunglo'" style="text-align:center;">
+							        		<span ng-if="item.dateofbirth != '0000-00-00' ">{{item.dateofbirth  | date : 'longDate' }}</span>
+							        		<span ng-if="item.dateofbirth == '0000-00-00' "> </span>
+							        </td> 
+							        <td title="'Gender'" filter="{ gender: 'text'}" sortable="'gender'" header-class="'bg-red-sunglo'" style="text-align:center;">
+							        	{{item.gender }}
+							        </td>  
+							        <td title="'Mobile No.'" filter="{ mobileNum: 'text'}" sortable="'mobileNum'" header-class="'bg-red-sunglo'" style="text-align:center;">
+							        	{{item.mobileNum }}
+							        </td>   
+							        <td title="'Points'" filter="{ totalPoints: 'text'}" sortable="'totalPoints'" header-class="'bg-red-sunglo'" style="text-align:center;">
+							        	{{item.totalPoints  | number}}
+							        </td>   
+							        <td title="'Card No.'" filter="{ qrCard: 'text'}" sortable="'qrCard'" header-class="'bg-red-sunglo'" style="text-align:center;">
+							        	{{item.qrCard }}
+							        </td>   
+							        <td title="'Card Expiration'" filter="{ expiration: 'text'}" sortable="'expiration'" header-class="'bg-red-sunglo'" style="text-align:center;">
+							        	{{item.expiration | date : 'longDate' }}
+							        </td>     
+							        <td title="'Action'"  header-class="'bg-red-sunglo'" style="text-align:center;">
+							        		<a href="javascript:;" class="btn blue btn-xs black icopad" data-ng-click="vm.ViewTransactions(item);">
+											<i class="fa fa-bars"></i></a> 
+											<a href="javascript:;" class="btn green-sharp btn-xs black icopad" data-ng-click="AddPoints(item.email);">
+											<i class="fa fa-gift"></i></a> 
+							        </td>
+							   </tr> 
+
+							</table>  
+
+						</div> 
+					</div>  
+                
+           </div>
+       	</div>
+       	<!-- END PORTLET -->
+
+
+       	<!-- MODAL VIEW --> 
+			<a id="transactionModalBtn" class="btn default" data-toggle="modal" href="#transactionModal" style="display: none;"></a> 
+			<div class="modal fade bs-modal-lg" id="transactionModal" tabindex="-1" role="dialog" aria-hidden="true">
+				<div class="modal-dialog modal-xlg">
+					<div class="modal-content">
+						<div class="modal-header">
+							<button type="button" class="close" data-dismiss="modal" aria-hidden="true"></button>
+							<h4 id="tableTitle" class="modal-title">Modal Title</h4>
+						</div>
+						<div class="modal-body">
+							
+							<div class="row">
+								<div class="col-md-12">  
+
+									<div class="col-md-12"> 
+										<div class="portlet light"> 
+											<div id="MyController3" class="portlet-body"> 
+
+												<div> 
+													<i class="fa fa-bar-chart-o"></i>
+													<span id="totalDisplay3">Total: 0</span>
+													<br><br>
+												</div>
+
+												<table ng-table="tableParams" class="table" show-filter="false">
+												    <tr ng-repeat="item in $data" class="even">  
+											        <td title="'Member ID'" filter="{ memberID: 'text'}" sortable="'memberID'" header-class="'bg-grey'" style="text-align:center;">
+											        	{{item.memberID }}
+											        </td> 
+											        <td title="'Transaction ID'" filter="{ transactionID: 'text'}" sortable="'transactionID'" header-class="'bg-grey'" style="text-align:center;">
+											        	{{item.transactionID }}
+											        </td>  
+											        <td title="'Name'" filter="{ name: 'text'}" sortable="'name'" header-class="'bg-grey'" style="text-align:center;">
+											        	{{item.name }}
+											        </td>  
+											        <td title="'Restaurant'" filter="{ brandName: 'text'}" sortable="'brandName'" header-class="'bg-grey'" style="text-align:center;">
+											        	{{item.brandName }}
+											        </td>   
+											        <td title="'Branch'" filter="{ branch: 'text'}" sortable="'branch'" header-class="'bg-grey'" style="text-align:center;">
+											        	{{item.branch }}
+											        </td>  
+											        <td title="'Date'" filter="{ date: 'text'}" sortable="'date'" header-class="'bg-grey'" style="text-align:center;">
+											        	{{item.date }}
+											        </td>   
+											        <td title="'Points'" filter="{ points: 'text'}" sortable="'points'" header-class="'bg-grey'" style="text-align:center;">
+											        	{{item.points | number }}
+											        </td> 
+											        <td title="'Amount'" filter="{ amount: 'text'}" sortable="'amount'" header-class="'bg-grey'" style="text-align:center;">
+											        	{{item.amount | number }}
+											        </td> 
+												    </tr>
+												</table> 
+												<div id="emptyField1"></div>      
+
+											</div>
+										</div> 
+									</div>    
+
+								</div>
+							</div>
+						</div>
+						<div class="modal-footer">
+							<button type="button" class="btn default" data-dismiss="modal">Close</button> 
+						</div>
+					</div>
+					<!-- /.modal-content -->
+				</div>
+				<!-- /.modal-dialog -->
 			</div>
-			
-			<!-- <input type="text" name="daterange" placeholder="Enter Start date and End date" class="form-control"/>
-			<input type="text" name="daterange2" placeholder="Enter Start date and End date" class="form-control"/> -->
-			<button type="button" class="btn btn-default pull-right" ng-click="vm.GetCustomerSummary()">Search</button> 
-		</div>   
- 	</div> 
+			<!-- END MODAL VIEW -->
 
-	<table ng-table="vm.tableParams" class="table" show-filter="false">
-	    <tr ng-repeat="item in $data" class="even">
-	        <td title="'Restaurant'" filter="{ Mobile: 'text'}" sortable="'Mobile'" header-class="'bg-grey-left'"> 
-						 {{item.Mobile}} 
-	        </td>
-	        <td title="'email'" filter="{ email: 'text'}" sortable="'email'" header-class="'bg-grey-left'"> 
-						 {{item.email}} </a>  
-	        </td>
-	        <td title="'No. of Transactions'" filter="{ totalMember: 'text'}" sortable="'totalMember'" header-class="'bg-grey'" style="text-align:center;">
-	        	{{item.totalMember | number}}
-	        </td> 
-	        <td title="'Total Earned Points'" filter="{ earnedpoints: 'text'}" sortable="'earnedpoints'" header-class="'bg-grey'" style="text-align:center;">
-	        	{{item.earnedpoints | number}}
-	        </td> 
-	        <td title="'Total Redeemed Points'" filter="{ redeemedpoints: 'text'}" sortable="'redeemedpoints'" header-class="'bg-grey'" style="text-align:center;">
-	        	{{item.redeemedpoints | number}}
-	        </td>    
-	    </tr>
-	</table> 
 
-	<img ng-if="vm.dataLoading" src="data:image/gif;base64,R0lGODlhEAAQAPIAAP///wAAAMLCwkJCQgAAAGJiYoKCgpKSkiH/C05FVFNDQVBFMi4wAwEAAAAh/hpDcmVhdGVkIHdpdGggYWpheGxvYWQuaW5mbwAh+QQJCgAAACwAAAAAEAAQAAADMwi63P4wyklrE2MIOggZnAdOmGYJRbExwroUmcG2LmDEwnHQLVsYOd2mBzkYDAdKa+dIAAAh+QQJCgAAACwAAAAAEAAQAAADNAi63P5OjCEgG4QMu7DmikRxQlFUYDEZIGBMRVsaqHwctXXf7WEYB4Ag1xjihkMZsiUkKhIAIfkECQoAAAAsAAAAABAAEAAAAzYIujIjK8pByJDMlFYvBoVjHA70GU7xSUJhmKtwHPAKzLO9HMaoKwJZ7Rf8AYPDDzKpZBqfvwQAIfkECQoAAAAsAAAAABAAEAAAAzMIumIlK8oyhpHsnFZfhYumCYUhDAQxRIdhHBGqRoKw0R8DYlJd8z0fMDgsGo/IpHI5TAAAIfkECQoAAAAsAAAAABAAEAAAAzIIunInK0rnZBTwGPNMgQwmdsNgXGJUlIWEuR5oWUIpz8pAEAMe6TwfwyYsGo/IpFKSAAAh+QQJCgAAACwAAAAAEAAQAAADMwi6IMKQORfjdOe82p4wGccc4CEuQradylesojEMBgsUc2G7sDX3lQGBMLAJibufbSlKAAAh+QQJCgAAACwAAAAAEAAQAAADMgi63P7wCRHZnFVdmgHu2nFwlWCI3WGc3TSWhUFGxTAUkGCbtgENBMJAEJsxgMLWzpEAACH5BAkKAAAALAAAAAAQABAAAAMyCLrc/jDKSatlQtScKdceCAjDII7HcQ4EMTCpyrCuUBjCYRgHVtqlAiB1YhiCnlsRkAAAOwAAAAAAAAAAAA==" />
-
-	<p><a href="#/login" class="btn btn-primary">Logout</a></p>
+      </div>
+    </div>
+    <!-- END PAGE CONTENT INNER -->
+  </div>
 </div>
+<!-- END PAGE CONTENT -->

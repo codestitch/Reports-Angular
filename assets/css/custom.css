@@ -1,0 +1,17 @@
+/* CSS Customization for css libraries*/
+
+/* layout.css */
+.page-header .page-header-top .page-logo .logo-default {
+    margin: 9px 0 0 0;
+    width: 208px;
+} 
+
+.page-footer {
+    font-size: 12px;
+    font-weight: 300;
+    padding: 17px 0;
+    position: fixed;
+    width: 100%;
+    bottom: 0;
+    z-index: 999;
+}
