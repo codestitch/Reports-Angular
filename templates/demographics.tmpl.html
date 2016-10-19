@@ -1,0 +1,56 @@
+<md-dialog aria-label="Mango (Fruit)">
+  <form ng-cloak>
+    <md-toolbar>
+      <div class="md-toolbar-tools">
+        <h2> Customer Transaction History </h2>
+        <span flex></span>
+        <md-button class="md-icon-button" ng-click="cancel()">
+          <md-icon md-svg-src="img/icons/ic_close_24px.svg" aria-label="Close dialog"></md-icon>
+        </md-button>
+      </div>
+    </md-toolbar>
+
+    <md-dialog-content>
+      <div class="md-dialog-content">  
+         <table ng-table="tableParams" class="table" style="    /* border-collapse: collapse;" show-filter="false">
+             <tr ng-repeat="item in $data" class="even">  
+              <td title="'Member ID'" filter="{ memberID: 'text'}" sortable="'memberID'" header-class="'bg-table-header-white-red'">
+               {{item.memberID }}
+              </td> 
+              <td title="'Transaction ID'" filter="{ transactionID: 'text'}" sortable="'transactionID'" header-class="'bg-table-header-white-red'" style="text-align:center;">
+               {{item.transactionID }}
+              </td>  
+              <td title="'Name'" filter="{ name: 'text'}" sortable="'name'" header-class="'bg-table-header-white-red'" style="text-align:center;">
+               {{item.name }}
+              </td>  
+              <td title="'Restaurant'" filter="{ brandName: 'text'}" sortable="'brandName'" header-class="'bg-table-header-white-red'" style="text-align:center;">
+               {{item.brandName }}
+              </td>   
+              <td title="'Branch'" filter="{ branch: 'text'}" sortable="'branch'" header-class="'bg-table-header-white-red'" style="text-align:center;">
+               {{item.branch }}
+              </td>  
+              <td title="'Date'" filter="{ date: 'text'}" sortable="'date'" header-class="'bg-table-header-white-red'" style="text-align:center;">
+               {{item.date }}
+              </td>   
+              <td title="'Points'" filter="{ points: 'text'}" sortable="'points'" header-class="'bg-table-header-white-red'" style="text-align:center;">
+               {{item.points | number }}
+              </td> 
+              <td title="'Amount'" filter="{ amount: 'text'}" sortable="'amount'" header-class="'bg-table-header-white-red'" style="text-align:center;">
+               {{item.amount | number }}
+              </td> 
+             </tr>
+         </table>  
+      </div>
+    </md-dialog-content>
+
+    <md-dialog-actions layout="row">
+      <md-button ng-click="export" md-autofocus>
+         Export
+      </md-button>
+      <span flex></span> 
+      <md-button ng-click="cancel()">
+        Close
+      </md-button>
+    </md-dialog-actions>
+  </form>
+</md-dialog>

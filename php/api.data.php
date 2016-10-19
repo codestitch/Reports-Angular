@@ -48,11 +48,144 @@
 
 	switch ($function) {
 
-		case 'get_userplatform': 
-			
-			$sql = "SELECT COUNT(*) AS `total`, platform FROM devicetokens WHERE platform IN ('ios','android') GROUP BY platform"; 
+		/********** Downloads **********/ 
+
+		case 'get_downloads_yearly':
+			$sql = "SELECT monthname(dateAdded) as Month, 
+			      SUM(CASE 
+			             WHEN platform = 'android' THEN 1
+			             ELSE 0
+			           END) AS Android,
+			       SUM(CASE 
+			             WHEN platform = 'ios' THEN 1
+			             ELSE 0
+			           END) AS iOS
+					from devicetokens where year(dateAdded) = YEAR(NOW()) group BY EXTRACT(YEAR_MONTH FROM dateAdded)";
 
 			break;
+
+		case 'get_downloads_monthly':
+			
+			$sql = "SELECT concat('Week  ', week(dateAdded)) as Week,
+				      SUM(CASE 
+				             WHEN platform = 'android' THEN 1
+				             ELSE 0
+				           END) AS Android,
+				       SUM(CASE 
+				             WHEN platform = 'ios' THEN 1
+				             ELSE 0
+				           END) AS iOS
+				from devicetokens where year(dateAdded) = year(now()) and month(dateAdded) = month(now()) group by Week";
+
+			break;
+
+		/********** Demographics **********/
+		case 'get_userPlatformRegistration':
+
+			$sql = "SELECT `platform` AS 'v_platform', 
+						COUNT(`id`) AS 'total' FROM `memberstable` 
+						WHERE `platform` IN ('android', 'ios', 'web') AND BINARY `activation` IS NULL GROUP BY `platform`";
+
+			break; 
+
+		case 'get_userGender':
+
+			$sql = "SELECT `gender`, COUNT(`id`) AS 'count' FROM `memberstable` WHERE `gender` IN ('male','female') GROUP BY `gender`";
+			
+			break;
+
+		case 'get_userAge':
+
+			$sql = "SELECT ( CASE
+				  WHEN `age` > 0 AND `age` <= 18 THEN '18 Below'
+				  WHEN `age` >= 19 AND `age` <= 31 THEN '19 - 31'
+				  WHEN `age` >= 32 AND `age` <= 45 THEN '32 - 45'
+				  WHEN `age` >= 46 AND `age` <= 60 THEN '46 - 60'
+				  WHEN `age` >= 61 THEN '61 and above'
+				 END
+				) AS `label`,
+					SUM(`dummyTable`.`count`) AS 'count'
+				FROM (
+					 SELECT CAST(DATEDIFF(NOW(), DATE(`dateOfBirth`)) / 365.25 AS UNSIGNED) AS `age`, COUNT(`id`) AS `count`
+					 FROM `memberstable`
+					 WHERE BINARY `dateOfBirth` != '0000-00-00' AND BINARY `dateOfBirth` IS NOT NULL
+					 AND BINARY `activation` IS NULL 
+					 GROUP BY `age`
+				) `dummyTable`
+				WHERE BINARY `age` > 0
+				GROUP BY `label`";
+ 
+			break;
+		
+		case 'get_userInformation' :
+
+			$filteredqry = "SELECT memberID, concat(fname, ' ', lname) as 'name', gender as 'gender', totalPoints, image, expiration, qrCard, dateofbirth as 'dateofbirth', 
+					TIMESTAMPDIFF(YEAR, dateofbirth, CURDATE()) as 'Age',
+					(case 
+					    when TIMESTAMPDIFF(YEAR, dateofbirth, CURDATE()) < 18 then 'Below 18'
+					    when TIMESTAMPDIFF(YEAR, dateofbirth, CURDATE()) >= 18 and TIMESTAMPDIFF(YEAR, dateofbirth, CURDATE()) <= 25 then  '18 to 25'
+					    when TIMESTAMPDIFF(YEAR, dateofbirth, CURDATE()) >= 26 and TIMESTAMPDIFF(YEAR, dateofbirth, CURDATE()) <= 35 then '26 to 35'
+					    when TIMESTAMPDIFF(YEAR, dateofbirth, CURDATE()) >= 36 and TIMESTAMPDIFF(YEAR, dateofbirth, CURDATE()) <= 45 then  '36 to 45'
+					    when TIMESTAMPDIFF(YEAR, dateofbirth, CURDATE()) >= 46 and TIMESTAMPDIFF(YEAR, dateofbirth, CURDATE()) <= 59 then  '46 to 59'
+					    when TIMESTAMPDIFF(YEAR, dateofbirth, CURDATE()) > 60  then  '60 and Above'
+					end) as 'agebracket', 
+					mobilenum as 'mobile', email from memberstable where "; 
+ 
+			$hasinitfilter = false; 
+
+			if ($email != "") {
+				$filteredqry .= " `email` LIKE '%" . $email. "%'";
+				$hasinitfilter = true;
+			} 
+
+			if ($gender != "" && !$hasinitfilter) {
+				$filteredqry .=  " `gender` = '" . $gender . "'";
+				$hasinitfilter = true;
+			}
+			else if ($gender != "" && $hasinitfilter) { 	  
+				$filteredqry .= " AND `gender` = '" . $gender . "'";
+			}
+
+			if ($birthday != "" && !$hasinitfilter) {
+				$filteredqry .=  " DATE_FORMAT(dateOfBirth, '%c') = " .$birthday;
+				$hasinitfilter = true;
+			}
+			else if ($birthday != "" && $hasinitfilter){  
+				$filteredqry .= " AND DATE_FORMAT(dateOfBirth, '%c') = " .$birthday;
+			} 
+
+			if ($startAge != "" && !$hasinitfilter) {
+				$filteredqry .=  " CAST(DATEDIFF(NOW(), DATE(`dateOfBirth`)) / 365.25 AS UNSIGNED) > " . $startAge . " AND CAST(DATEDIFF(NOW(), DATE(`dateOfBirth`)) / 365.25 AS UNSIGNED) < " . $endAge;
+				$hasinitfilter = true;
+			}
+			else if ($startAge != "" && $hasinitfilter){  
+				$filteredqry .=  " AND CAST(DATEDIFF(NOW(), DATE(`dateOfBirth`)) / 365.25 AS UNSIGNED) > " . $startAge . " AND CAST(DATEDIFF(NOW(), DATE(`dateOfBirth`)) / 365.25 AS UNSIGNED) < " . $endAge;
+			}
+
+			if ($startDate != "" && !$hasinitfilter) {
+				$filteredqry .=  " DATE_FORMAT(dateReg, '%Y/%m/%d') >= '".$startDate."' AND DATE_FORMAT(dateReg, '%Y/%m/%d') <= '".$endDate."' ";
+				$hasinitfilter = true;
+			}
+			else if ($startDate != "" && $hasinitfilter){  
+				$filteredqry .=  " AND DATE_FORMAT(dateReg, '%Y/%m/%d') >= '".$startDate."' AND DATE_FORMAT(dateReg, '%Y/%m/%d') <= '".$endDate."' ";
+			}
+
+			$filteredqry .= " AND activation IS NULL";
+			
+			$sql = $filteredqry; 
+			
+ 			break;
+
+		case 'get_customerTransactionHistory':
+ 			
+ 			$sql = "SELECT e.brandName, e.transactiontype as 'type', e.memberid as 'memberID', e.transactionid as 'transactionID', 
+						IFNULL(concat(m.fname, ' ', m.lname),e.email) as 'name', locname as 'branch', e.dateAdded as 'date', amount as 'amount', points AS 'points'
+						from earntable e inner join memberstable m on e.memberid = m.memberid
+						where e.memberid = '".$memberID."' ";
+						
+ 			break;
+
+
 
 
 		/********** Registration **********/
@@ -149,50 +282,7 @@
 			break;
 
 
-		/********** Demographics **********/
-		case 'get_userplatformRegistration':
-
-			$sql = "SELECT `platform` AS 'v_platform', 
-						COUNT(`id`) AS 'total' FROM `memberstable` 
-						WHERE `platform` IN ('android', 'ios', 'web') AND BINARY `activation` IS NULL GROUP BY `platform`";
-
-			break;
-
-		case 'get_userdownloads': 
-
-			$sql = "SELECT COUNT(*) AS 'total', platform FROM devicetokens WHERE platform IN ('ios','android') GROUP BY platform";
-
-			break;
-
-		case 'get_usergender':
-
-			$sql = "SELECT `gender`, COUNT(`id`) AS 'count' FROM `memberstable` WHERE `gender` IN ('male','female') GROUP BY `gender`";
-			
-			break;
-
-
-		case 'get_userage':
-
-			$sql = "SELECT ( CASE
-				  WHEN `age` > 0 AND `age` <= 18 THEN '18 Below'
-				  WHEN `age` >= 19 AND `age` <= 31 THEN '19 - 31'
-				  WHEN `age` >= 32 AND `age` <= 45 THEN '32 - 45'
-				  WHEN `age` >= 46 AND `age` <= 60 THEN '46 - 60'
-				  WHEN `age` >= 61 THEN '61 and above'
-				 END
-				) AS `label`,
-					SUM(`dummyTable`.`count`) AS 'count'
-				FROM (
-					 SELECT CAST(DATEDIFF(NOW(), DATE(`dateOfBirth`)) / 365.25 AS UNSIGNED) AS `age`, COUNT(`id`) AS `count`
-					 FROM `memberstable`
-					 WHERE BINARY `dateOfBirth` != '0000-00-00' AND BINARY `dateOfBirth` IS NOT NULL
-					 AND BINARY `activation` IS NULL 
-					 GROUP BY `age`
-				) `dummyTable`
-				WHERE BINARY `age` > 0
-				GROUP BY `label`";
- 
-			break;
+		
 			
 
 		case 'get_customerSummary': 
@@ -222,36 +312,7 @@
  
 			break;
 
-		/********** Downloads **********/ 
-
-		case 'get_downloads_yearly':
-			$sql = "SELECT monthname(dateAdded) as Month, 
-			      SUM(CASE 
-			             WHEN platform = 'android' THEN 1
-			             ELSE 0
-			           END) AS Android,
-			       SUM(CASE 
-			             WHEN platform = 'ios' THEN 1
-			             ELSE 0
-			           END) AS iOS
-					from devicetokens where year(dateAdded) = YEAR(NOW()) group BY EXTRACT(YEAR_MONTH FROM dateAdded)";
-
-			break;
-
-		case 'get_downloads_monthly':
-			
-			$sql = "SELECT concat('Week  ', week(dateAdded)) as Week,
-				      SUM(CASE 
-				             WHEN platform = 'android' THEN 1
-				             ELSE 0
-				           END) AS Android,
-				       SUM(CASE 
-				             WHEN platform = 'ios' THEN 1
-				             ELSE 0
-				           END) AS iOS
-				from devicetokens where year(dateAdded) = year(now()) and month(dateAdded) = month(now()) group by Week";
-
-			break;
+		
 
 		/********** Sales **********/
 		case 'get_salesprogress': 
@@ -535,77 +596,10 @@
 			break;
 
 
-
-		/********** SPECIAL REPORTS **********/ 
-		case 'get_userinformation' :
-
-			$filteredqry = "SELECT memberID, concat(fname, ' ', lname) as 'name', gender as 'gender', totalPoints, image, expiration, qrCard, dateofbirth as 'dateofbirth', 
-					TIMESTAMPDIFF(YEAR, dateofbirth, CURDATE()) as 'Age',
-					(case 
-					    when TIMESTAMPDIFF(YEAR, dateofbirth, CURDATE()) < 18 then 'Below 18'
-					    when TIMESTAMPDIFF(YEAR, dateofbirth, CURDATE()) >= 18 and TIMESTAMPDIFF(YEAR, dateofbirth, CURDATE()) <= 25 then  '18 to 25'
-					    when TIMESTAMPDIFF(YEAR, dateofbirth, CURDATE()) >= 26 and TIMESTAMPDIFF(YEAR, dateofbirth, CURDATE()) <= 35 then '26 to 35'
-					    when TIMESTAMPDIFF(YEAR, dateofbirth, CURDATE()) >= 36 and TIMESTAMPDIFF(YEAR, dateofbirth, CURDATE()) <= 45 then  '36 to 45'
-					    when TIMESTAMPDIFF(YEAR, dateofbirth, CURDATE()) >= 46 and TIMESTAMPDIFF(YEAR, dateofbirth, CURDATE()) <= 59 then  '46 to 59'
-					    when TIMESTAMPDIFF(YEAR, dateofbirth, CURDATE()) > 60  then  '60 and Above'
-					end) as 'agebracket', 
-					mobilenum as 'mobile', email from memberstable where ";
-
-			// $filteredqry = "SELECT email, memberID, image, lname, fname, mname, CONCAT(fname, ' ', lname) as name, address1, DATE_FORMAT(dateofbirth, '%d-%M-%Y') as 'dateofbirth', gender, mobileNum,  totalPoints from memberstable where ";
  
-			$hasinitfilter = false; 
+		
 
-			if ($email != "") {
-				$filteredqry .= " `email` LIKE '%" . $email. "%'";
-				$hasinitfilter = true;
-			} 
-
-			if ($gender != "" && !$hasinitfilter) {
-				$filteredqry .=  " `gender` = '" . $gender . "'";
-				$hasinitfilter = true;
-			}
-			else if ($gender != "" && $hasinitfilter) { 	  
-				$filteredqry .= " AND `gender` = '" . $gender . "'";
-			}
-
-			if ($birthday != "" && !$hasinitfilter) {
-				$filteredqry .=  " DATE_FORMAT(dateOfBirth, '%c') = " .$birthday;
-				$hasinitfilter = true;
-			}
-			else if ($birthday != "" && $hasinitfilter){  
-				$filteredqry .= " AND DATE_FORMAT(dateOfBirth, '%c') = " .$birthday;
-			} 
-
-			if ($startAge != "" && !$hasinitfilter) {
-				$filteredqry .=  " CAST(DATEDIFF(NOW(), DATE(`dateOfBirth`)) / 365.25 AS UNSIGNED) > " . $startAge . " AND CAST(DATEDIFF(NOW(), DATE(`dateOfBirth`)) / 365.25 AS UNSIGNED) < " . $endAge;
-				$hasinitfilter = true;
-			}
-			else if ($startAge != "" && $hasinitfilter){  
-				$filteredqry .=  " AND CAST(DATEDIFF(NOW(), DATE(`dateOfBirth`)) / 365.25 AS UNSIGNED) > " . $startAge . " AND CAST(DATEDIFF(NOW(), DATE(`dateOfBirth`)) / 365.25 AS UNSIGNED) < " . $endAge;
-			}
-
-			if ($startDate != "" && !$hasinitfilter) {
-				$filteredqry .=  " DATE_FORMAT(dateReg, '%Y/%m/%d') >= '".$startDate."' AND DATE_FORMAT(dateReg, '%Y/%m/%d') <= '".$endDate."' ";
-				$hasinitfilter = true;
-			}
-			else if ($startDate != "" && $hasinitfilter){  
-				$filteredqry .=  " AND DATE_FORMAT(dateReg, '%Y/%m/%d') >= '".$startDate."' AND DATE_FORMAT(dateReg, '%Y/%m/%d') <= '".$endDate."' ";
-			}
-
-			$filteredqry .= " AND activation IS NULL";
-			
-			$sql = $filteredqry; 
-			
- 			break;
-
- 		case 'get_customerHistoryTransactions':
- 			
- 			$sql = "SELECT e.brandName, e.transactiontype as 'type', e.memberid as 'memberID', e.transactionid as 'transactionID', 
-						IFNULL(concat(m.fname, ' ', m.lname),e.email) as 'name', locname as 'branch', e.dateAdded as 'date', amount as 'amount', points AS 'points'
-						from earntable e inner join memberstable m on e.memberid = m.memberid
-						where e.memberid = '".$memberID."' ";
-
- 			break;
+ 		
 
  		case 'get_customerProfileDetail':
  			

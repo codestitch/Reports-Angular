@@ -23,6 +23,7 @@
 		service.GetPlatformRegistration = GetPlatformRegistration;
 		service.GetGender = GetGender;
 		service.GetDemographics = GetDemographics; 
+      service.GetCustomerTransactionHistory = GetCustomerTransactionHistory;
 
 		return service;
 
@@ -30,7 +31,7 @@
 			Public Functions
 			----------------
 			Downloads
-      */
+      */ 
       function GetYearlyDownload(){ 
       	var url = DataLink.report_link+"function=get_downloads_yearly";  
          return $http.get(url).then(handleSuccess, handleError); 
@@ -49,29 +50,34 @@
 			Demographics
       */
       function GetPlatformRegistration(){
-      	var url = DataLink.report_link+"function=get_userplatformRegistration";  
+      	var url = DataLink.report_link+"function=get_userPlatformRegistration";  
          return $http.get(url).then(handleSuccess, handleError); 
       }
 
       function GetAge(){
-      	var url = DataLink.report_link+"function=get_userage";  
+      	var url = DataLink.report_link+"function=get_userAge";  
          return $http.get(url).then(handleSuccess, handleError); 
       }
 
       function GetGender(){
-      	var url = DataLink.report_link+"function=get_usergender";  
+      	var url = DataLink.report_link+"function=get_userGender";  
          return $http.get(url).then(handleSuccess, handleError);       	
       }
 
 		function GetDemographics(startdate, enddate, email, gender, birthday, startAge, endAge){  
-			var url = DataLink.report_link+"function=get_userinformation&startDate="+startdate+"&endDate="+enddate
+			var url = DataLink.report_link+"function=get_userInformation&startDate="+startdate+"&endDate="+enddate
 				+"&email="+email+"&gender="+gender+"&birthday="+birthday+"&startAge="+startAge+"&startAge="+startAge; 
          return $http.get(url).then(handleSuccess, handleError);
 		}   
 
+      function GetCustomerTransactionHistory(memberID){
+         var url = DataLink.report_link+"function=get_customerTransactionHistory&memberID="+memberID; 
+         return $http.get(url).then(handleSuccess, handleError);
+      }
+
 
 		// private functions
-      function handleSuccess(response) { 
+      function handleSuccess(response) {  
          return response.data;
       }
 

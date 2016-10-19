@@ -96,6 +96,13 @@
   opacity: 0;
 }
 
+/* Tables */
+.bg-table-header-white-red{
+  border-color: #E26A6A !important;
+  background-image: none !important;
+  background-color: #fff !important;
+  color: #444 !important; 
+}
 
 
 /* Element Specific */
@@ -118,13 +125,14 @@
 }  
 
 .imgcircle{
-  width: 25px;
-  height: 25px;
+  width: 45px;
+  height: 45px;
   background: rgb(31, 69, 152) none repeat scroll 0% 0%;
   -moz-border-radius: 50px;
   -webkit-border-radius: 50px;
   border-radius: 50px;
-  margin-top: -4px;
+  margin-top: 2px;
+  margin-right: 10px;
 }
 
 #ageChart {
@@ -133,6 +141,8 @@
   /*font-size : 11px;*/
 }         
 
+
+/* Angular Material UI */
 .dialogdemoBasicUsage #popupContainer {
   position: relative; }
 
@@ -152,42 +162,11 @@
   color: #c60008; }
 
 .dialogdemoBasicUsage .dialog-demo-prerendered md-checkbox {
-  margin-bottom: 0; }
+  margin-bottom: 0; } 
 
-
-
-.progressCirculardemoBasicUsage body {
-  padding: 20px; }
-
-.progressCirculardemoBasicUsage h4 {
-  margin: 10px 0; }
-
-.progressCirculardemoBasicUsage md-progress-circular {
-  margin-bottom: 20px; }
-
-.progressCirculardemoBasicUsage #loaders > md-switch {
-  margin: 0;
-  margin-left: 10px;
-  margin-top: -10px; }
-
-.progressCirculardemoBasicUsage #loaders > h5 {
-  margin-top: 0; }
-
-.progressCirculardemoBasicUsage #loaders > p {
-  margin-right: 20px;
-  margin-bottom: 24px; }
-
-.progressCirculardemoBasicUsage p.small {
-  font-size: 0.8em;
-  margin-top: -18px; }
-
-.progressCirculardemoBasicUsage hr {
-  width: 100%;
-  margin-top: 20px;
-  border-color: rgba(221, 221, 177, 0.1); }
-
-.progressCirculardemoBasicUsage p.small > code {
-  font-size: 0.8em; }
-
-.progressCirculardemoBasicUsage .visible {
-  border-color: rgba(221, 221, 177, 0); }
+.button-table{
+    margin: 0;
+    line-height: 20px !important;
+    width: 35px !important;
+    height: 35px !important;
+}
