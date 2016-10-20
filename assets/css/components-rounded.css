@@ -4943,7 +4943,7 @@ Dashboard Stats
 ***/
 .dashboard-stat {
   display: block;
-  margin-bottom: 25px;
+  /*margin-bottom: 25px;*/
   overflow: hidden;
   -webkit-border-radius: 4px;
   -moz-border-radius: 4px;

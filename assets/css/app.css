@@ -1,14 +1,17 @@
 ﻿body {
   padding-top: 50px;
-}
- 
-
+  background-color: #eff3f8;
+} 
 /* General */ 
 .hide-element {
   display: none;
 }
 .display-element {
   display: block;
+}
+
+.empty-element{
+  width: 600px;
 }
 .no-padding{
   padding: 0 !important;;
@@ -74,6 +77,28 @@
     color: #3e4f5e;
 }
 
+.widget-thumb .widget-thumb-heading {
+     font-size: 14px; 
+     font-weight: 700 !important; 
+     color: #666; 
+     margin: 0 0 20px;  
+    float: left;
+    display: inline-block; 
+}
+
+.widget-title{ 
+    min-height: 48px; 
+}
+
+.widget-tools {
+    margin: -7px 0 0;
+    float: right;
+    display: inline-block;
+}
+
+.widget-body{ 
+    margin: 0 0 15px 0;
+}
 
 /* Default view */ 
 .view-animate {
@@ -135,6 +160,16 @@
   margin-right: 10px;
 }
 
+.mainimgcircle{
+  width: 200px;
+  height: 200px;
+  background: rgb(31, 69, 152) none repeat scroll 0% 0%;
+  -moz-border-radius: 50px;
+  -webkit-border-radius: 50px;
+  border-radius: 100px;
+  margin-left: 80px;
+}
+
 #ageChart {
   width: 100%;
   height: 230px;
@@ -142,31 +177,3 @@
 }         
 
 
-/* Angular Material UI */
-.dialogdemoBasicUsage #popupContainer {
-  position: relative; }
-
-.dialogdemoBasicUsage .footer {
-  width: 100%;
-  text-align: center;
-  margin-left: 20px; }
-
-.dialogdemoBasicUsage .footer, .dialogdemoBasicUsage .footer > code {
-  font-size: 0.8em;
-  margin-top: 50px; }
-
-.dialogdemoBasicUsage button {
-  width: 200px; }
-
-.dialogdemoBasicUsage div#status {
-  color: #c60008; }
-
-.dialogdemoBasicUsage .dialog-demo-prerendered md-checkbox {
-  margin-bottom: 0; } 
-
-.button-table{
-    margin: 0;
-    line-height: 20px !important;
-    width: 35px !important;
-    height: 35px !important;
-}

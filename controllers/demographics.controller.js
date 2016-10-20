@@ -3,10 +3,11 @@
 
    angular
       .module('app')
-      .controller('DemographicsController', DemographicsController);
+      .controller('DemographicsController', DemographicsController)
+      .controller('DialogController', DialogController);
 
-   DemographicsController.$inject = ['UserService', 'PreloaderService','$rootScope', 'QueryService', '$http', 'ChartService', 'TableService', '$mdDialog', '$scope' ];
-   function DemographicsController(UserService, PreloaderService, $rootScope, QueryService, $http, ChartService, TableService, $mdDialog, $scope) {
+   DemographicsController.$inject = ['PreloaderService', 'QueryService', '$http', 'ChartService', 'TableService', 'ToastService', '$mdDialog', '$scope' ];
+   function DemographicsController(PreloaderService, QueryService, $http, ChartService, TableService, ToastService, $mdDialog, $scope) {
       var vm = this; 
         
       // Variables
@@ -20,11 +21,14 @@
       vm.platform = { android: "", ios: "", web: ""}; 
       vm.gendercount = { male: 0, female: 0};
 
+      vm.doneloading_transactions = true; // preloader
+
       // Access Functions
       vm.SelectGender = SelectGender; 
       vm.SelectBirthday = SelectBirthday; 
       vm.SelectAgeRange = SelectAgeRange; 
       vm.GetCustomerSummary = GetCustomerSummary;  
+      vm.ExportCustomer = ExportCustomer;  
 
       vm.ViewTransactions = ViewTransactions; 
         
@@ -46,11 +50,11 @@
 
       // Public functions
       function Initialize(){ 
-            PreloaderService.Display();
-            GetRegistration();
-            GetAge();
-            GetGender(); 
-            PreloaderService.Hide(); 
+         PreloaderService.Display();
+         GetRegistration();
+         GetAge();
+         GetGender(); 
+         PreloaderService.Hide(); 
       }
 
       function GetRegistration(){
@@ -88,26 +92,32 @@
              });
       }
 
-      function GetCustomerSummary(){    
+      function GetCustomerSummary(){     
 
-         if (vm.startdate == "" && vm.enddate == "" && vm.email == "" && vm.gender.value == "" && vm.bday.value == "" && vm.agerange.start == "") { 
-             toastr['warning']("Oops! You seem to miss selecting a filter", "No Filter"); 
-             return;
+         if (vm.startdate == "" && vm.enddate == "" && vm.email == "" && vm.gender.value == "" && vm.bday.value == "" && vm.agerange.start == "") {  
+            ToastService.Show('No Filter Found', 'Oops! You seem to forget selecting a filter. Kindly select at least 1 filter.'); 
+            return;
          }
-
-         PreloaderService.Display();
+         
+         vm.doneloading_transactions = false;
+         vm.tableParams = TableService.Empty(vm.tableParams);
          QueryService.GetDemographics(vm.startdate, vm.enddate, vm.email, vm.gender.value, vm.bday.value, vm.agerange.start, vm.agerange.end)
              .then( function(result){ 
 
                  if (result[0].response == "Success") {  
-                     vm.tableParams = TableService.CreateTable(result[0].data, vm.tableParams); 
+                     vm.tableParams = TableService.Create(result[0].data, vm.tableParams); 
                  }
-                 else if (result[0].response == "Empty"){
-                     toastr['warning']("Sorry! No data found.", "Empty Data");  
+                 else if (result[0].response == "Empty"){ 
+                     ToastService.Show('No Data Found', 'Oops! It seems there\' no records at the moment');
                  }
-                 PreloaderService.Hide(); 
+                  vm.doneloading_transactions = true;
+                  
              });  
       } 
+
+      function ExportCustomer(){
+         ToastService.Show('Export Successful', '' ); 
+      }
 
       function SelectGender(_gender){
          if (_gender == "Male") { vm.gender = { title: "Male", value: "male"} }
@@ -129,7 +139,7 @@
              case 10: vm.bday = { title: "October", value: 10}; break;
              case 11: vm.bday = { title: "November", value: 11}; break;
              case 12: vm.bday = { title: "December", value: 12}; break;
-             default: vm.bday = { title: "Birth Month", value: 0}; break;
+             default: vm.bday = { title: "Birth Month", value: ""}; break;
          }
       }
 
@@ -146,53 +156,88 @@
 
       function ViewTransactions(ev, data){
 
+         PreloaderService.Display();
          $mdDialog.show({
-           controller: DialogController,
-           templateUrl: 'templates/demographics.tmpl.html',
-           parent: angular.element(document.body),
-           targetEvent: ev,
-           clickOutsideToClose:true,
-           locals : {
+            controller: DialogController,
+            templateUrl: 'templates/demographics.tmpl.html',
+            // templateUrl: 'tabDialog.tmpl.html',
+            parent: angular.element(document.body),
+            targetEvent: ev,
+            clickOutsideToClose:true,
+            locals : {
                  data : data
-             },
-           fullscreen: true
+            },
+            fullscreen: true
          })
-         .then(function(answer) {
-             console.log('You said the information was "' + answer + '".'); 
+         .then(function() {
+             console.log('You said the information was.'); 
          }, function() {
              console.log('You cancelled the dialog.');  
          });
+
+         PreloaderService.Hide();
       }
 
-      function DialogController($scope, $mdDialog, data) { 
-         console.log(data);
-         QueryService.GetCustomerTransactionHistory(data.memberID)
-            .then( function(result){
-               console.log(result);
-               if (result[0].response == "Success") {  
-                  $scope.tableParams = TableService.CreateTable(result[0].data, $scope.tableParams);  
-               }
-               else if (result[0].response == "Empty"){
-                  toastr['warning']("Sorry! No data found.", "Empty Data");  
-               }
-            }); 
-
-         $scope.hide = function() {
-           $mdDialog.hide();
-         };
-
-         $scope.cancel = function() {
-           $mdDialog.cancel();
-         };
-
-         $scope.answer = function(answer) {
-           $mdDialog.hide(answer);
-         };
-      }
+      
         
       Metronic.init(); // init metronic core components
       Layout.init(); // init current layout   
-    } 
+   }
+
+
+   DialogController.$inject = ['$scope', '$mdDialog', 'QueryService', 'TableService', 'data', 'ToastService'];
+   function DialogController($scope, $mdDialog, QueryService, TableService, data, ToastService) { 
+
+      $scope.toggleTransaction = true; // for export flag show/hide
+      $scope.doneloading_transaction = false;
+      $scope.doneloading_profile = false; 
+      $scope.norecordText = "";
+
+
+      QueryService.GetCustomerTransactionHistory(data.memberID)
+         .then( function(result){
+            console.log(result);
+            if (result[0].response == "Success") {  
+               $scope.tableParams = TableService.Create(result[0].data, $scope.tableParams);   
+               $scope.doneloading_transaction = true;
+               console.log(result);
+            }
+            else if (result[0].response == "Empty"){ 
+               $scope.doneloading_transaction = true;
+               $scope.norecordText = "No Records Found";
+            }
+         }); 
+
+      QueryService.GetCustomerDetails(data.email)
+         .then( function(result){
+            console.log(result);
+            if (result[0].response == "Success") {  
+               $scope.customer = result[0].data[0];
+               $scope.doneloading_profile = true;
+            }
+            else if (result[0].response == "Empty"){ ;  
+               $scope.doneloading_profile = true;
+            }
+         });  
+
+      $scope.ToggleTab = function(_tab){
+         $scope.toggleTransaction = (_tab == 'transactions') ? true : false;
+         console.log($scope.toggleTransaction);
+      }
+
+      $scope.hide = function() {
+        $mdDialog.hide();
+      };
+
+      $scope.cancel = function() {
+        $mdDialog.cancel();
+      }; 
+
+      $scope.export = function(){
+         ToastService.Show('Export Successful', '' ); 
+      }
+
+   } 
 
 })();
 

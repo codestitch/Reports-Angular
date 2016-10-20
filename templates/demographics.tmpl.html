@@ -1,8 +1,8 @@
-<md-dialog aria-label="Mango (Fruit)">
+<md-dialog aria-label="Customer Information">
   <form ng-cloak>
-    <md-toolbar>
+    <md-toolbar class="pomegranate">
       <div class="md-toolbar-tools">
-        <h2> Customer Transaction History </h2>
+        <h2>Customer Informations</h2>
         <span flex></span>
         <md-button class="md-icon-button" ng-click="cancel()">
           <md-icon md-svg-src="img/icons/ic_close_24px.svg" aria-label="Close dialog"></md-icon>
@@ -11,40 +11,101 @@
     </md-toolbar>
 
     <md-dialog-content>
-      <div class="md-dialog-content">  
-         <table ng-table="tableParams" class="table" style="    /* border-collapse: collapse;" show-filter="false">
-             <tr ng-repeat="item in $data" class="even">  
-              <td title="'Member ID'" filter="{ memberID: 'text'}" sortable="'memberID'" header-class="'bg-table-header-white-red'">
-               {{item.memberID }}
-              </td> 
-              <td title="'Transaction ID'" filter="{ transactionID: 'text'}" sortable="'transactionID'" header-class="'bg-table-header-white-red'" style="text-align:center;">
-               {{item.transactionID }}
-              </td>  
-              <td title="'Name'" filter="{ name: 'text'}" sortable="'name'" header-class="'bg-table-header-white-red'" style="text-align:center;">
-               {{item.name }}
-              </td>  
-              <td title="'Restaurant'" filter="{ brandName: 'text'}" sortable="'brandName'" header-class="'bg-table-header-white-red'" style="text-align:center;">
-               {{item.brandName }}
-              </td>   
-              <td title="'Branch'" filter="{ branch: 'text'}" sortable="'branch'" header-class="'bg-table-header-white-red'" style="text-align:center;">
-               {{item.branch }}
-              </td>  
-              <td title="'Date'" filter="{ date: 'text'}" sortable="'date'" header-class="'bg-table-header-white-red'" style="text-align:center;">
-               {{item.date }}
-              </td>   
-              <td title="'Points'" filter="{ points: 'text'}" sortable="'points'" header-class="'bg-table-header-white-red'" style="text-align:center;">
-               {{item.points | number }}
-              </td> 
-              <td title="'Amount'" filter="{ amount: 'text'}" sortable="'amount'" header-class="'bg-table-header-white-red'" style="text-align:center;">
-               {{item.amount | number }}
-              </td> 
-             </tr>
-         </table>  
-      </div>
+      <md-tabs md-dynamic-height md-border-bottom>
+
+        <md-tab label="Transaction History" ng-click="ToggleTab('transactions')">
+          <md-content class="md-padding">
+                
+
+                <div layout="row" layout-sm="column" layout-align="space-around" ng-hide="doneloading_transaction">
+                  <md-progress-circular md-mode="indeterminate"></md-progress-circular>
+                </div>
+ 
+                <div class="empty-element" >{{ norecordText }}</div>
+
+                <table ng-table="tableParams" class="table" show-filter="false" ng-show="doneloading_transaction && norecordText =='' ">
+                   <tr ng-repeat="item in $data" class="even">  
+                    <td title="'Member ID'" filter="{ memberID: 'text'}" sortable="'memberID'" header-class="'bg-table-header-white-red'">
+                     {{item.memberID }}
+                    </td> 
+                    <td title="'Transaction ID'" filter="{ transactionID: 'text'}" sortable="'transactionID'" header-class="'bg-table-header-white-red'" style="text-align:center;">
+                     {{item.transactionID }}
+                    </td>  
+                    <td title="'Name'" filter="{ name: 'text'}" sortable="'name'" header-class="'bg-table-header-white-red'" style="text-align:center;">
+                     {{item.name }}
+                    </td>  
+                    <td title="'Restaurant'" filter="{ brandName: 'text'}" sortable="'brandName'" header-class="'bg-table-header-white-red'" style="text-align:center;">
+                     {{item.brandName }}
+                    </td>   
+                    <td title="'Branch'" filter="{ branch: 'text'}" sortable="'branch'" header-class="'bg-table-header-white-red'" style="text-align:center;">
+                     {{item.branch }}
+                    </td>  
+                    <td title="'Date'" filter="{ date: 'text'}" sortable="'date'" header-class="'bg-table-header-white-red'" style="text-align:center;">
+                     {{item.date }}
+                    </td>   
+                    <td title="'Points'" filter="{ points: 'text'}" sortable="'points'" header-class="'bg-table-header-white-red'" style="text-align:center;">
+                     {{item.points | number }}
+                    </td> 
+                    <td title="'Amount'" filter="{ amount: 'text'}" sortable="'amount'" header-class="'bg-table-header-white-red'" style="text-align:center;">
+                     {{item.amount | number }}
+                    </td> 
+                   </tr>
+                </table>  
+
+
+          </md-content>
+        </md-tab>
+        <md-tab label="Details" ng-click="ToggleTab('details')">
+          <md-content class="md-padding"> 
+
+                <md-card style="min-width: 800px;" md-theme-watch>
+                  <md-card-title>
+                    <md-card-title-text>
+                      <span class="md-headline">{{ customer.name }}</span>
+                      <span class="md-subhead">{{ customer.email }}</span>
+                      
+                      <div class="card-info-content">
+                        <label>{{ customer.dateofbirth }}</label>
+                        <p>Birthday</p>  
+                      </div> 
+                      <div class="card-info-content">
+                        <label>{{ customer.gender }}</label>
+                        <p>Gender</p>  
+                      </div> 
+                      <div class="card-info-content">
+                        <label>{{ customer.mobile }}</label>
+                        <p>Mobile</p>  
+                      </div> 
+                      <div class="card-info-content">
+                        <label>{{ customer.qrCard }}</label>
+                        <p>Card No</p>  
+                      </div> 
+                      <div class="card-info-content">
+                        <label>{{ customer.expiration }}</label>
+                        <p>Expiration Date</p>  
+                      </div> 
+                      <div class="card-info-content">
+                        <label>{{ customer.totalpoints }}</label>
+                        <p>Total Points</p>  
+                      </div> 
+
+                    </md-card-title-text>
+                    <md-card-title-media>
+                      <div class="md-media-xl card-media">
+                          <img src="assets/img/logo.png" class="md-card-image" alt="Washed Out">
+                      </div>
+                    </md-card-title-media>
+                  </md-card-title>  
+                </md-card>
+ 
+          </md-content>
+        </md-tab>
+ 
+      </md-tabs>
     </md-dialog-content>
 
-    <md-dialog-actions layout="row">
-      <md-button ng-click="export" md-autofocus>
+    <md-dialog-actions layout="row"> 
+      <md-button ng-click="export()" class="primary" md-autofocus ng-hide="!toggleTransaction">
          Export
       </md-button>
       <span flex></span> 
@@ -52,5 +113,7 @@
         Close
       </md-button>
     </md-dialog-actions>
+
   </form>
+
 </md-dialog>

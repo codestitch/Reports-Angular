@@ -24,6 +24,7 @@
 		service.GetGender = GetGender;
 		service.GetDemographics = GetDemographics; 
       service.GetCustomerTransactionHistory = GetCustomerTransactionHistory;
+      service.GetCustomerDetails = GetCustomerDetails;
 
 		return service;
 
@@ -66,7 +67,7 @@
 
 		function GetDemographics(startdate, enddate, email, gender, birthday, startAge, endAge){  
 			var url = DataLink.report_link+"function=get_userInformation&startDate="+startdate+"&endDate="+enddate
-				+"&email="+email+"&gender="+gender+"&birthday="+birthday+"&startAge="+startAge+"&startAge="+startAge; 
+				+"&email="+email+"&gender="+gender+"&birthday="+birthday+"&startAge="+startAge+"&endAge="+endAge; 
          return $http.get(url).then(handleSuccess, handleError);
 		}   
 
@@ -74,6 +75,12 @@
          var url = DataLink.report_link+"function=get_customerTransactionHistory&memberID="+memberID; 
          return $http.get(url).then(handleSuccess, handleError);
       }
+
+      function GetCustomerDetails(email){
+         var url = DataLink.report_link+"function=get_customerProfileDetail&email="+email; 
+         return $http.get(url).then(handleSuccess, handleError);
+      }
+
 
 
 		// private functions

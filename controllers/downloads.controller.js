@@ -5,8 +5,8 @@
         .module('app')
         .controller('DownloadController', DownloadController);
 
-    DownloadController.$inject = ['$rootScope', 'QueryService', 'ChartService'];
-    function DownloadController($rootScope, QueryService, ChartService) {
+    DownloadController.$inject = ['$rootScope', 'QueryService', 'ChartService', 'PreloaderService'];
+    function DownloadController($rootScope, QueryService, ChartService, PreloaderService) {
         var vm = this;
 
         // Variables
@@ -66,6 +66,8 @@
 
         // Private functions
         function GetDateToday(){
+            PreloaderService.Display();
+
             var d = new Date();
             var month = d.getMonth();
             var montharray = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
@@ -75,6 +77,7 @@
 
             SelectYearlyDownload();
             SelectMonthlyDownload();
+            PreloaderService.Hide(); 
         }
 
  

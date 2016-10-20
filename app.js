@@ -6,64 +6,75 @@
         .config(config)
         .run(run); 
 
-    config.$inject = ['$routeProvider', '$locationProvider'];
-    function config($routeProvider, $locationProvider) {
+    config.$inject = ['$routeProvider', '$locationProvider', '$mdThemingProvider'];
+    function config($routeProvider, $locationProvider, $mdThemingProvider) {
         $routeProvider
             .when('/', {
+                cache: false,
+                cache: false,
                 controller: 'DownloadController',
                 templateUrl: 'views/downloads.view.html',
                 activetab: 'downloads',
                 controllerAs: 'vm'
             })
             .when('/registration', {
+                cache: false,
                 controller: 'RegistrationController',
                 templateUrl: 'views/registration.view.html',
                 activetab: 'registration',
                 controllerAs: 'vm'
             })
             .when('/demographics', {
+                cache: false,
                 controller: 'DemographicsController',
                 templateUrl: 'views/demographics.view.html',
                 activetab: 'demographics',
                 controllerAs: 'vm'
             })
             .when('/sales', { 
+                cache: false,
                 controller: 'SalesController',
                 templateUrl: 'views/sales.view.html',
                 activetab: 'sales',
                 controllerAs: 'vm'
             })
             .when('/spend', { 
+                cache: false,
                 controller: 'SpendController',
                 templateUrl: 'views/spend.view.html',
                 activetab: 'spend',
                 controllerAs: 'vm'
             })
             .when('/branches', { 
+                cache: false,
                 controller: 'BranchesController',
                 templateUrl: 'views/branches.view.html',
                 activetab: 'branches',
                 controllerAs: 'vm'
             })
             .when('/customers', { 
+                cache: false,
                 controller: 'DustomersController',
                 templateUrl: 'views/customers.view.html',
                 activetab: 'customers',
                 controllerAs: 'vm'
             })
             .when('/vouchers', { 
+                cache: false,
                 controller: 'VouchersController',
                 templateUrl: 'views/vouchers.view.html',
                 activetab: 'vouchers',
                 controllerAs: 'vm'
             })
             .when('/redemption', { 
+                cache: false,
                 controller: 'RedemptionController',
                 templateUrl: 'views/redemption.view.html',
                 activetab: 'redemption',
                 controllerAs: 'vm'
             })
             .when('/home', { 
+                cache: false,
                 controller: 'HomeController',
                 templateUrl: 'views/home.view.html',
                 activetab: 'home',
@@ -71,12 +82,14 @@
             })
 
             .when('/login', {
+                cache: false,
                 controller: 'LoginController',
                 templateUrl: 'views/login.view.html',
                 controllerAs: 'vm'
             })
 
             .when('/register', {
+                cache: false,
                 controller: 'RegisterController',
                 templateUrl: 'views/register.view.html',
                 controllerAs: 'vm'
@@ -85,6 +98,17 @@
             .otherwise({ redirectTo: '/' });
 
             // $locationProvider.html5Mode(true);
+         
+        var pomegranate = $mdThemingProvider.extendPalette('red', {
+            '500': '#c0392b'
+        });
+ 
+        // Register the new color palette map with the name <code>neonRed</code>
+        $mdThemingProvider.definePalette('pomegranate', pomegranate);
+
+        // Use that theme for the primary intentions
+        $mdThemingProvider.theme('default')
+            .primaryPalette('pomegranate');
     }
 
     run.$inject = ['$rootScope', '$location', '$cookieStore', '$http', '$route'];

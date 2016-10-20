@@ -172,7 +172,7 @@
 
 			$filteredqry .= " AND activation IS NULL";
 			
-			$sql = $filteredqry; 
+			$sql = $filteredqry;  
 			
  			break;
 
@@ -183,8 +183,15 @@
 						from earntable e inner join memberstable m on e.memberid = m.memberid
 						where e.memberid = '".$memberID."' ";
 						
- 			break;
+ 			break; 
 
+ 		case 'get_customerProfileDetail':
+ 			
+ 			$sql = "SELECT memberID, image, email, concat(fname, ' ', lname) as name, address1 as address, DATE_FORMAT(dateofbirth, '%d-%M-%Y') as 'dateofbirth' , gender as gender, 
+					mobilenum as mobile, totalpoints, DATE_FORMAT(expiration, '%d-%M-%Y') as expiration, qrCard
+					from memberstable where `email` = '" . $email. "'";
+
+ 			break; 
 
 
 
@@ -600,14 +607,6 @@
 		
 
  		
-
- 		case 'get_customerProfileDetail':
- 			
- 			$sql = "SELECT memberID, image, email, concat(fname, ' ', lname) as name, address1 as address, DATE_FORMAT(dateofbirth, '%d-%M-%Y') as 'dateofbirth' , gender as gender, 
-					mobilenum as mobile, totalpoints, DATE_FORMAT(expiration, '%d-%M-%Y') as expiration, qrCard
-					from memberstable where `email` = '" . $email. "'";
-
- 			break; 
 
 
 		/********** JSON **********/
