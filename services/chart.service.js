@@ -45,6 +45,7 @@
 			});
       }
 
+
       function CreateLineChart_Multiple (chartname, data, categoryField, graphconfig){
       	return AmCharts.makeChart(chartname, {
 	         "theme": "light",

@@ -21,6 +21,7 @@
       vm.platform = { android: "", ios: "", web: ""}; 
       vm.gendercount = { male: 0, female: 0};
 
+      vm.totalrecord = 0;
       vm.doneloading_transactions = true; // preloader
 
       // Access Functions
@@ -32,16 +33,7 @@
 
       vm.ViewTransactions = ViewTransactions; 
         
-      $('#reportrange').daterangepicker({
-         locale: {
-            format: 'YYYY-MM-DD'
-         }
-      },
-      function(start, end, label) { 
-         vm.startdate = start.format('YYYY/MM/DD');
-         vm.enddate =  end.format('YYYY/MM/DD');
-         $('#reportrange span').html(start.format('MMMM D, YYYY') + ' - ' + end.format('MMMM D, YYYY'));
-      });  
+      
 
       
       // Initialization
@@ -104,12 +96,13 @@
          QueryService.GetDemographics(vm.startdate, vm.enddate, vm.email, vm.gender.value, vm.bday.value, vm.agerange.start, vm.agerange.end)
              .then( function(result){ 
 
-                 if (result[0].response == "Success") {  
+                  if (result[0].response == "Success") {  
                      vm.tableParams = TableService.Create(result[0].data, vm.tableParams); 
-                 }
-                 else if (result[0].response == "Empty"){ 
+                     vm.totalrecord = result[0].data.length;
+                  }
+                  else if (result[0].response == "Empty"){ 
                      ToastService.Show('No Data Found', 'Oops! It seems there\' no records at the moment');
-                 }
+                  }
                   vm.doneloading_transactions = true;
                   
              });  
@@ -178,7 +171,16 @@
          PreloaderService.Hide();
       }
 
-      
+      $('#reportrange').daterangepicker({
+         locale: {
+            format: 'YYYY-MM-DD'
+         }
+      },
+      function(start, end, label) { 
+         vm.startdate = start.format('YYYY/MM/DD');
+         vm.enddate =  end.format('YYYY/MM/DD');
+         $('#reportrange span').html(start.format('MMMM D, YYYY') + ' - ' + end.format('MMMM D, YYYY'));
+      });  
         
       Metronic.init(); // init metronic core components
       Layout.init(); // init current layout   

@@ -9,10 +9,10 @@
 	
 	require_once('../../php/api/cipher/cipher.class.php');
 	require_once('../../php/api/settings/config.php');
-	$path = PATH."reports.php"; 
+	// $path = PATH."reports.php"; 
 
-	// $path = str_replace("/reports/php", "", PATH)."reports.php"; 
-	$data = [];
+	$path = str_replace("/reports/php", "", PATH)."reports.php"; 
+	$data = "[]";
 
 
 	if ($_SERVER['REQUEST_METHOD'] == 'POST')

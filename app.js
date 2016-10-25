@@ -6,8 +6,8 @@
         .config(config)
         .run(run); 
 
-    config.$inject = ['$routeProvider', '$locationProvider', '$mdThemingProvider'];
-    function config($routeProvider, $locationProvider, $mdThemingProvider) {
+    config.$inject = ['$routeProvider', '$locationProvider', '$mdThemingProvider', '$httpProvider'];
+    function config($routeProvider, $locationProvider, $mdThemingProvider, $httpProvider) {
         $routeProvider
             .when('/', {
                 cache: false,
@@ -86,19 +86,15 @@
                 controller: 'LoginController',
                 templateUrl: 'views/login.view.html',
                 controllerAs: 'vm'
-            })
-
-            .when('/register', {
-                cache: false,
-                controller: 'RegisterController',
-                templateUrl: 'views/register.view.html',
-                controllerAs: 'vm'
-            })
+            }) 
 
             .otherwise({ redirectTo: '/' });
 
             // $locationProvider.html5Mode(true);
-         
+        
+        $httpProvider.defaults.useXDomain = true;
+        delete $httpProvider.defaults.headers.common['X-Requested-With'];
+
         var pomegranate = $mdThemingProvider.extendPalette('red', {
             '500': '#c0392b'
         });

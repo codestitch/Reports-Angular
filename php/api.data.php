@@ -247,7 +247,7 @@
                    
 			break;
 
-		case 'get_cardregistration':
+		case 'get_cardregistration_summary':
 			
 			$sql = "SELECT  b.name, l.name as 'branch', SUM(IF(m.activation IS NULL, 1, 0)) AS registered, SUM(IF(m.activation IS NOT NULL, 1, 0)) AS notactivated, SUM(IF(m.activation IS NULL, 2500, 0)) AS cardsales 
 			 FROM memberstable m INNER JOIN loctable l ON m.locid = l.locid
@@ -344,7 +344,7 @@
 
 			break;  
 
-		case 'get_salesreportsummary': 
+		case 'get_salessummary': 
 
 			$sql = "SELECT tmp.brandname, tmp.locname, COUNT(DISTINCT(tmp.memberid)) AS totalMember, SUM(tmp.amount) AS totalAmount, 
                      COUNT(tmp.transactionid) AS totalTransaction
@@ -360,7 +360,7 @@
 
 			break;  
 
-		case 'get_salesreporthourly':
+		case 'get_salesperhourly':
   
 			$sql = "SELECT DATE(tmp.dateAdded) as dateAdded, DATE_FORMAT(tmp.dateAdded, '%H:00:00') AS Hour, COUNT(DISTINCT(tmp.memberid)) AS 'MembersCount',
 					SUM(tmp.amount) AS 'TotalLoyaltySales', COUNT(tmp.transactionid) AS 'TotalTransactions'
@@ -376,7 +376,7 @@
 
 			break; 
 
-		case 'get_salesreportmembers':
+		case 'get_salesperbranch':
  
 			$sql = "SELECT tmp.memberid, tmp.email, SUM(tmp.amount) as amount
 						FROM
@@ -610,16 +610,19 @@
 
 
 		/********** JSON **********/
- 		case 'getLocation':
+ 		case 'gettablerecords':
+ 
+			$sql = "SELECT DISTINCT * from ".$table." ORDER BY name ASC";    
+
+			break;
+
+		case 'getrecord':
 
  			if ($table == 'loctable') {
 				$sql = "SELECT DISTINCT * from ".$table." WHERE `brandID` = '" . $brandID. "' ORDER BY name ASC";  
  			}
- 			else if($table == 'brandtable'){
-				$sql = "SELECT DISTINCT * from ".$table." ORDER BY name ASC";   				
- 			}
 
-			break;
+ 			break;
 	}
 
 	// If not empty

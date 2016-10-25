@@ -21,6 +21,14 @@
 /***
 Red Pomegranate
 ***/
+
+.label-red-pomegranate {
+  background-color: #c0392b;
+}
+.label-red-pomegranate[href]:hover, .label-red-pomegranate[href]:focus {
+  background-color: #c0392b;
+}
+
 /* Button */
 .red-pomegranate.btn {
   color: #FFFFFF;

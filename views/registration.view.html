@@ -15,21 +15,20 @@
                      <h4 class="widget-thumb-heading">Card Registration Overview</h4> 
                      <div class="widget-tools"> 
                        <div class="btn-group btn-group-devided pull-right" data-toggle="buttons">
-                         <label class="btn btn-transparent grey-salsa btn-circle btn-sm active" ng-click="GetDaily()">
+                         <label class="btn btn-transparent grey-salsa btn-circle btn-sm active" ng-click="vm.GetOverview('daily')">
                          <input type="radio" name="options" class="toggle">Daily</label>
-                         <label class="btn btn-transparent grey-salsa btn-circle btn-sm" ng-click="GetWeekly()">
+                         <label class="btn btn-transparent grey-salsa btn-circle btn-sm" ng-click="vm.GetOverview('weekly')">
                          <input type="radio" name="options" class="toggle">Weekly</label>
-                         <label class="btn btn-transparent grey-salsa btn-circle btn-sm" ng-click="GetMonthly()">
+                         <label class="btn btn-transparent grey-salsa btn-circle btn-sm" ng-click="vm.GetOverview('monthly')">
                          <input type="radio" name="options" class="toggle">Monthly</label>
-                         <label class="btn btn-transparent grey-salsa btn-circle btn-sm" ng-click="GetQuarterly()">
+                         <label class="btn btn-transparent grey-salsa btn-circle btn-sm" ng-click="vm.GetOverview('quarterly')">
                          <input type="radio" name="options" class="toggle">Quarterly</label>
-                         <label class="btn btn-transparent grey-salsa btn-circle btn-sm" ng-click="GetYearly()">
+                         <label class="btn btn-transparent grey-salsa btn-circle btn-sm" ng-click="vm.GetOverview('yearly')">
                          <input type="radio" name="options" class="toggle">Yearly</label>
                        </div>  
                      </div>
 
-                  </div>
-                  
+                  </div> 
 
                   <div class="widget-body">
                     
@@ -42,7 +41,7 @@
                             </div>
                             <div class="details">
                               <div class="number">
-                                {{ (spent.activatedCard == '' ) ? 0 : spent.activatedCard }}
+                                {{ (vm.spent.activatedCard == '' ) ? 0 : vm.spent.activatedCard }}
                               </div>
                               <div class="desc">
                                  Activated Card
@@ -59,7 +58,7 @@
                             </div>
                             <div class="details">
                               <div class="number"> 
-                                ₱ {{ (spent.cardSales == '' ) ? 0 : spent.cardSales }}
+                                ₱ {{ (vm.spent.cardSales == '' ) ? 0 : vm.spent.cardSales }}
                               </div>
                               <div class="desc">
                                 Card Sales
@@ -76,7 +75,7 @@
                             </div>
                             <div class="details">
                               <div class="number"> 
-                                 {{ (spent.unactivatedCard == '' ) ? 0 : spent.unactivatedCard }}
+                                 {{ (vm.spent.unactivatedCard == '' ) ? 0 : vm.spent.unactivatedCard }}
                               </div>
                               <div class="desc">
                                 Not Activated Card
@@ -93,7 +92,7 @@
                             </div>
                             <div class="details">
                               <div class="number"> 
-                                {{ (spent.expiredCard == '' ) ? 0 : spent.expiredCard }}
+                                {{ (vm.spent.expiredCard == '' ) ? 0 : vm.spent.expiredCard }}
                               </div>
                               <div class="desc">
                                 Expired Card
@@ -112,6 +111,172 @@
                <!-- END WIDGET THUMB -->
            </div> 
        	</div> 
+         <!-- END OVERVIEW -->
+
+
+         <!-- START PORTLET -->
+         <div class="portlet light">
+
+            <div class="portlet-title">
+               <div class="caption">
+                   <i class="icon-bar-chart font-dark hide"></i>
+                   <span class="caption-subject font-dark bold uppercase">Card Registration Summary</span> 
+               </div>
+               <div class="actions">
+                  <div class="btn-group btn-group-devided" data-toggle="buttons">  
+                  <a ng-click="vm.GetRegistrationSummary()" class="btn btn-lg red-pomegranate"> <i class="fa fa-search"></i> Search </a>
+                  <a ng-click="vm.ExportRegistrationSummary()" class="btn btn-lg red-pomegranate"> <i class="fa fa-cloud-download"></i> Export </a> 
+                  </div>
+               </div>
+            </div>
+            <div class="portlet-body">  
+
+               <div class="row"> 
+                  <div class="col-md-12">  
+                  
+                     <div id="summarydate" class="pull-left calendar-style " >
+                       <i class="glyphicon glyphicon-calendar fa fa-calendar"></i>&nbsp;
+                       <span>Select Date</span> <b class="caret"></b>
+                     </div>   
+
+                  </div>   
+
+                  <div class="col-md-12">  
+
+                     <div class="record-label"> 
+                     Total Records: <span class="label label-red-pomegranate">
+                        {{vm.totalrecord.summary | number}} </span>
+                     </div>
+       
+                     <div class="table-responsive">
+                        <table ng-table="vm.tableParams" class="table" show-filter="false">
+                           <tr ng-repeat="item in $data" class="even">
+                             <td title="'Restaurant'" filter="{ name: 'text'}" sortable="'name'" header-class="'bg-table-header-white-red'"> 
+                                {{ item.name }}
+                             </td>
+                             <td title="'Branch'" filter="{ branch: 'text'}" sortable="'branch'" header-class="'bg-table-header-white-red'" style="text-align:center;">
+                                 {{ item.branch }}
+                             </td>  
+                             <td title="'Total Activated'" filter="{ registered: 'number'}" sortable="'registered'" header-class="'bg-table-header-white-red'" style="text-align:center;">
+                                 <span> {{ item.registered | number }} </span>
+                             </td> 
+                             <td title="'Total Not Activated'" filter="{ notactivated: 'number'}" sortable="'notactivated'" header-class="'bg-table-header-white-red'" style="text-align:center;">
+                                 <span > {{ item.notactivated | number}} </span>
+                             </td> 
+                             <td title="'Total Sales'" filter="{ cardsales: 'number'}" sortable="'cardsales'" header-class="'bg-table-header-white-red'" style="text-align:center;">
+                                 <span class="bold theme-font"> ₱ {{ item.cardsales | number}} </span>
+                             </td>   
+                           </tr>  
+                        </table>  
+                     </div>  
+
+                      <div layout="row" layout-sm="column" layout-align="space-around" ng-hide="vm.preloader.summary">
+                          <md-progress-circular md-mode="indeterminate"></md-progress-circular>
+                       </div>  
+                  </div> 
+               </div>  
+                
+           </div>
+
+         </div>
+        <!-- END PORTLET --> 
+
+
+         <!-- START PORTLET -->
+         <div class="portlet light">
+
+            <div class="portlet-title">
+               <div class="caption">
+                   <i class="icon-bar-chart font-dark hide"></i>
+                   <span class="caption-subject font-dark bold uppercase">Card Registration History</span> 
+               </div>
+               <div class="actions">
+                  <div class="btn-group btn-group-devided" data-toggle="buttons">  
+                  <a ng-click="vm.GetRegistrationHistory()" class="btn btn-lg red-pomegranate"> <i class="fa fa-search"></i> Search </a>
+                  <a ng-click="vm.ExportRegistrationHistory()" class="btn btn-lg red-pomegranate"> <i class="fa fa-cloud-download"></i> Export </a> 
+                  </div>
+               </div>
+            </div>
+            <div class="portlet-body">  
+
+               <div class="row"> 
+                  <div class="col-md-12">  
+                  
+                     <div id="historydate" class="pull-left calendar-style " >
+                       <i class="glyphicon glyphicon-calendar fa fa-calendar"></i>&nbsp;
+                       <span>Select Date</span> <b class="caret"></b>
+                     </div>    
+
+                     <div class="btn-group btn-group-devided  pull-right" data-toggle="buttons">
+                        <label class="btn btn-transparent grey-salsa btn-circle btn-sm active" ng-click="vm.GetHistoryStatus('active')">
+                        <input type="radio" name="historystatus" class="toggle" value="active">Active</label>
+                        <label class="btn btn-transparent grey-salsa btn-circle btn-sm" ng-click="vm.GetHistoryStatus('inactive')">
+                        <input type="radio" name="historystatus" class="toggle" value="inactive">Inactive</label>
+                        <label class="btn btn-transparent grey-salsa btn-circle btn-sm" ng-click="vm.GetHistoryStatus('expired')">
+                        <input type="radio" name="historystatus" class="toggle" value="expired">Expired</label> 
+                     </div> 
+
+                  </div>   
+
+                  <div class="col-md-12">  
+
+                     <div class="record-label"> 
+                     Total Records: <span class="label label-red-pomegranate">
+                        {{vm.totalrecord.history | number}} </span>
+                     </div>
+       
+                     <div class="table-responsive">
+                        <table ng-table="vm.tableParams_history" class="table-scrollable" show-filter="false">
+                           <tr ng-repeat="item in $data" class="even">
+                              <td title="'Customer'" filter="{ email: 'text'}" sortable="'email'" header-class="'bg-table-header-white-red'"> 
+                                 <img ng-if="item.image != ''" src="{{ item.image }}" width="20%" class="imgcircle" onError="this.src='assets/img/logo.png';">
+                                 <img ng-if="item.image == ''" src="assets/img/logo.png" width="20%" class="imgcircle"> 
+                                 {{ item.email }}
+                              </td> 
+                              <td title="'Card No.'" filter="{ qrcard: 'text'}" sortable="'qrcard'" header-class="'bg-table-header-white-red'" style="text-align:center;">
+                                 {{ item.qrcard }}
+                              </td>  
+                              <td title="'Birthday'" filter="{ dateofbirth: 'text'}" sortable="'dateofbirth'" header-class="'bg-table-header-white-red'" style="text-align:center;">
+                                 <span > {{ item.dateofbirth }} </span>
+                              </td> 
+                              <td title="'Gender'" filter="{ gender: 'text'}" sortable="'gender'" header-class="'bg-table-header-white-red'" style="text-align:center;">
+                                 <span > {{ item.gender }} </span>
+                              </td> 
+                              <td title="'Date Registered'" filter="{ datereg: 'text'}" sortable="'datereg'" header-class="'bg-table-header-white-red'" style="text-align:center;">
+                                 <span > {{ item.datereg }} </span>
+                              </td> 
+                              <td title="'Expiration'" filter="{ expiration: 'text'}" sortable="'expiration'" header-class="'bg-table-header-white-red'" style="text-align:center;">
+                                 <span > {{ item.expiration }} </span>
+                              </td>  
+                              <td title="'Server Name'" filter="{ servername: 'text'}" sortable="'servername'" header-class="'bg-table-header-white-red'" style="text-align:center;">
+                                 <span > {{ item.servername }} </span>
+                              </td> 
+                              <td title="'Total Points'" filter="{ totalpoints: 'number'}" sortable="'totalpoints'" header-class="'bg-table-header-white-red'" style="text-align:center;">
+                                 <span > {{ item.totalpoints | number}} </span>
+                              </td> 
+                              <td title="'Last Transaction'" filter="{ lasttransaction: 'text'}" sortable="'lasttransaction'" header-class="'bg-table-header-white-red'" style="text-align:center;">
+                                 <span > {{ item.lasttransaction }} </span>
+                              </td>    
+                              <td title="'Restaurant'" filter="{ restaurant: 'text'}" sortable="'restaurant'" header-class="'bg-table-header-white-red'" style="text-align:center;">
+                                 <span > {{ item.restaurant}} </span>
+                              </td>   
+                              <td title="'Branch'" filter="{ branch: 'text'}" sortable="'branch'" header-class="'bg-table-header-white-red'" style="text-align:center;">
+                                 <span > {{ item.branch}} </span>
+                              </td>   
+                           </tr>  
+                        </table>  
+                     </div>  
+
+                     <div layout="row" layout-sm="column" layout-align="space-around" ng-hide="vm.preloader.history">
+                        <md-progress-circular md-mode="indeterminate"></md-progress-circular>
+                     </div>  
+                  </div> 
+               </div>  
+                
+           </div>
+           
+         </div>
+        <!-- END PORTLET --> 
 
 
       </div>

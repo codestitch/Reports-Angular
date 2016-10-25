@@ -185,65 +185,62 @@
 									</ul>
 								</div> 				
 							</div> 
+
+
 						</div>   
 
-						<div class="col-md-12">  
+						<div class="col-md-12">   
 
-							<table ng-table="vm.tableParams" class="table" show-filter="false">
-								<tr ng-repeat="item in $data" class="even">
-						        	  <td title="'Email'" filter="{ email: 'text'}" sortable="'email'" header-class="'bg-table-header-white-red'"> 
-											<img ng-if="item.image != ''" src="{{ item.image }}" width="20%" class="imgcircle" onError="this.src='assets/img/logo.png';">
-											<img ng-if="item.image == ''" src="assets/img/logo.png" width="20%" class="imgcircle">  
-							        	{{item.email}}
-							        </td>
-							        <td title="'Name'" filter="{ lname: 'text'}" sortable="'lname'" header-class="'bg-table-header-white-red'" style="text-align:center;">
-							        		<div ng-if="item.lname == '' &&  item.fname == ''  &&  item.mname == '' "></div>
-							        		<div ng-if="item.lname != '' ||  item.fname != ''  ||  item.mname != '' ">
-							        			{{ item.name }}
-							        		</div> 
-							        </td>
-							        <td title="'Birthday'" filter="{ dateOfBirth: 'text'}" sortable="'dateOfBirth'" header-class="'bg-table-header-white-red'" style="text-align:center;">
-							        		<span ng-if="item.dateofbirth != '0000-00-00' ">{{item.dateofbirth  | date : 'longDate' }}</span>
-							        		<span ng-if="item.dateofbirth == '0000-00-00' "> </span>
-							        </td> 
-							        <td title="'Gender'" filter="{ gender: 'text'}" sortable="'gender'" header-class="'bg-table-header-white-red'" style="text-align:center;">
-							        	{{item.gender }}
-							        </td>  
-							        <td title="'Mobile No.'" filter="{ mobileNum: 'text'}" sortable="'mobileNum'" header-class="'bg-table-header-white-red'" style="text-align:center;">
-							        	{{item.mobileNum }}
-							        </td>   
-							        <td title="'Points'" filter="{ totalPoints: 'text'}" sortable="'totalPoints'" header-class="'bg-table-header-white-red'" style="text-align:center;">
-							        	{{item.totalPoints  | number}}
-							        </td>   
-							        <td title="'Card No.'" filter="{ qrCard: 'text'}" sortable="'qrCard'" header-class="'bg-table-header-white-red'" style="text-align:center;">
-							        	{{item.qrCard }}
-							        </td>   
-							        <td title="'Card Expiration'" filter="{ expiration: 'text'}" sortable="'expiration'" header-class="'bg-table-header-white-red'" style="text-align:center;">
-							        	{{item.expiration | date : 'longDate' }}
-							        </td>     
-							        <td title="'Action'"  header-class="'bg-table-header-white-red'" style="text-align:center;"> 
-							        		<md-button class="md-fab md-mini red-pomegranate" aria-label="Use Android" ng-click="vm.ViewTransactions($event, item)"> 
-										     	<i class="fa fa-bars"></i>
-										   </md-button>    
-							        </td>
-							   </tr>  
-							</table>    
+							<div class="record-label"> 
+							Total Records: <span class="label label-red-pomegranate">
+								{{vm.totalrecord | number}} </span>
+							</div>
+
+               		<div class="table-responsive">
+								<table ng-table="vm.tableParams" class="table" show-filter="false">
+									<tr ng-repeat="item in $data" class="even">
+							        	  <td title="'Email'" filter="{ email: 'text'}" sortable="'email'" header-class="'bg-table-header-white-red'"> 
+												<img ng-if="item.image != ''" src="{{ item.image }}" width="20%" class="imgcircle" onError="this.src='assets/img/logo.png';">
+												<img ng-if="item.image == ''" src="assets/img/logo.png" width="20%" class="imgcircle">  
+								        	{{item.email}}
+								        </td>
+								        <td title="'Name'" filter="{ lname: 'text'}" sortable="'lname'" header-class="'bg-table-header-white-red'" style="text-align:center;">
+								        		<div ng-if="item.lname == '' &&  item.fname == ''  &&  item.mname == '' "></div>
+								        		<div ng-if="item.lname != '' ||  item.fname != ''  ||  item.mname != '' ">
+								        			{{ item.name }}
+								        		</div> 
+								        </td>
+								        <td title="'Birthday'" filter="{ dateOfBirth: 'text'}" sortable="'dateOfBirth'" header-class="'bg-table-header-white-red'" style="text-align:center;">
+								        		<span ng-if="item.dateofbirth != '0000-00-00' ">{{item.dateofbirth  | date : 'longDate' }}</span>
+								        		<span ng-if="item.dateofbirth == '0000-00-00' "> </span>
+								        </td> 
+								        <td title="'Gender'" filter="{ gender: 'text'}" sortable="'gender'" header-class="'bg-table-header-white-red'" style="text-align:center;">
+								        	{{item.gender }}
+								        </td>  
+								        <td title="'Mobile No.'" filter="{ mobileNum: 'text'}" sortable="'mobileNum'" header-class="'bg-table-header-white-red'" style="text-align:center;">
+								        	{{item.mobileNum }}
+								        </td>   
+								        <td title="'Points'" filter="{ totalPoints: 'text'}" sortable="'totalPoints'" header-class="'bg-table-header-white-red'" style="text-align:center;">
+								        	{{item.totalPoints  | number}}
+								        </td>   
+								        <td title="'Card No.'" filter="{ qrCard: 'text'}" sortable="'qrCard'" header-class="'bg-table-header-white-red'" style="text-align:center;">
+								        	{{item.qrCard }}
+								        </td>   
+								        <td title="'Card Expiration'" filter="{ expiration: 'text'}" sortable="'expiration'" header-class="'bg-table-header-white-red'" style="text-align:center;">
+								        	{{item.expiration | date : 'longDate' }}
+								        </td>     
+								        <td title="'Action'"  header-class="'bg-table-header-white-red'" style="text-align:center;"> 
+								        		<md-button class="md-fab md-mini red-pomegranate" aria-label="Use Android" ng-click="vm.ViewTransactions($event, item)"> 
+											     	<i class="fa fa-bars"></i>
+											   </md-button>    
+								        </td>
+								   </tr>  
+								</table>    
+							</div>
 
 				      	<div layout="row" layout-sm="column" layout-align="space-around" ng-hide="vm.doneloading_transactions">
 				            <md-progress-circular md-mode="indeterminate"></md-progress-circular>
-				         </div> 
-
-							<!-- <md-button class="primary"> Button </md-button>
-							<md-button class="md-fab md-mini red-pomegranate" aria-label="Use Android"> 
-						     	<i class="fa fa-bars"></i>
-						   </md-button>   
-							<md-button class="amazingPaletteName"> Button </md-button>
-							<md-button class="primary"> Button </md-button>
-
-							<md-button class="md-fab md-mini red-pomegranate" aria-label="Use Android" ng-click="vm.ViewTransactions($event, item)"> 
-										     	<i class="fa fa-bars"></i>
-										   </md-button>   -->
-							
+				         </div>  
 
 						</div> 
 					</div>  
