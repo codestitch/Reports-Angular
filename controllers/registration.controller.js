@@ -3,10 +3,11 @@
 
    angular
       .module('app')
-      .controller('RegistrationController', RegistrationController);
+      .controller('RegistrationController', RegistrationController)
+      .controller('ExportRegistrationCtrl', ExportRegistrationCtrl);
 
-   RegistrationController.$inject = ['$rootScope', 'PreloaderService', 'QueryService', 'ChartService', 'TableService', 'ToastService', '$mdDialog', '$scope' ];
-   function RegistrationController($rootScope, PreloaderService, QueryService, ChartService, TableService, ToastService, $mdDialog, $scope) {
+   RegistrationController.$inject = ['$rootScope', 'PreloaderService', 'QueryService', 'ChartService', 'TableService', 'ToastService', '$mdDialog', '$scope', 'ExportToastService' ];
+   function RegistrationController($rootScope, PreloaderService, QueryService, ChartService, TableService, ToastService, $mdDialog, $scope, ExportToastService) {
       var vm = this; 
         
       // Variables  
@@ -22,6 +23,7 @@
          summary: true,
          history: true
       };  
+      vm.exportingprogress = false; 
 
       // Access Functions 
       vm.GetOverview = GetOverview; 
@@ -111,15 +113,18 @@
 
          vm.preloader.summary = false;
          vm.tableParams = TableService.Empty(vm.tableParams);
-         QueryService.GetCardRegistration_Summary()
+         QueryService.GetCardRegistration_Summary(vm.daterange.summary.start, vm.daterange.summary.end)
             .then( function(result){ 
                if (result[0].response == "Success") {  
                   vm.tableParams = TableService.Create(result[0].data, vm.tableParams); 
                   vm.totalrecord.summary = result[0].data.length;  
                }
                else if (result[0].response == "Empty"){ 
-                  ToastService.Show('No Data Found', 'Oops! It seems there\' no records at the moment');
+                  ToastService.Show('No Data Found', 'Oops! It seems that there\'s no existing record at the moment');
                }
+               else{
+                  ToastService.Show('Something went wrong', result); 
+               } 
                vm.preloader.summary = true;
             }); 
       }
@@ -134,7 +139,6 @@
       }
 
       function GetRegistrationHistory(){  
-
          if (vm.daterange.history.start == "" && vm.daterange.history.end == "") {  
             ToastService.Show('No Date Range Specified', 'Oops! Don\'t forget to specify a date'); 
             return;
@@ -151,8 +155,11 @@
                         vm.totalrecord.history = result[0].data.length;  
                      }
                      else if (result[0].response == "Empty"){ 
-                        ToastService.Show('No Data Found', 'Oops! It seems there\' no records at the moment');
+                        ToastService.Show('No Data Found', 'Oops! It seems that there\'s no existing record at the moment');
                      }
+                     else{
+                        ToastService.Show('Something went wrong', result); 
+                     } 
                      vm.preloader.history = true;
                   });
                break;
@@ -165,8 +172,11 @@
                         vm.totalrecord.history = result[0].data.length;  
                      }
                      else if (result[0].response == "Empty"){ 
-                        ToastService.Show('No Data Found', 'Oops! It seems there\' no records at the moment');
+                        ToastService.Show('No Data Found', 'Oops! It seems that there\'s no existing record at the moment');
                      }
+                     else{
+                        ToastService.Show('Something went wrong', result); 
+                     } 
                      vm.preloader.history = true;
                   });
                break;
@@ -179,22 +189,99 @@
                         vm.totalrecord.history = result[0].data.length;  
                      }
                      else if (result[0].response == "Empty"){ 
-                        ToastService.Show('No Data Found', 'Oops! It seems there\' no records at the moment');
+                        ToastService.Show('No Data Found', 'Oops! It seems that there\'s no existing record at the moment');
                      }
+                     else{
+                        ToastService.Show('Something went wrong', result); 
+                     } 
                      vm.preloader.history = true;
                   });
                break;
-         }
-
-
+         } 
       }
 
  
-      function ExportRegistrationSummary(){
+      function ExportRegistrationSummary(ev){
+
+         if (!vm.exportingprogress) {
+
+            if (vm.daterange.summary.start == "" && vm.daterange.summary.end == "") {  
+               ToastService.Show('No Date Range Specified', 'Oops! Don\'t forget to specify a date'); 
+               return;
+            }
+            var _data = { 'start': vm.daterange.summary.start, 'end': vm.daterange.summary.end, 'mode': 'summary'};
+
+            var confirm = $mdDialog.confirm()
+                   .title('Would you like to export searched data?')
+                   .textContent('Allows you to see the raw data you\'ve searched for.')
+                   .ariaLabel('Lucky day')
+                   .targetEvent(ev)
+                   .ok('Yes Please')
+                   .cancel('Nope');
+
+            $mdDialog.show(confirm).then(function() { 
+               
+               vm.exportingprogress = true;  
+               ExportToastService.Init(_data, 'ExportRegistrationCtrl').then(
+                  function(resolve) {  
+                     ToastService.Show('Export Successful', '');
+                     vm.exportingprogress = false; 
+                  }, function(reject) {  
+                     vm.exportingprogress = false; 
+                     if (reject == "Empty") {
+                        ToastService.Show('No Data Found', 'Oops! It seems that there\'s no existing record at the moment'); 
+                     }
+                     else {
+                        ToastService.Show('Something went wrong', reject); 
+                     }
+                  }); 
+
+            }, function() {
+               vm.exportingprogress = false; 
+            }); 
+         }
 
       } 
  
-      function ExportRegistrationHistory(){
+      function ExportRegistrationHistory(ev){ 
+
+         if (!vm.exportingprogress) {
+
+            if (vm.daterange.history.start == "" && vm.daterange.history.end == "") {  
+               ToastService.Show('No Date Range Specified', 'Oops! Don\'t forget to specify a date'); 
+               return;
+            }
+            var _data = { 'start': vm.daterange.history.start, 'end': vm.daterange.history.end, 'mode': 'history', 'historystatus' : vm.historystatus};
+
+            var confirm = $mdDialog.confirm()
+                   .title('Would you like to export searched data?')
+                   .textContent('Allows you to see the raw data you\'ve searched for.')
+                   .ariaLabel('Lucky day')
+                   .targetEvent(ev)
+                   .ok('Yes Please')
+                   .cancel('Nope');
+
+            $mdDialog.show(confirm).then(function() {  
+              
+               vm.exportingprogress = true;  
+               ExportToastService.Init(_data, 'ExportRegistrationCtrl').then(
+                  function(resolve) {  
+                     ToastService.Show('Export Successful', '');
+                     vm.exportingprogress = false; 
+                  }, function(reject) {  
+                     vm.exportingprogress = false; 
+                     if (reject == "Empty") {
+                        ToastService.Show('No Data Found', 'Oops! It seems that there\'s no existing record at the moment'); 
+                     }
+                     else {
+                        ToastService.Show('Something went wrong', reject); 
+                     }
+                  }); 
+
+            }, function() {
+               vm.exportingprogress = false; 
+            }); 
+         }
 
       }
        
@@ -220,9 +307,91 @@
          $('#historydate span').html(start.format('MMMM D, YYYY') + ' - ' + end.format('MMMM D, YYYY'));
       });   
         
+
       Metronic.init(); // init metronic core components
       Layout.init(); // init current layout   
-    } 
+   }  
+
+   ExportRegistrationCtrl.$inject = ['$rootScope', '$scope', '$mdToast', '$mdDialog', 'data', 'ExportService', 'ToastService', 'DataLink'];
+   function ExportRegistrationCtrl($rootScope, $scope, $mdToast, $mdDialog, data, ExportService, ToastService, DataLink){ 
+ 
+      if (data.mode == "summary") {
+
+         ExportService.ExportCardRegistration_Summary(data.start, data.end)
+            .then(function(result){
+               if (result[0].response == "Success") { 
+                  window.location = DataLink.merchant_domain+"reports/excel/"+result[0].filename; 
+                  $mdToast.hide('Success');  
+               }
+               else if(result[0].response == "Empty"){
+                  $mdToast.cancel('Empty');   
+               }
+               else{
+                  $mdToast.cancel(result);   
+               }
+            });
+      } 
+      else if (data.mode == "history"){
+
+         switch(data.historystatus){
+            case 'active' : 
+
+               ExportService.ExportActive_CardHistory(data.start, data.end)
+                  .then(function(result){ 
+                     if (result[0].response == "Success") { 
+                        window.location = DataLink.merchant_domain+"reports/excel/"+result[0].filename;  
+                        $mdToast.hide('Success');  
+                     }
+                     else if(result[0].response == "Empty"){
+                        $mdToast.cancel('Empty');   
+                     }
+                     else{
+                        $mdToast.cancel(result); 
+                     } 
+                     console.log("active");
+                  });
+
+               break;
+
+            case 'inactive' : 
+
+               ExportService.ExportInactive_CardHistory(data.start, data.end)
+                  .then(function(result){ 
+                     if (result[0].response == "Success") { 
+                        window.location = DataLink.merchant_domain+"reports/excel/"+result[0].filename;   
+                        $mdToast.hide('Success');  
+                     }
+                     else if(result[0].response == "Empty"){
+                        $mdToast.cancel('Empty');   
+                     }
+                     else{
+                        $mdToast.cancel(result); 
+                     } 
+                  });
+                  
+               break;
+
+            case 'expired' : 
+
+               ExportService.ExportExpired_CardHistory(data.start, data.end)
+                  .then(function(result){ 
+                     if (result[0].response == "Success") { 
+                        window.location = DataLink.merchant_domain+"reports/excel/"+result[0].filename;  
+                        $mdToast.hide('Success');   
+                     }
+                     else if(result[0].response == "Empty"){
+                        $mdToast.cancel('Empty');   
+                     }
+                     else{
+                        $mdToast.cancel(result); 
+                     } 
+                  });
+                  
+               break;
+
+         }
+      }
+
+   }
 
 })();
-

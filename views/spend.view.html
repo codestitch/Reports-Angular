@@ -1,0 +1,194 @@
+<!-- BEGIN PAGE CONTENT -->
+<div class="page-content">
+  <div class="container-fluid">  
+    <div class="row">
+      <div class="col-md-12">  
+
+      	<!-- START OVERVIEW -->
+      	<div class="row widget-row">
+           <div class="col-md-12">
+               <!-- BEGIN WIDGET THUMB -->
+               <div class="widget-thumb widget-bg-color-white text-uppercase margin-bottom-20 ">
+
+                  <div class="widget-title">
+
+                     <h4 class="widget-thumb-heading">Spend Overview</h4> 
+                     <div class="widget-tools"> 
+                       <div class="btn-group btn-group-devided pull-right" data-toggle="buttons">
+                         <label class="btn btn-transparent grey-salsa btn-circle btn-sm active" ng-click="vm.GetOverview('daily')">
+                         <input type="radio" name="options" class="toggle">Daily</label>
+                         <label class="btn btn-transparent grey-salsa btn-circle btn-sm" ng-click="vm.GetOverview('weekly')">
+                         <input type="radio" name="options" class="toggle">Weekly</label>
+                         <label class="btn btn-transparent grey-salsa btn-circle btn-sm" ng-click="vm.GetOverview('monthly')">
+                         <input type="radio" name="options" class="toggle">Monthly</label>
+                         <label class="btn btn-transparent grey-salsa btn-circle btn-sm" ng-click="vm.GetOverview('quarterly')">
+                         <input type="radio" name="options" class="toggle">Quarterly</label>
+                         <label class="btn btn-transparent grey-salsa btn-circle btn-sm" ng-click="vm.GetOverview('yearly')">
+                         <input type="radio" name="options" class="toggle">Yearly</label>
+                       </div>  
+                     </div>
+
+                  </div> 
+
+                  <div class="widget-body">
+                    
+                     <div class="row">
+
+                         <div class="col-lg-3 col-md-3 col-sm-6 col-xs-12">
+                          <div class="dashboard-stat red-pomegranate">
+                            <div class="visual">
+                              <i class="fa fa-dollar"></i>
+                            </div>
+                            <div class="details">
+                              <div class="number">
+                                {{ (vm.spent.totalSales == '' ) ? 0 : vm.spent.totalSales }}
+                              </div>
+                              <div class="desc">
+                                  Total Sales
+                              </div>
+                            </div>
+                            <a class="more" href="javascript:;"> 
+                            </a>
+                          </div>
+                        </div>
+                        <div class="col-lg-3 col-md-3 col-sm-6 col-xs-12">
+                          <div class="dashboard-stat red-pomegranate">
+                            <div class="visual">
+                              <i class="fa fa-users"></i>
+                            </div>
+                            <div class="details">
+                              <div class="number"> 
+                                ₱ {{ (vm.spent.totalMember == '' ) ? 0 : vm.spent.totalMember }}
+                              </div>
+                              <div class="desc">
+                                 Total Member
+                              </div>
+                            </div>
+                            <a class="more" href="javascript:;">
+                            </a>
+                          </div>
+                        </div>
+                        <div class="col-lg-3 col-md-3 col-sm-6 col-xs-12">
+                          <div class="dashboard-stat red-pomegranate">
+                            <div class="visual">
+                              <i class="fa fa-globe"></i>
+                            </div>
+                            <div class="details">
+                              <div class="number"> 
+                                 {{ (vm.spent.totalTransaction == '' ) ? 0 : vm.spent.totalTransaction }}
+                              </div>
+                              <div class="desc">
+                                Total Transaction
+                              </div>
+                            </div>
+                            <a class="more" href="javascript:;">
+                            </a>
+                          </div>
+                        </div>
+                        <div class="col-lg-3 col-md-3 col-sm-6 col-xs-12">
+                          <div class="dashboard-stat red-pomegranate">
+                            <div class="visual">
+                              <i class="fa fa-money"></i>
+                            </div>
+                            <div class="details">
+                              <div class="number"> 
+                                {{ (vm.spent.averageSpend == '' ) ? 0 : vm.spent.averageSpend }}
+                              </div>
+                              <div class="desc">
+                                 Average Spend
+                              </div>
+                            </div>
+                            <a class="more" href="javascript:;">
+                            </a>
+                          </div>
+                        </div>
+                       
+                     </div>
+                  </div>
+
+
+               </div>
+               <!-- END WIDGET THUMB -->
+           </div> 
+       	</div> 
+         <!-- END OVERVIEW -->
+
+
+         <!-- START PORTLET -->
+         <div class="portlet light">
+
+            <div class="portlet-title">
+               <div class="caption">
+                   <i class="icon-bar-chart font-dark hide"></i>
+                   <span class="caption-subject font-dark bold uppercase">Spend Summary</span> 
+               </div>
+               <div class="actions">
+                  <div class="btn-group btn-group-devided" data-toggle="buttons">  
+                  <a ng-click="vm.GetSpendSummary()" class="btn btn-lg red-pomegranate"> <i class="fa fa-search"></i> Search </a>
+                  <a ng-click="vm.ExportSpendSummary()" ng-disabled="vm.exportingprogress" class="btn btn-lg red-pomegranate"> <i class="fa fa-cloud-download"></i> Export </a> 
+                  </div>
+               </div>
+            </div>
+            <div class="portlet-body">  
+
+               <div class="row"> 
+                  <div class="col-md-12">  
+                  
+                     <div id="spendsummarydate" class="pull-left calendar-style " >
+                       <i class="glyphicon glyphicon-calendar fa fa-calendar"></i>&nbsp;
+                       <span>Select Date</span> <b class="caret"></b>
+                     </div>   
+
+                  </div>   
+
+                  <div class="col-md-12">  
+
+                     <div class="record-label"> 
+                     Total Records: <span class="label label-red-pomegranate">
+                        {{vm.totalrecord.summary | number}} </span>
+                     </div>
+       
+                     <div class="table-responsive">
+                        <table ng-table="vm.tableParams" class="table" show-filter="false">
+                           <tr ng-repeat="item in $data" class="even">
+                             <td title="'Email'" filter="{ email: 'text'}" sortable="'email'" header-class="'bg-table-header-white-red'"> 
+                                 <img ng-if="item.image != ''" src="{{ item.image }}" width="20%" class="imgcircle">
+                                 <img ng-if="item.image == ''" src="assets/img/logo.png" width="20%" class="imgcircle">
+                                {{ item.email }}
+                             </td>
+                             <td title="'Card No.'" filter="{ qrcard: 'text'}" sortable="'qrcard'" header-class="'bg-table-header-white-red'" style="text-align:center;">
+                                 {{ item.qrcard }}
+                             </td>  
+                             <td title="'Total Spend'" filter="{ totalSpend: 'number'}" sortable="'totalSpend'" header-class="'bg-table-header-white-red'" style="text-align:center;">
+                                 <span class="bold theme-font"> ₱ {{ item.totalSpend | number }} </span>
+                             </td> 
+                             <td title="'Total Transaction'" filter="{ totalTransaction: 'number'}" sortable="'totalTransaction'" header-class="'bg-table-header-white-red'" style="text-align:center;">
+                                 <span > {{ item.totalTransaction | number}} </span>
+                             </td> 
+                             <td title="'Average Spend'" filter="{ averageSpend: 'text'}" sortable="'averageSpend'" header-class="'bg-table-header-white-red'" style="text-align:center;">
+                                 <span class="bold theme-font"> ₱ {{ item.averageSpend | number}} </span>
+                             </td>   
+                           </tr>  
+                        </table>  
+                     </div>  
+
+                      <div layout="row" layout-sm="column" layout-align="space-around" ng-hide="vm.preloader.summary">
+                          <md-progress-circular md-mode="indeterminate"></md-progress-circular>
+                       </div>  
+                  </div> 
+               </div>  
+                
+           </div>
+
+         </div>
+        <!-- END PORTLET --> 
+
+ 
+
+
+      </div>
+    </div>
+    <!-- END PAGE CONTENT INNER -->
+  </div>
+</div>
+<!-- END PAGE CONTENT -->

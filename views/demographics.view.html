@@ -109,8 +109,8 @@
                </div>
                <div class="actions">
                    <div class="btn-group btn-group-devided" data-toggle="buttons">  
-								<a ng-click="vm.GetCustomerSummary()" class="btn btn-lg red-pomegranate"> <i class="fa fa-search"></i> Search </a>
-								<a ng-click="vm.ExportCustomer()" class="btn btn-lg red-pomegranate"> <i class="fa fa-cloud-download"></i> Export </a> 
+								<a ng-click="vm.GetCustomerDetails()" class="btn btn-lg red-pomegranate"> <i class="fa fa-search"></i> Search </a>
+								<a ng-click="vm.ExportCustomer()" ng-disabled="vm.exportingprogress" class="btn btn-lg red-pomegranate"> <i class="fa fa-cloud-download"></i> Export </a> 
                    </div>
                </div>
             </div>
@@ -255,4 +255,3 @@
   </div>
 </div>
 <!-- END PAGE CONTENT -->
-

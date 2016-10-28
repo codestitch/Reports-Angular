@@ -15,32 +15,13 @@
 	/********** MySQLi Config **********/
 	$mysqli = new mysqli("localhost", "root", "28rskad08dwR", "work_bistro_2016");
 	$sql = "";
-
-
-	// filters
-	$email =  (!isset($_POST['email']) ) ? "" : $_POST['email'];  
-	$gender =  (!isset($_POST['gender']) ) ? "" : $_POST['gender']; 
-	$birthday =  (!isset($_POST['birthday']) ) ? "" : $_POST['birthday']; 
-	$startAge =  (!isset($_POST['startAge']) ) ? "" : $_POST['startAge']; 
-	$endAge =  (!isset($_POST['endAge']) ) ? "" : $_POST['endAge'];  
-
-	$startDate = (!isset($_POST['startDate']) ) ? "" : $_POST['startDate']; 
-
-	$endDate =  (!isset($_POST['endDate']) ) ? "" : $_POST['endDate']; 
-	$locName = (!isset($_POST['locName']) ) ? "" : $_POST['locName'];  
-	$memberID =  (!isset($_POST['memberID']) ) ? "" : $_POST['memberID']; 
-	$startTime =  (!isset($_POST['startTime']) ) ? "" : $_POST['startTime']; 
-
-	$brandID = (!isset($_POST['brandID']) ) ? "" : $_POST['brandID'];   
-
-
-	$output = array();
-
-	if ((!isset($_POST['function'])) || (!$_POST['function'])) {
+ 
+	/********** Parameters **********/
+	if ((!isset($_GET['function'])) || (!$_GET['function'])) {
 		echo "error";
 		return;
 	} else {
-		$function = $_POST['function'];
+		$function = $_GET['function'];
 		$function = filter_var($function, FILTER_SANITIZE_URL);
 	} 
 
@@ -48,6 +29,25 @@
 	    die('Unable to connect to database [' . $mysqli->connect_error . ']');
 	}
 
+	// filters
+	$email =  (!isset($_GET['email']) ) ? "" : $_GET['email'];  
+	$gender =  (!isset($_GET['gender']) ) ? "" : $_GET['gender']; 
+	$birthday =  (!isset($_GET['birthday']) ) ? "" : $_GET['birthday']; 
+	$startAge =  (!isset($_GET['startAge']) ) ? "" : $_GET['startAge']; 
+	$endAge =  (!isset($_GET['endAge']) ) ? "" : $_GET['endAge'];  
+
+	$startDate = (!isset($_GET['startDate']) ) ? "" : $_GET['startDate']; 
+
+	$endDate =  (!isset($_GET['endDate']) ) ? "" : $_GET['endDate']; 
+	$locName = (!isset($_GET['locName']) ) ? "" : $_GET['locName'];  
+	$locID = (!isset($_GET['locID']) ) ? "" : $_GET['locID'];  
+	$memberID =  (!isset($_GET['memberID']) ) ? "" : $_GET['memberID']; 
+	$startTime =  (!isset($_GET['startTime']) ) ? "" : $_GET['startTime']; 
+
+	$brandID = (!isset($_GET['brandID']) ) ? "" : $_GET['brandID'];   
+
+
+	$output = array(); 
 	$mydate=getdate(date("U"));
 	$filename = date("m") ."-".date("d")."-".date("Y"); 
 
@@ -57,15 +57,15 @@
 
 		/********** Registration **********/
 
-		case 'export_cardregistration': 
-			$filename = $filename."_cardregistration.xlsx";
+		case 'export_cardregistration_summary': 
+			$filename = $filename."_cardregistration_summary.xlsx";
 
 			$sql = "SELECT  b.name as 'Restaurant', l.name as 'Branch', SUM(IF(m.activation IS NULL, 1, 0)) AS 'Total Activated', SUM(IF(m.activation IS NOT NULL, 1, 0)) AS 'Total Not Activated', SUM(IF(m.activation IS NULL, 2500, 0)) AS 'Total Sales' 
 					 FROM memberstable m INNER JOIN loctable l ON m.locid = l.locid
 					 LEFT JOIN brandtable b ON l.brandid = b.brandid
 					 WHERE DATE(m.datereg) >= '".$startDate."' AND DATE(m.datereg) <= '".$endDate."'
 					 GROUP BY b.name, l.name
-					 ORDER BY 'Total Sales' DESC";
+					 ORDER BY 'Total Sales' DESC"; 
  
 			break;
 
@@ -91,7 +91,79 @@
 			break; 
 
 
-		/********** Demographics **********/ 
+		/********** Demographics **********/  	
+		case 'export_userInformation':
+
+			$filename = $filename."_customerdetails.xlsx";
+
+			$filteredqry = "SELECT memberid as 'Members Acct No.', concat(fname, ' ', lname) as 'Members Name', gender as 'Gender', dateofbirth as 'Birthdate', 
+				TIMESTAMPDIFF(YEAR, dateofbirth, CURDATE()) as 'Age', 
+				(case 
+				    when TIMESTAMPDIFF(YEAR, dateofbirth, CURDATE()) < 18 then 'Below 18'
+				    when TIMESTAMPDIFF(YEAR, dateofbirth, CURDATE()) >= 18 and TIMESTAMPDIFF(YEAR, dateofbirth, CURDATE()) <= 25 then  '18 to 25'
+				    when TIMESTAMPDIFF(YEAR, dateofbirth, CURDATE()) >= 26 and TIMESTAMPDIFF(YEAR, dateofbirth, CURDATE()) <= 35 then '26 to 35'
+				    when TIMESTAMPDIFF(YEAR, dateofbirth, CURDATE()) >= 36 and TIMESTAMPDIFF(YEAR, dateofbirth, CURDATE()) <= 45 then  '36 to 45'
+				    when TIMESTAMPDIFF(YEAR, dateofbirth, CURDATE()) >= 46 and TIMESTAMPDIFF(YEAR, dateofbirth, CURDATE()) <= 59 then  '46 to 59'
+				    when TIMESTAMPDIFF(YEAR, dateofbirth, CURDATE()) > 60  then  '60 and Above'
+				end) as 'Age Bracket', 
+				mobilenum as 'Mobile', email as 'Email'  from memberstable where "; 
+				
+			$hasinitfilter = false; 
+
+			if ($email != "") {
+				$filteredqry .= " `email` LIKE '%" . $email. "%'";
+				$hasinitfilter = true;
+			} 
+
+			if ($gender != "" && !$hasinitfilter) {
+				$filteredqry .=  " `gender` = '" . $gender . "'";
+				$hasinitfilter = true;
+			}
+			else if ($gender != "" && $hasinitfilter) { 	  
+				$filteredqry .= " AND `gender` = '" . $gender . "'";
+			}
+
+			if ($birthday != "" && !$hasinitfilter) {
+				$filteredqry .=  " DATE_FORMAT(dateOfBirth, '%c') = " .$birthday;
+				$hasinitfilter = true;
+			}
+			else if ($birthday != "" && $hasinitfilter){  
+				$filteredqry .= " AND DATE_FORMAT(dateOfBirth, '%c') = " .$birthday;
+			} 
+
+			if ($startAge != "" && !$hasinitfilter) {
+				$filteredqry .=  " CAST(DATEDIFF(NOW(), DATE(`dateOfBirth`)) / 365.25 AS UNSIGNED) > " . $startAge . " AND CAST(DATEDIFF(NOW(), DATE(`dateOfBirth`)) / 365.25 AS UNSIGNED) < " . $endAge;
+				$hasinitfilter = true;
+			}
+			else if ($startAge != "" && $hasinitfilter){  
+				$filteredqry .=  " AND CAST(DATEDIFF(NOW(), DATE(`dateOfBirth`)) / 365.25 AS UNSIGNED) > " . $startAge . " AND CAST(DATEDIFF(NOW(), DATE(`dateOfBirth`)) / 365.25 AS UNSIGNED) < " . $endAge;
+			}
+
+			if ($startDate != "" && !$hasinitfilter) {
+				$filteredqry .=  " DATE_FORMAT(dateReg, '%Y/%m/%d') >= '".$startDate."' AND DATE_FORMAT(dateReg, '%Y/%m/%d') <= '".$endDate."' ";
+				$hasinitfilter = true;
+			}
+			else if ($startDate != "" && $hasinitfilter){  
+				$filteredqry .=  " AND DATE_FORMAT(dateReg, '%Y/%m/%d') >= '".$startDate."' AND DATE_FORMAT(dateReg, '%Y/%m/%d') <= '".$endDate."' ";
+			}
+
+			$filteredqry .= " AND activation IS NULL";
+
+			$sql = $filteredqry;   
+
+ 			break;  
+
+		case 'export_customerTransactionHistory':
+
+			$filename = $filename."_customerTransactionHistory.xlsx";
+
+			$sql = "SELECT e.transactiontype AS 'Type', e.memberid AS 'Member\'s Account No.', e.transactionid AS 'Transaction ID', 
+						IFNULL(CONCAT(m.fname, ' ', m.lname),e.email) AS 'Member\'s Name', e.locname AS 'Branch of Purchase', e.dateAdded AS 'Date of Purchase', amount AS 'Sales Amount'
+						FROM earntable e INNER JOIN memberstable m ON e.memberid = m.memberid
+						WHERE e.amount > 0 AND e.memberid = '".$memberID."' ";
+ 
+			break;
+
 		case 'export_customerSummary': 
 
 			$filename = $filename."_customerSummary.xlsx";
@@ -113,22 +185,11 @@
  
 			break;
 
-		case 'export_customerTransactionHistory':
-
-			$filename = $filename."_customerTransactionHistory.xlsx";
-
-			$sql = "SELECT e.transactiontype AS 'Type', e.memberid AS 'Member\'s Account No.', e.transactionid AS 'Transaction ID', 
-						IFNULL(CONCAT(m.fname, ' ', m.lname),e.email) AS 'Member\'s Name', locname AS 'Branch of Purchase', dateAdded AS 'Date of Purchase', amount AS 'Sales Amount'
-						FROM earntable e INNER JOIN memberstable m ON e.memberid = m.memberid
-						WHERE e.amount > 0 AND e.memberid = '".$memberID."' ";
- 
-			break;
-
 
 		/********** Sales **********/ 
-		case 'export_salesreportsummary': 
+		case 'export_salessummary': 
 
-			$filename = $filename."_salesreportsummary.xlsx";  
+			$filename = $filename."_salessummary.xlsx";  
 			$sql = "SELECT tmp.brandname as 'Restaurant', tmp.locname as 'Branch', COUNT(DISTINCT(tmp.memberid)) AS 'Total Member', SUM(tmp.amount) AS 'Total Amount', 
 						COUNT(tmp.transactionid) AS 'Total Transaction'
 						FROM
@@ -143,26 +204,26 @@
 
 			break;  
 
-		case 'export_salesreporthourly':
-  
-			$filename = $filename."_salesreporthourly.xlsx";
-			$sql = "SELECT DATE(tmp.dateAdded) as 'DateAdded', DATE_FORMAT(tmp.dateAdded, '%H:00:00') AS Hour, COUNT(DISTINCT(tmp.memberid)) AS 'Members Count',
+		case 'export_salesperhourly': 
+
+			$filename = $filename."_salesperhourly.xlsx";
+			$sql = "SELECT DATE(tmp.dateAdded) as 'Date Added', DATE_FORMAT(tmp.dateAdded, '%H:00:00') AS Hour, COUNT(DISTINCT(tmp.memberid)) AS 'Members Count',
 					SUM(tmp.amount) AS 'Total Loyalty Sales', COUNT(tmp.transactionid) AS 'Total Transactions'
 					FROM
 					(
 					 SELECT dateAdded, memberid, amount, transactionid, locname FROM earntable WHERE amount > 0
 					 AND DATE_FORMAT(dateAdded, '%Y/%m/%d %H:00:00') >= '".$startDate." 00:00:00' 
 					 AND DATE_FORMAT(dateAdded, '%Y/%m/%d %H:00:00') <= '".$endDate." 23:59:59'
-					 AND locID = '".$locName."' AND brandID = '".$brandID."'
+					 AND locID = '".$locID."' AND brandID = '".$brandID."'
 					)
 					AS tmp
-					GROUP BY DATE(tmp.dateAdded), DATE_FORMAT(tmp.dateAdded, '%H:00:00')";
+					GROUP BY DATE(tmp.dateAdded), DATE_FORMAT(tmp.dateAdded, '%H:00:00')";  
 
 			break; 
 
-		case 'export_salesreportmembers':
+		case 'export_salesperbranch':
  
-			$filename = $filename."_salesreportmembers.xlsx";
+			$filename = $filename."_salesperbranch.xlsx";
 			$sql = "SELECT tmp.memberid as 'Member\'s Account No.', tmp.email as 'Email', SUM(tmp.amount) as 'Total Loyalty Sales'
 						FROM
 						(
@@ -170,11 +231,10 @@
 						  FROM earntable WHERE amount > 0 AND 
 						  DATE_FORMAT(dateAdded, '%Y-%m-%d %H:00:00') >= '".$startDate." ".$startTime."'
 						  AND DATE_FORMAT(dateAdded, '%Y-%m-%d %H:00:00') <= '".$startDate." ".substr($startTime,0,2).":59:59'
-						  AND locID = '".$locName."' AND brandID = '".$brandID."'
+						  AND locID = '".$locID."' AND brandID = '".$brandID."'
 						)
 						AS tmp
 						GROUP BY tmp.memberid;"; 
-
 
 			break; 
 
@@ -243,7 +303,7 @@
 		case 'export_customers_quarterlysales':
 			$filename = $filename."_customers_quarterlysales.xlsx";
 				
-			$sql = "SELECT m.qrcard as 'Card No.', e.email as 'Email', sum(e.points) as 'Sales'
+			$sql = "SELECT m.qrcard as 'Card No.', e.email as 'Email', sum(e.amount) as 'Sales'
 					 from earntable e inner join memberstable m on e.memberid=m.memberid
 					 where quarter(e.dateadded) = quarter(now())
 					 group by m.qrcard
@@ -254,7 +314,7 @@
 		case 'export_customers_quarterlysales_all':
 			$filename = $filename."_customers_quarterlysales_all.xlsx";
 				
-			$sql = "SELECT m.qrcard as 'Card No.', e.email as 'Email', sum(e.points) as 'Sales'
+			$sql = "SELECT m.qrcard as 'Card No.', e.email as 'Email', sum(e.amount) as 'Sales'
 					 from earntable e inner join memberstable m on e.memberid=m.memberid
 					 where quarter(e.dateadded) = quarter(now())
 					 group by m.qrcard
@@ -282,13 +342,29 @@
 						order by visit"; 
 			break;
 
+		case 'export_customer_transactions':
+			$filename = $filename."_customer_transactions.xlsx";
+				
+			$sql = "SELECT tmp.qrcard as 'Card No.', tmp.email as 'Email', SUM(tmp.amount) AS 'Total Amount', sum(tmp.points) as 'Points', COUNT(tmp.transactionid) AS 'Total Transaction'
+               FROM
+               (
+                SELECT m.qrcard, m.email, e.memberid, e.amount, e.points, e.transactionid FROM earntable e INNER JOIN memberstable m ON e.memberid = m.memberid
+                WHERE e.amount > 0 
+                AND DATE(e.dateAdded) >= '".$startDate."'
+                AND DATE(e.dateAdded) <= '".$endDate."'
+               )
+               AS tmp
+					GROUP BY tmp.qrcard, tmp.email ORDER BY points DESC";  
+
+			break;
+
 
 		/********** Branches **********/
 
 		case 'export_branch_quarterlysales':
 			$filename = $filename."_branch_quarterlysales.xlsx";
 				
-			$sql = "SELECT brandname as 'Restaurant', locname as 'Branch', sum(points) as 'Sales' from earntable where quarter(dateadded) = quarter(now())
+			$sql = "SELECT brandname as 'Restaurant', locname as 'Branch', sum(amount) as 'Sales' from earntable where quarter(dateadded) = quarter(now())
 					 group by brandname, locname 
 					 order by sales desc limit 10";
 
@@ -297,7 +373,7 @@
 		case 'export_branch_quarterlysales_all':
 			$filename = $filename."_branch_quarterlysales_all.xlsx";
 				
-			$sql = "SELECT brandname as 'Restaurant', locname as 'Branch', sum(points) as 'Sales' from earntable where quarter(dateadded) = quarter(now())
+			$sql = "SELECT brandname as 'Restaurant', locname as 'Branch', sum(amount) as 'Sales' from earntable where quarter(dateadded) = quarter(now())
 					 group by brandname, locname 
 					 order by sales desc";
 
@@ -317,7 +393,25 @@
 			$sql = "SELECT brandname as 'Restaurant', locname as 'Branch', count(transactionid) as 'Visit' from earntable where quarter(dateadded) = quarter(now())
 					 group by brandname, locname 
 					 order by visit desc"; 
-			break;
+			break; 
+
+
+		case 'export_branchsalessummary': 
+
+			$filename = $filename."_branchsalessummary.xlsx";  
+			$sql = "SELECT tmp.brandname as 'Restaurant', tmp.locname as 'Branch', COUNT(DISTINCT(tmp.memberid)) AS 'Total Member', SUM(tmp.amount) AS 'Total Amount', 
+						COUNT(tmp.transactionid) AS 'Total Transaction'
+						FROM
+						(
+						 SELECT brandname, locname, memberid, amount, transactionid FROM earntable
+						 WHERE amount > 0 
+						 AND DATE_FORMAT(dateAdded, '%Y/%m/%d') >= '".$startDate."'
+						 AND DATE_FORMAT(dateAdded, '%Y/%m/%d') <= '".$endDate."'
+						)
+						AS tmp
+						GROUP BY tmp.brandname, tmp.locname";
+
+			break;     
 
 
 
@@ -363,77 +457,6 @@
  
 
 		/********** Special Report **********/ 
-		case 'export_customerdetails':
-
-			$filename = $filename."_customerdetails.xlsx";
-
-			$filteredqry = "SELECT memberid as 'Members Acct No.', concat(fname, ' ', lname) as 'Members Name', gender as 'Gender', dateofbirth as 'Birthdate', 
-				TIMESTAMPDIFF(YEAR, dateofbirth, CURDATE()) as 'Age', 
-				(case 
-				    when TIMESTAMPDIFF(YEAR, dateofbirth, CURDATE()) < 18 then 'Below 18'
-				    when TIMESTAMPDIFF(YEAR, dateofbirth, CURDATE()) >= 18 and TIMESTAMPDIFF(YEAR, dateofbirth, CURDATE()) <= 25 then  '18 to 25'
-				    when TIMESTAMPDIFF(YEAR, dateofbirth, CURDATE()) >= 26 and TIMESTAMPDIFF(YEAR, dateofbirth, CURDATE()) <= 35 then '26 to 35'
-				    when TIMESTAMPDIFF(YEAR, dateofbirth, CURDATE()) >= 36 and TIMESTAMPDIFF(YEAR, dateofbirth, CURDATE()) <= 45 then  '36 to 45'
-				    when TIMESTAMPDIFF(YEAR, dateofbirth, CURDATE()) >= 46 and TIMESTAMPDIFF(YEAR, dateofbirth, CURDATE()) <= 59 then  '46 to 59'
-				    when TIMESTAMPDIFF(YEAR, dateofbirth, CURDATE()) > 60  then  '60 and Above'
-				end) as 'Age Bracket', 
-				mobilenum as 'Mobile', email as 'Email'  from memberstable where ";
-
-			// $filteredqry = "SELECT memberID as 'MemberID', email as 'Email', address1 as 'Address', CONCAT(fname, ' ', lname) as 'Name', DATE_FORMAT(dateofbirth, '%d-%M-%Y') as 'Birthday', gender as 'Gender', mobileNum as 'Mobile No.', totalPoints as 'Total Points' from memberstable where "; 
-			
-			$hasinitfilter = false; 
-
-			if ($email != "") {
-				$filteredqry .= " `email` LIKE '%" . $email. "%'";
-				$hasinitfilter = true;
-			} 
-
-			if ($gender != "" && !$hasinitfilter) {
-				$filteredqry .=  " `gender` = '" . $gender . "'";
-				$hasinitfilter = true;
-			}
-			else if ($gender != "" && $hasinitfilter) { 	  
-				$filteredqry .= " AND `gender` = '" . $gender . "'";
-			}
-
-			if ($birthday != "" && !$hasinitfilter) {
-				$filteredqry .=  " DATE_FORMAT(dateOfBirth, '%c') = " .$birthday;
-				$hasinitfilter = true;
-			}
-			else if ($birthday != "" && $hasinitfilter){  
-				$filteredqry .= " AND DATE_FORMAT(dateOfBirth, '%c') = " .$birthday;
-			} 
-
-			if ($startAge != "" && !$hasinitfilter) {
-				$filteredqry .=  " CAST(DATEDIFF(NOW(), DATE(`dateOfBirth`)) / 365.25 AS UNSIGNED) > " . $startAge . " AND CAST(DATEDIFF(NOW(), DATE(`dateOfBirth`)) / 365.25 AS UNSIGNED) < " . $endAge;
-				$hasinitfilter = true;
-			}
-			else if ($startAge != "" && $hasinitfilter){  
-				$filteredqry .=  " AND CAST(DATEDIFF(NOW(), DATE(`dateOfBirth`)) / 365.25 AS UNSIGNED) > " . $startAge . " AND CAST(DATEDIFF(NOW(), DATE(`dateOfBirth`)) / 365.25 AS UNSIGNED) < " . $endAge;
-			}
-
-			if ($startDate != "" && !$hasinitfilter) {
-				$filteredqry .=  " DATE_FORMAT(dateReg, '%Y/%m/%d') >= '".$startDate."' AND DATE_FORMAT(dateReg, '%Y/%m/%d') <= '".$endDate."' ";
-				$hasinitfilter = true;
-			}
-			else if ($startDate != "" && $hasinitfilter){  
-				$filteredqry .=  " AND DATE_FORMAT(dateReg, '%Y/%m/%d') >= '".$startDate."' AND DATE_FORMAT(dateReg, '%Y/%m/%d') <= '".$endDate."' ";
-			}
-
-
-			$sql = $filteredqry;   
-
- 			break; 
-
- 		case 'export_customerHistoryTransactions':
- 			
-			$filename = $filename."_customerHistoryTransactions.xlsx";
- 			$sql = "SELECT e.transactiontype as 'Type', e.memberid as 'Member ID', e.transactionid as 'Transaction ID', 
-						IFNULL(concat(m.fname, ' ', m.lname),e.email) as 'Member\'s Name', locname as 'Branch', dateAdded as 'Date of Transaction', amount as 'Amount', points AS 'Snaps'
-						from earntable e inner join memberstable m on e.memberid = m.memberid
-						where e.memberid = '".$memberID."' ";
-
- 			break;
 
 	}// end switch
 

@@ -1,0 +1,197 @@
+<!-- BEGIN PAGE CONTENT -->
+<div class="page-content">
+  <div class="container-fluid">  
+    <div class="row">
+      <div class="col-md-12">  
+
+      	<!-- START OVERVIEW -->
+      	<div class="row widget-row">
+           <div class="col-md-6">
+               <!-- BEGIN WIDGET THUMB -->
+               <div class="widget-thumb widget-bg-color-white text-uppercase margin-bottom-20 ">
+
+                  <div class="widget-title">
+
+                     <h4 class="widget-thumb-heading">Top 20 - Quarterly Sales</h4> 
+                     <div class="widget-actions"> 
+                        <div class="btn-group btn-group-devided" data-toggle="buttons">  
+                           <a ng-click="vm.ExportQuarterlySales(false)" ng-disabled="vm.exportingprogress" class="btn btn-lg red-pomegranate"> <i class="fa fa-download"></i> Export </a>
+                           <a ng-click="vm.ExportQuarterlySales(true)" ng-disabled="vm.exportingprogress" class="btn btn-lg red-pomegranate"> <i class="fa fa-cloud-download"></i> Export All</a> 
+                        </div>
+                     </div>
+
+                  </div> 
+
+                  <div class="widget-body"> 
+                     <div class="row"> 
+
+                        <table class="table table-hover table-light">
+                           <thead>
+                           <tr class="uppercase">
+                              <th >
+                                 Name
+                              </th> 
+                              <th >
+                                 Card No.
+                              </th>  
+                              <th>
+                                  Sales
+                              </th> 
+                           </tr>
+                           </thead>
+                           <tr ng-repeat="data in vm.quarterlysales"> 
+                              <td>
+                                 <img ng-if="data.image != ''" src="{{ data.image }}" width="20%" class="imgcircle">
+                                 <img ng-if="data.image == ''" src="assets/img/logo.png" width="20%" class="imgcircle">
+                                 <span class="font-blue-sharp">{{ data.email }}</span>
+                              </td>  
+                              <td>
+                                 {{ data.qrcard }}
+                              </td> 
+                              <td>
+                                 <span class="bold theme-font"> ₱ {{ data.sales | number }} </span>
+                              </td> 
+                           </tr> 
+                        </table> 
+                       
+                     </div>
+                  </div> 
+
+               </div>
+               <!-- END WIDGET THUMB -->
+           </div> 
+           <div class="col-md-6">
+               <!-- BEGIN WIDGET THUMB -->
+               <div class="widget-thumb widget-bg-color-white text-uppercase margin-bottom-20 ">
+
+                  <div class="widget-title">
+
+                     <h4 class="widget-thumb-heading">Top 20 - Quarterly Visits</h4> 
+                     <div class="widget-actions"> 
+                        <div class="btn-group btn-group-devided" data-toggle="buttons">  
+                           <a ng-click="vm.ExportQuarterlyVisits(false)" ng-disabled="vm.exportingprogress" class="btn btn-lg red-pomegranate"> <i class="fa fa-download"></i> Export </a>
+                           <a ng-click="vm.ExportQuarterlyVisits(true)" ng-disabled="vm.exportingprogress" class="btn btn-lg red-pomegranate"> <i class="fa fa-cloud-download"></i> Export All</a> 
+                        </div>
+                     </div>
+
+                  </div> 
+
+                  <div class="widget-body"> 
+                     <div class="row"> 
+
+                        <table class="table table-hover table-light">
+                           <thead>
+                           <tr class="uppercase">
+                              <th >
+                                 Name
+                              </th> 
+                              <th >
+                                 Card No.
+                              </th>  
+                              <th>
+                                  Visits
+                              </th> 
+                           </tr>
+                           </thead>
+                           <tr ng-repeat="data in vm.quarterlyvisit"> 
+                              <td>
+                                 <img ng-if="data.image != ''" src="{{ data.image }}" width="20%" class="imgcircle">
+                                 <img ng-if="data.image == ''" src="assets/img/logo.png" width="20%" class="imgcircle">
+                                 <span class="text-blue">{{ data.email }}</span>
+                              </td>  
+                              <td>
+                                 {{ data.qrcard }}
+                              </td> 
+                              <td>
+                                 <span class="bold theme-font"> {{ data.visit | number }} </span>
+                              </td> 
+                           </tr> 
+                        </table> 
+                       
+                     </div>
+                  </div> 
+
+               </div>
+               <!-- END WIDGET THUMB -->
+           </div> 
+       	</div> 
+         <!-- END OVERVIEW -->
+
+
+         <!-- START PORTLET -->
+         <div class="portlet light">
+
+            <div class="portlet-title">
+               <div class="caption">
+                   <i class="icon-bar-chart font-dark hide"></i>
+                   <span class="caption-subject font-dark bold uppercase">Transaction Summary</span> 
+               </div>
+               <div class="actions">
+                  <div class="btn-group btn-group-devided" data-toggle="buttons">  
+                  <a ng-click="vm.GetCustomerSummary()" class="btn btn-lg red-pomegranate"> <i class="fa fa-search"></i> Search </a>
+                  <a ng-click="vm.ExportCustomerSummary()" ng-disabled="vm.exportingprogress" class="btn btn-lg red-pomegranate"> <i class="fa fa-cloud-download"></i> Export </a> 
+                  </div>
+               </div>
+            </div>
+            <div class="portlet-body">  
+
+               <div class="row"> 
+                  <div class="col-md-12">  
+                     
+                     <div id="customersummarydate" class="pull-left calendar-style " >
+                       <i class="glyphicon glyphicon-calendar fa fa-calendar"></i>&nbsp;
+                       <span>Select Date</span> <b class="caret"></b>
+                     </div>   
+
+                  </div>   
+
+                  <div class="col-md-12">  
+
+                     <div class="record-label"> 
+                     Total Records: <span class="label label-red-pomegranate">
+                        {{vm.totalrecord.summary | number}} </span>
+                     </div>
+       
+                     <div class="table-responsive">
+                        <table ng-table="vm.tableParams" class="table" show-filter="false">
+                           <tr ng-repeat="item in $data" class="even">
+                             <td title="'Card No.'" filter="{ qrcard: 'text'}" sortable="'qrcard'" header-class="'bg-table-header-white-red'"> 
+                                 {{ item.qrcard }}
+                             </td>
+                             <td title="'Email'" filter="{ email: 'text'}" sortable="'email'" header-class="'bg-table-header-white-red'" style="text-align:center;">
+                                 {{ item.email }}
+                             </td>  
+                             <td title="'Total Amount'" filter="{ totalAmount: 'number'}" sortable="'totalAmount'" header-class="'bg-table-header-white-red'" style="text-align:center;">
+                                 <span class="bold theme-font"> ₱ {{ item.totalAmount | number }} </span>
+                             </td> 
+                             <td title="'Total Points'" filter="{ points: 'number'}" sortable="'points'" header-class="'bg-table-header-white-red'" style="text-align:center;">
+                                 <span > {{ item.points | number}} </span>
+                             </td> 
+                             <td title="'Total Transaction'" filter="{ totalTransaction: 'number'}" sortable="'totalTransaction'" header-class="'bg-table-header-white-red'" style="text-align:center;">
+                                 <span class="bold theme-font"> {{ item.totalTransaction | number}} </span>
+                             </td>   
+                           </tr>   
+                        </table>  
+                     </div>  
+
+                     <div layout="row" layout-sm="column" layout-align="space-around" ng-hide="vm.preloader.summary">
+                        <md-progress-circular md-mode="indeterminate"></md-progress-circular>
+                     </div>  
+                     <div class="table-footer-space"></div>
+                  </div> 
+               </div>  
+                
+           </div>
+
+         </div>
+        <!-- END PORTLET --> 
+
+ 
+
+
+      </div>
+    </div>
+    <!-- END PAGE CONTENT INNER -->
+  </div>
+</div>
+<!-- END PAGE CONTENT -->

@@ -1,0 +1,193 @@
+<!-- BEGIN PAGE CONTENT -->
+<div class="page-content">
+  <div class="container-fluid">  
+    <div class="row">
+      <div class="col-md-12">  
+
+      	<!-- START OVERVIEW -->
+      	<div class="row widget-row">
+           <div class="col-md-6">
+               <!-- BEGIN WIDGET THUMB -->
+               <div class="widget-thumb widget-bg-color-white text-uppercase margin-bottom-20 ">
+
+                  <div class="widget-title">
+
+                     <h4 class="widget-thumb-heading">Top 10 - Quarterly Sales</h4> 
+                     <div class="widget-actions"> 
+                        <div class="btn-group btn-group-devided" data-toggle="buttons">  
+                           <a ng-click="vm.ExportQuarterlySales(false)" ng-disabled="vm.exportingprogress" class="btn btn-lg red-pomegranate"> <i class="fa fa-download"></i> Export </a>
+                           <a ng-click="vm.ExportQuarterlySales(true)" ng-disabled="vm.exportingprogress" class="btn btn-lg red-pomegranate"> <i class="fa fa-cloud-download"></i> Export All</a> 
+                        </div>
+                     </div>
+
+                  </div> 
+
+                  <div class="widget-body"> 
+                     <div class="row"> 
+
+                        <table class="table table-hover table-light">
+                           <thead>
+                           <tr class="uppercase">
+                              <th >
+                                 Restaurant
+                              </th> 
+                              <th >
+                                 Branch
+                              </th>  
+                              <th>
+                                  Sales
+                              </th> 
+                           </tr>
+                           </thead>
+                           <tr ng-repeat="data in vm.quarterlysales"> 
+                              <td> 
+                                 <span class="font-blue-sharp">{{ data.brandname }}</span>
+                              </td>  
+                              <td>
+                                 {{ data.locname }}
+                              </td> 
+                              <td>
+                                 <span class="bold theme-font"> ₱ {{ data.sales | number }} </span>
+                              </td> 
+                           </tr> 
+                        </table> 
+                       
+                     </div>
+                  </div> 
+
+               </div>
+               <!-- END WIDGET THUMB -->
+           </div> 
+           <div class="col-md-6">
+               <!-- BEGIN WIDGET THUMB -->
+               <div class="widget-thumb widget-bg-color-white text-uppercase margin-bottom-20 ">
+
+                  <div class="widget-title">
+
+                     <h4 class="widget-thumb-heading">Top 10 - Quarterly Visits</h4> 
+                     <div class="widget-actions"> 
+                        <div class="btn-group btn-group-devided" data-toggle="buttons">  
+                           <a ng-click="vm.ExportQuarterlyVisits(false)" ng-disabled="vm.exportingprogress" class="btn btn-lg red-pomegranate"> <i class="fa fa-download"></i> Export </a>
+                           <a ng-click="vm.ExportQuarterlyVisits(true)" ng-disabled="vm.exportingprogress" class="btn btn-lg red-pomegranate"> <i class="fa fa-cloud-download"></i> Export All</a> 
+                        </div>
+                     </div>
+
+                  </div> 
+
+                  <div class="widget-body"> 
+                     <div class="row"> 
+
+                        <table class="table table-hover table-light">
+                           <thead>
+                           <tr class="uppercase">
+                              <th >
+                                 Restaurant
+                              </th> 
+                              <th >
+                                 Branch
+                              </th>  
+                              <th>
+                                  Visits
+                              </th> 
+                           </tr>
+                           </thead>
+                           <tr ng-repeat="data in vm.quarterlyvisit"> 
+                              <td> 
+                                 <span class="font-blue-sharp">{{ data.brandname }}</span>
+                              </td>  
+                              <td>
+                                 {{ data.locname }}
+                              </td> 
+                              <td>
+                                 <span class="bold theme-font"> {{ data.visit | number }} </span>
+                              </td> 
+                           </tr> 
+                        </table> 
+                       
+                     </div>
+                  </div> 
+
+               </div>
+               <!-- END WIDGET THUMB -->
+           </div> 
+       	</div> 
+         <!-- END OVERVIEW -->
+
+
+         <!-- START PORTLET -->
+         <div class="portlet light">
+
+            <div class="portlet-title">
+               <div class="caption">
+                   <i class="icon-bar-chart font-dark hide"></i>
+                   <span class="caption-subject font-dark bold uppercase">Transaction Summary</span> 
+               </div>
+               <div class="actions">
+                  <div class="btn-group btn-group-devided" data-toggle="buttons">  
+                  <a ng-click="vm.GetBranchSummary()" class="btn btn-lg red-pomegranate"> <i class="fa fa-search"></i> Search </a>
+                  <a ng-click="vm.ExportBranchSummary()" ng-disabled="vm.exportingprogress" class="btn btn-lg red-pomegranate"> <i class="fa fa-cloud-download"></i> Export </a> 
+                  </div>
+               </div>
+            </div>
+            <div class="portlet-body">  
+
+               <div class="row"> 
+                  <div class="col-md-12">  
+                     
+                     <div id="branchsummarydate" class="pull-left calendar-style " >
+                       <i class="glyphicon glyphicon-calendar fa fa-calendar"></i>&nbsp;
+                       <span>Select Date</span> <b class="caret"></b>
+                     </div>   
+
+                  </div>   
+
+                  <div class="col-md-12">  
+
+                     <div class="record-label"> 
+                     Total Records: <span class="label label-red-pomegranate">
+                        {{vm.totalrecord.summary | number}} </span>
+                     </div>
+       
+                     <div class="table-responsive">
+                        <table ng-table="vm.tableParams" class="table" show-filter="false">
+                           <tr ng-repeat="item in $data" class="even">
+                             <td title="'Restaurant'" filter="{ brandname: 'text'}" sortable="'brandname'" header-class="'bg-table-header-white-red'"> 
+                                 {{ item.brandname }}
+                             </td>
+                             <td title="'Branch'" filter="{ locname: 'text'}" sortable="'locname'" header-class="'bg-table-header-white-red'" style="text-align:center;">
+                                 {{ item.locname }}
+                             </td>  
+                             <td title="'Total Amount'" filter="{ totalAmount: 'number'}" sortable="'totalAmount'" header-class="'bg-table-header-white-red'" style="text-align:center;">
+                                 <span> ₱ {{ item.totalAmount | number }} </span>
+                             </td> 
+                             <td title="'Total Member'" filter="{ totalMember: 'number'}" sortable="'totalMember'" header-class="'bg-table-header-white-red'" style="text-align:center;">
+                                 <span > {{ item.totalMember | number}} </span>
+                             </td> 
+                             <td title="'Total Transaction'" filter="{ totalTransaction: 'number'}" sortable="'totalTransaction'" header-class="'bg-table-header-white-red'" style="text-align:center;">
+                                 <span class="bold theme-font"> {{ item.totalTransaction | number}} </span>
+                             </td>   
+                           </tr>   
+                        </table>  
+                     </div>  
+
+                     <div layout="row" layout-sm="column" layout-align="space-around" ng-hide="vm.preloader.summary">
+                        <md-progress-circular md-mode="indeterminate"></md-progress-circular>
+                     </div>  
+                     <div class="table-footer-space"></div>
+                  </div> 
+               </div>  
+                
+           </div>
+
+         </div>
+        <!-- END PORTLET --> 
+
+ 
+
+
+      </div>
+    </div>
+    <!-- END PAGE CONTENT INNER -->
+  </div>
+</div>
+<!-- END PAGE CONTENT -->

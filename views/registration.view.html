@@ -125,7 +125,7 @@
                <div class="actions">
                   <div class="btn-group btn-group-devided" data-toggle="buttons">  
                   <a ng-click="vm.GetRegistrationSummary()" class="btn btn-lg red-pomegranate"> <i class="fa fa-search"></i> Search </a>
-                  <a ng-click="vm.ExportRegistrationSummary()" class="btn btn-lg red-pomegranate"> <i class="fa fa-cloud-download"></i> Export </a> 
+                  <a ng-click="vm.ExportRegistrationSummary($event)" ng-disabled="vm.exportingprogress" class="btn btn-lg red-pomegranate"> <i class="fa fa-cloud-download"></i> Export </a> 
                   </div>
                </div>
             </div>
@@ -193,7 +193,7 @@
                <div class="actions">
                   <div class="btn-group btn-group-devided" data-toggle="buttons">  
                   <a ng-click="vm.GetRegistrationHistory()" class="btn btn-lg red-pomegranate"> <i class="fa fa-search"></i> Search </a>
-                  <a ng-click="vm.ExportRegistrationHistory()" class="btn btn-lg red-pomegranate"> <i class="fa fa-cloud-download"></i> Export </a> 
+                  <a ng-click="vm.ExportRegistrationHistory($event)" ng-disabled="vm.exportingprogress" class="btn btn-lg red-pomegranate"> <i class="fa fa-cloud-download"></i> Export </a> 
                   </div>
                </div>
             </div>
@@ -270,6 +270,7 @@
                      <div layout="row" layout-sm="column" layout-align="space-around" ng-hide="vm.preloader.history">
                         <md-progress-circular md-mode="indeterminate"></md-progress-circular>
                      </div>  
+
                   </div> 
                </div>  
                 

@@ -3,12 +3,6 @@
 
 	angular
 		.module('app')
-      .constant('DataLink', {
-         "merchant_domain" : "http://192.168.1.9/jproject/bistro/",
-         "report_link" : "php/api.data.php?",
-         // "report_link" : "http://bff.appsolutely.ph/reportdata/data.php?",
-         "export_link" : "http://192.168.1.9/jproject/bistro/"
-      })
 		.factory('QueryService', QueryService);
 
 	QueryService.$inject = ['$http', '$rootScope', 'DataLink', 'ToastService'];
@@ -44,6 +38,32 @@
       service.GetSalesPerHour = GetSalesPerHour;
       service.GetSalesPerBranch = GetSalesPerBranch;
 
+      // Spend
+      service.GetSpendDaily = GetSpendDaily;
+      service.GetSpendWeekly = GetSpendWeekly;
+      service.GetSpendMonthly = GetSpendMonthly;
+      service.GetSpendQuarterly = GetSpendQuarterly;
+      service.GetSpendYearly = GetSpendYearly;
+      service.GetSpendSummary = GetSpendSummary;
+
+      // Branches
+      service.GetBranchQuarterlySales = GetBranchQuarterlySales;
+      service.GetBranchQuarterlyVisits = GetBranchQuarterlyVisits;
+      service.GetBranchSummary = GetBranchSummary; 
+
+      // Customers
+      service.GetCustomerQuarterlySales = GetCustomerQuarterlySales;
+      service.GetCustomerQuarterlyVisits = GetCustomerQuarterlyVisits;
+      service.GetCustomerSummary = GetCustomerSummary;
+
+      // Vouchers
+      service.GetDaily_Vouchers = GetDaily_Vouchers;
+      service.GetWeekly_Vouchers = GetWeekly_Vouchers;
+      service.GetMonthly_Vouchers = GetMonthly_Vouchers;
+      service.GetQuarterly_Vouchers = GetQuarterly_Vouchers;
+      service.GetYearly_Vouchers = GetYearly_Vouchers;
+      service.GetRedemptionVouchers = GetRedemptionVouchers;
+      service.GetCustomerRedemptionVouchers = GetCustomerRedemptionVouchers;
 
       // Json
       service.GetTableRecords = GetTableRecords;
@@ -79,7 +99,7 @@
       */
 
       function GetCardRegistration_Summary(startdate, enddate){
-         var url = DataLink.report_link+"function=get_cardregistration_summary";  
+         var url = DataLink.report_link+"function=get_cardregistration_summary&startDate="+startdate+"&endDate="+enddate;    
          return $http.get(url).then(handleSuccess, function(error){ 
             ToastService.Show("An unexpected error occured", error); 
          });  
@@ -267,13 +287,171 @@
          });         
       }
 
-      function GetSalesPerBranch(startdate, locID, brandID){
-         var url = DataLink.report_link+"function=get_salesperbranch&startDate="+startdate+"&locID="+locID+"&brandID="+brandID; 
+      function GetSalesPerBranch(startdate, startTime, locID, brandID){
+         var url = DataLink.report_link+"function=get_salesperbranch&startDate="+startdate+"&startTime="+startTime+"&locID="+locID+"&brandID="+brandID; 
          return $http.get(url).then(handleSuccess, function(error){ 
             ToastService.Show("An unexpected error occured", error); 
          });         
       }
 
+ 
+
+      /*
+         Public Functions
+         ----------------
+         Spend
+      */
+      function GetSpendDaily(){
+         var url = DataLink.report_link+"function=get_spent_daily"; 
+         return $http.get(url).then(handleSuccess, function(error){ 
+            ToastService.Show("An unexpected error occured", error); 
+         });                  
+      }
+
+      function GetSpendWeekly(){
+         var url = DataLink.report_link+"function=get_spent_weekly"; 
+         return $http.get(url).then(handleSuccess, function(error){ 
+            ToastService.Show("An unexpected error occured", error); 
+         });    
+      }
+
+      function GetSpendMonthly(){
+         var url = DataLink.report_link+"function=get_spent_monthly"; 
+         return $http.get(url).then(handleSuccess, function(error){ 
+            ToastService.Show("An unexpected error occured", error); 
+         });    
+      }
+
+      function GetSpendQuarterly(){
+         var url = DataLink.report_link+"function=get_spent_quarterly"; 
+         return $http.get(url).then(handleSuccess, function(error){ 
+            ToastService.Show("An unexpected error occured", error); 
+         });    
+      }
+
+      function GetSpendYearly(){
+         var url = DataLink.report_link+"function=get_spent_yearly"; 
+         return $http.get(url).then(handleSuccess, function(error){ 
+            ToastService.Show("An unexpected error occured", error); 
+         });    
+      }
+
+      function GetSpendSummary(startdate, enddate){
+         var url = DataLink.report_link+"function=get_spent_summary&startDate="+startdate+"&endDate="+enddate; 
+         return $http.get(url).then(handleSuccess, function(error){ 
+            ToastService.Show("An unexpected error occured", error); 
+         });    
+      }
+
+
+
+      /*
+         Public Functions
+         ----------------
+         Branches
+      */
+      function GetBranchQuarterlySales(){
+         var url = DataLink.report_link+"function=get_branch_quarterlysales"; 
+         return $http.get(url).then(handleSuccess, function(error){ 
+            ToastService.Show("An unexpected error occured", error); 
+         }); 
+      }
+
+      function GetBranchQuarterlyVisits(){
+         var url = DataLink.report_link+"function=get_branch_quarterlyvisits"; 
+         return $http.get(url).then(handleSuccess, function(error){ 
+            ToastService.Show("An unexpected error occured", error); 
+         }); 
+      }
+
+      function GetBranchSummary(startdate, enddate){
+         var url = DataLink.report_link+"function=get_branchsalessummary&startDate="+startdate+"&endDate="+enddate; 
+         return $http.get(url).then(handleSuccess, function(error){ 
+            ToastService.Show("An unexpected error occured", error); 
+         });  
+      }
+
+
+      /*
+         Public Functions
+         ----------------
+         Customers
+      */
+      function GetCustomerQuarterlySales(){
+         var url = DataLink.report_link+"function=get_customers_quarterlysales"; 
+         return $http.get(url).then(handleSuccess, function(error){ 
+            ToastService.Show("An unexpected error occured", error); 
+         }); 
+      }
+
+      function GetCustomerQuarterlyVisits(){
+         var url = DataLink.report_link+"function=get_customers_quarterlyvisits"; 
+         return $http.get(url).then(handleSuccess, function(error){ 
+            ToastService.Show("An unexpected error occured", error); 
+         }); 
+      }
+
+      function GetCustomerSummary(startdate, enddate){
+         var url = DataLink.report_link+"function=get_customer_transactions&startDate="+startdate+"&endDate="+enddate; 
+         return $http.get(url).then(handleSuccess, function(error){ 
+            ToastService.Show("An unexpected error occured", error); 
+         });  
+      }  
+
+
+      /*
+         Public Functions
+         ----------------
+         Vouchers
+      */ 
+      function GetDaily_Vouchers(){
+         var url = DataLink.report_link+"function=get_redemptionVoucher_daily"; 
+         return $http.get(url).then(handleSuccess, function(error){ 
+            ToastService.Show("An unexpected error occured", error); 
+         }); 
+      }
+
+      function GetWeekly_Vouchers(){
+         var url = DataLink.report_link+"function=get_redemptionVoucher_weekly"; 
+         return $http.get(url).then(handleSuccess, function(error){ 
+            ToastService.Show("An unexpected error occured", error); 
+         }); 
+      }
+
+      function GetMonthly_Vouchers(){
+         var url = DataLink.report_link+"function=get_redemptionVoucher_monthly"; 
+         return $http.get(url).then(handleSuccess, function(error){ 
+            ToastService.Show("An unexpected error occured", error); 
+         }); 
+      }
+
+      function GetQuarterly_Vouchers(){
+         var url = DataLink.report_link+"function=get_redemptionVoucher_quarterly"; 
+         return $http.get(url).then(handleSuccess, function(error){ 
+            ToastService.Show("An unexpected error occured", error); 
+         }); 
+      }
+
+      function GetYearly_Vouchers(){
+         var url = DataLink.report_link+"function=get_redemptionVoucher_yearly"; 
+         return $http.get(url).then(handleSuccess, function(error){ 
+            ToastService.Show("An unexpected error occured", error); 
+         }); 
+      }
+
+      function GetRedemptionVouchers(){
+         var url = DataLink.report_link+"function=get_redemptionVoucher&startDate="+startdate+"&endDate="+enddate; 
+         return $http.get(url).then(handleSuccess, function(error){ 
+            ToastService.Show("An unexpected error occured", error); 
+         });  
+      }
+
+      function GetCustomerRedemptionVouchers(){
+         var url = DataLink.report_link+"function=get_customerRedemptionVoucher&startDate="+startdate+"&endDate="+enddate; 
+         return $http.get(url).then(handleSuccess, function(error){ 
+            ToastService.Show("An unexpected error occured", error); 
+         });  
+      }
 
 
 

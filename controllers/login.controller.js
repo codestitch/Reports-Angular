@@ -5,8 +5,8 @@
         .module('app')
         .controller('LoginController', LoginController);
 
-    LoginController.$inject = ['$location', 'AuthenticationService', 'FlashService'];
-    function LoginController($location, AuthenticationService, FlashService) {
+    LoginController.$inject = ['$location', 'AuthenticationService', 'ToastService'];
+    function LoginController($location, AuthenticationService, ToastService) {
         var vm = this;
 
         vm.login = login;
@@ -14,6 +14,10 @@
         (function initController() {
             // reset login status
             AuthenticationService.ClearCredentials();
+
+              console.log('screen.height');
+              console.log(screen.height);
+              document.getElementById('sideImage').style.height = (screen.height - 130)+"px"; 
         })();
 
         function login() {
@@ -24,7 +28,8 @@
                     AuthenticationService.SetCredentials(vm.username, vm.password);
                     $location.path('/');
                 } else {  
-                    FlashService.Error(response[0].description);
+
+                    ToastService.Show('Error Login Credentials', response[0].description); 
                     vm.dataLoading = false;
                 }
             });

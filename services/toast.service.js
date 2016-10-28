@@ -9,8 +9,7 @@
 	ToastService.$inject = ['$rootScope', '$mdToast'];
 	function ToastService($rootScope, $mdToast){
 		var service = {};
-
-		// Downloads
+ 
 		service.Show = Show; 
 
 		return service;

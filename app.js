@@ -4,13 +4,17 @@
     angular
         .module('app', ['ngRoute', 'ngCookies', 'ngTable', 'ngAnimate', 'ngMaterial', 'ngMessages', 'material.svgAssetsCache'])
         .config(config)
+        .constant('DataLink', {
+            "merchant_domain" : "http://192.168.1.9/jproject/bistro/",
+            "report_link" : "php/api.data.php?", 
+            "export_link" : "php/api.export.php?"
+        })
         .run(run); 
 
     config.$inject = ['$routeProvider', '$locationProvider', '$mdThemingProvider', '$httpProvider'];
     function config($routeProvider, $locationProvider, $mdThemingProvider, $httpProvider) {
         $routeProvider
-            .when('/', {
-                cache: false,
+            .when('/', { 
                 cache: false,
                 controller: 'DownloadController',
                 templateUrl: 'views/downloads.view.html',
@@ -54,7 +58,7 @@
             })
             .when('/customers', { 
                 cache: false,
-                controller: 'DustomersController',
+                controller: 'CustomersController',
                 templateUrl: 'views/customers.view.html',
                 activetab: 'customers',
                 controllerAs: 'vm'
@@ -85,6 +89,7 @@
                 cache: false,
                 controller: 'LoginController',
                 templateUrl: 'views/login.view.html',
+                activetab: 'login',
                 controllerAs: 'vm'
             }) 
 
@@ -116,8 +121,7 @@
             $http.defaults.headers.common['Authorization'] = 'Basic ' + $rootScope.globals.currentUser.authdata; // jshint ignore:line
         }
 
-        $rootScope.$on('$locationChangeStart', function (event, next, current) {
-            console.log( $route );
+        $rootScope.$on('$locationChangeStart', function (event, next, current) { 
 
             // redirect to login page if not logged in and trying to access a restricted page
             var restrictedPage = $.inArray($location.path(), ['/login', '/register']) === -1;
@@ -125,17 +129,18 @@
             if (restrictedPage && !loggedIn) {
                 $location.path('/login');
             }
-        }); 
+ 
+            if ($location.path() != '/login') {
+                document.getElementById('header-container').className = 'page-header'; 
+                document.getElementById('footer-container').className = 'page-footer'; 
+            }
+            else{
+                document.getElementById('header-container').className = 'hide-element';
+                document.getElementById('footer-container').className = 'hide-element';                 
+            }
+        });  
 
-        toastr.options.closeButton = true;
-        toastr.options.showMethod = 'slideDown';
-        toastr.options.preventDuplicates = true;
-        toastr.options.closeDuration = 200;
-
-        $rootScope.$route = $route;
-
-        
-    } 
-
+        $rootScope.$route = $route;   
+    }  
 
 })();

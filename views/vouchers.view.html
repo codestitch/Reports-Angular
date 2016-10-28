@@ -11,13 +11,28 @@
                <div class="widget-thumb widget-bg-color-white text-uppercase margin-bottom-20 ">
 
                   <div class="widget-title"> 
-                     <h4 class="widget-thumb-heading">Sales Overview</h4>   
+                     <h4 class="widget-thumb-heading">Vouchers Overview</h4>   
+                     <div class="widget-tools"> 
+                       <div class="btn-group btn-group-devided pull-right" data-toggle="buttons">
+                         <label class="btn btn-transparent grey-salsa btn-circle btn-sm active" ng-click="vm.GetOverview('daily')">
+                         <input type="radio" name="options" class="toggle">Daily</label>
+                         <label class="btn btn-transparent grey-salsa btn-circle btn-sm" ng-click="vm.GetOverview('weekly')">
+                         <input type="radio" name="options" class="toggle">Weekly</label>
+                         <label class="btn btn-transparent grey-salsa btn-circle btn-sm" ng-click="vm.GetOverview('monthly')">
+                         <input type="radio" name="options" class="toggle">Monthly</label>
+                         <label class="btn btn-transparent grey-salsa btn-circle btn-sm" ng-click="vm.GetOverview('quarterly')">
+                         <input type="radio" name="options" class="toggle">Quarterly</label>
+                         <label class="btn btn-transparent grey-salsa btn-circle btn-sm" ng-click="vm.GetOverview('yearly')">
+                         <input type="radio" name="options" class="toggle">Yearly</label>
+                       </div>  
+                     </div>
                   </div> 
 
                   <div class="widget-body">
                     
                      <div class="row"> 
-                        <div id="saleschart" class="chart"></div>
+                        <div id="noDatadiv" class="hide-element">No Data Yet</div>
+                        <div id="voucherchart" class="chart"></div>
                      </div>
                   </div>
 
@@ -35,12 +50,12 @@
             <div class="portlet-title">
                <div class="caption">
                    <i class="icon-bar-chart font-dark hide"></i>
-                   <span class="caption-subject font-dark bold uppercase">Sales Summary</span> 
+                   <span class="caption-subject font-dark bold uppercase">Branch Redemption</span> 
                </div>
                <div class="actions">
                   <div class="btn-group btn-group-devided" data-toggle="buttons">  
-                  <a ng-click="vm.GetSalesSummary()" class="btn btn-lg red-pomegranate"> <i class="fa fa-search"></i> Search </a>
-                  <a ng-click="vm.ExportSalesSummary()" ng-disabled="vm.exportingprogress" class="btn btn-lg red-pomegranate"> <i class="fa fa-cloud-download"></i> Export </a> 
+                  <a ng-click="vm.GetBranchRedemption()" class="btn btn-lg red-pomegranate"> <i class="fa fa-search"></i> Search </a>
+                  <a ng-click="vm.ExportBranchRedemption()" ng-disabled="vm.exportingprogress" class="btn btn-lg red-pomegranate"> <i class="fa fa-cloud-download"></i> Export </a> 
                   </div>
                </div>
             </div>
@@ -49,7 +64,7 @@
                <div class="row"> 
                   <div class="col-md-12">  
                   
-                     <div id="salessummaryrange" class="pull-left calendar-style " >
+                     <div id=branchvoucherrange" class="pull-left calendar-style " >
                        <i class="glyphicon glyphicon-calendar fa fa-calendar"></i>&nbsp;
                        <span>Select Date</span> <b class="caret"></b>
                      </div>   
@@ -60,7 +75,7 @@
 
                      <div class="record-label"> 
                      Total Records: <span class="label label-red-pomegranate">
-                        {{vm.totalrecord.summary | number}} </span>
+                        {{vm.totalrecord.branch | number}} </span>
                      </div>
        
                      <div class="table-responsive">
@@ -85,7 +100,7 @@
                         </table>  
                      </div> 
 
-                      <div layout="row" layout-sm="column" layout-align="space-around" ng-hide="vm.preloader.summary">
+                      <div layout="row" layout-sm="column" layout-align="space-around" ng-hide="vm.preloader.branch">
                           <md-progress-circular md-mode="indeterminate"></md-progress-circular>
                        </div>  
                   </div> 
@@ -103,12 +118,12 @@
             <div class="portlet-title">
                <div class="caption">
                    <i class="icon-bar-chart font-dark hide"></i>
-                   <span class="caption-subject font-dark bold uppercase">Sales Per Hour</span> 
+                   <span class="caption-subject font-dark bold uppercase">Customer Redemption</span> 
                </div>
                <div class="actions">
                   <div class="btn-group btn-group-devided" data-toggle="buttons">  
-                     <a ng-click="vm.GetSalesPerHour()" class="btn btn-lg red-pomegranate"> <i class="fa fa-search"></i> Search </a>
-                     <a ng-click="vm.ExportSalesPerHour()" ng-disabled="vm.exportingprogress" class="btn btn-lg red-pomegranate"> <i class="fa fa-cloud-download"></i> Export </a> 
+                     <a ng-click="vm.GetCustomerRedemption()" class="btn btn-lg red-pomegranate"> <i class="fa fa-search"></i> Search </a>
+                     <a ng-click="vm.ExportCustomerRedemption()" ng-disabled="vm.exportingprogress" class="btn btn-lg red-pomegranate"> <i class="fa fa-cloud-download"></i> Export </a> 
                   </div>
                </div>
             </div>
@@ -117,7 +132,7 @@
                <div class="row"> 
                   <div class="col-md-12">  
                   
-                     <div id="salesperhourange" class="pull-left calendar-style " >
+                     <div id="customervoucherrange" class="pull-left calendar-style " >
                        <i class="glyphicon glyphicon-calendar fa fa-calendar"></i>&nbsp;
                        <span>Select Date</span> <b class="caret"></b>
                      </div>     
@@ -154,7 +169,7 @@
 
                      <div class="record-label"> 
                      Total Records: <span class="label label-red-pomegranate">
-                        {{vm.totalrecord.perhour | number}} </span>
+                        {{vm.totalrecord.customer  | number}} </span>
                      </div>
        
                      <div class="table-responsive">
@@ -182,7 +197,7 @@
                         </table>  
                      </div>  
 
-                      <div layout="row" layout-sm="column" layout-align="space-around" ng-hide="vm.preloader.perhour">
+                      <div layout="row" layout-sm="column" layout-align="space-around" ng-hide="vm.preloader.customer">
                           <md-progress-circular md-mode="indeterminate"></md-progress-circular>
                        </div>  
                      <div class="table-footer-space"></div>

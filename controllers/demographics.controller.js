@@ -4,10 +4,12 @@
    angular
       .module('app')
       .controller('DemographicsController', DemographicsController)
-      .controller('DialogController', DialogController);
+      .controller('DemographicsDialogController', DemographicsDialogController)
+      .controller('ExportDemographicsCtrl', ExportDemographicsCtrl)
+      .controller('ExportDemographicsModalCtrl', ExportDemographicsModalCtrl);
 
-   DemographicsController.$inject = ['PreloaderService', 'QueryService', '$http', 'ChartService', 'TableService', 'ToastService', '$mdDialog', '$scope' ];
-   function DemographicsController(PreloaderService, QueryService, $http, ChartService, TableService, ToastService, $mdDialog, $scope) {
+   DemographicsController.$inject = ['PreloaderService', 'QueryService', '$http', 'ChartService', 'TableService', 'ToastService', '$mdDialog', '$scope', 'ExportToastService' ];
+   function DemographicsController(PreloaderService, QueryService, $http, ChartService, TableService, ToastService, $mdDialog, $scope, ExportToastService) {
       var vm = this; 
         
       // Variables
@@ -23,19 +25,17 @@
 
       vm.totalrecord = 0;
       vm.doneloading_transactions = true; // preloader
+      vm.exportingprogress = false; 
 
       // Access Functions
       vm.SelectGender = SelectGender; 
       vm.SelectBirthday = SelectBirthday; 
       vm.SelectAgeRange = SelectAgeRange; 
-      vm.GetCustomerSummary = GetCustomerSummary;  
+      vm.GetCustomerDetails = GetCustomerDetails;  
       vm.ExportCustomer = ExportCustomer;  
 
-      vm.ViewTransactions = ViewTransactions; 
-        
-      
+      vm.ViewTransactions = ViewTransactions;  
 
-      
       // Initialization
       Initialize();
 
@@ -84,7 +84,7 @@
              });
       }
 
-      function GetCustomerSummary(){     
+      function GetCustomerDetails(){     
 
          if (vm.startdate == "" && vm.enddate == "" && vm.email == "" && vm.gender.value == "" && vm.bday.value == "" && vm.agerange.start == "") {  
             ToastService.Show('No Filter Found', 'Oops! You seem to forget selecting a filter. Kindly select at least 1 filter.'); 
@@ -101,16 +101,15 @@
                      vm.totalrecord = result[0].data.length;
                   }
                   else if (result[0].response == "Empty"){ 
-                     ToastService.Show('No Data Found', 'Oops! It seems there\' no records at the moment');
+                     ToastService.Show('No Data Found', 'Oops! It seems that there\'s no existing record at the moment');
                   }
+                  else{
+                     ToastService.Show('Something went wrong', result); 
+                  } 
                   vm.doneloading_transactions = true;
                   
              });  
       } 
-
-      function ExportCustomer(){
-         ToastService.Show('Export Successful', '' ); 
-      }
 
       function SelectGender(_gender){
          if (_gender == "Male") { vm.gender = { title: "Male", value: "male"} }
@@ -151,9 +150,8 @@
 
          PreloaderService.Display();
          $mdDialog.show({
-            controller: DialogController,
-            templateUrl: 'templates/demographics.tmpl.html',
-            // templateUrl: 'tabDialog.tmpl.html',
+            controller: DemographicsDialogController,
+            templateUrl: 'templates/demographics.tmpl.html', 
             parent: angular.element(document.body),
             targetEvent: ev,
             clickOutsideToClose:true,
@@ -162,13 +160,98 @@
             },
             fullscreen: true
          })
-         .then(function() {
-             console.log('You said the information was.'); 
+         .then(function(response) { 
+            if (response != "") {
+               ExportCustomerTransaction(response);
+            }
          }, function() {
              console.log('You cancelled the dialog.');  
          });
 
          PreloaderService.Hide();
+      }
+ 
+
+      function ExportCustomer(ev){
+
+         if (!vm.exportingprogress) { 
+            
+            if (vm.startdate == "" && vm.enddate == "" && vm.email == "" && vm.gender.value == "" && vm.bday.value == "" && vm.agerange.start == "") {  
+               ToastService.Show('No Filter Found', 'Oops! You seem to forget selecting a filter. Kindly select at least 1 filter.'); 
+               return;
+            }
+
+            var _data = { 'start': vm.startdate, 'end': vm.enddate, 'email': vm.email, 'gender' : vm.gender.value, 
+                           'bday' : vm.bday.value, 'age' : vm.agerange, };
+
+            var confirm = $mdDialog.confirm()
+                   .title('Would you like to export searched data?')
+                   .textContent('Allows you to see the raw data you\'ve searched for.')
+                   .ariaLabel('Lucky day')
+                   .targetEvent(ev)
+                   .ok('Yes Please')
+                   .cancel('Nope');
+
+            $mdDialog.show(confirm).then(function() { 
+               
+               vm.exportingprogress = true;  
+               ExportToastService.Init(_data, 'ExportDemographicsCtrl').then(
+                  function(resolve) {  
+                     ToastService.Show('Export Successful', '');
+                     vm.exportingprogress = false; 
+                  }, function(reject) {  
+                     vm.exportingprogress = false; 
+                     if (reject == "Empty") {
+                        ToastService.Show('No Data Found', 'Oops! It seems that there\'s no existing record at the moment'); 
+                     }
+                     else {
+                        ToastService.Show('Something went wrong', reject); 
+                     }
+                  }); 
+
+            }, function() {
+               vm.exportingprogress = false; 
+            }); 
+
+         }
+
+      }
+
+      function ExportCustomerTransaction(_data){
+
+         if (vm.startdate == "" && vm.enddate == "" && vm.email == "" && vm.gender.value == "" && vm.bday.value == "" && vm.agerange.start == "") {  
+            ToastService.Show('No Filter Found', 'Oops! You seem to forget selecting a filter. Kindly select at least 1 filter.'); 
+            return;
+         } 
+
+         var confirm = $mdDialog.confirm()
+                .title('Would you like to export searched data?')
+                .textContent('Allows you to see the raw data you\'ve searched for.')
+                .ariaLabel('Lucky day') 
+                .ok('Yes Please')
+                .cancel('Nope');
+
+         $mdDialog.show(confirm).then(function() { 
+            
+            vm.exportingprogress = true;  
+            ExportToastService.Init(_data, 'ExportDemographicsModalCtrl').then(
+               function(resolve) {  
+                  ToastService.Show('Export Successful', '');
+                  vm.exportingprogress = false; 
+               }, function(reject) {  
+                  vm.exportingprogress = false; 
+                  if (reject == "Empty") {
+                     ToastService.Show('No Data Found', 'Oops! It seems that there\'s no existing record at the moment'); 
+                  }
+                  else {
+                     ToastService.Show('Something went wrong', reject); 
+                  }
+               }); 
+
+         }, function() {
+            vm.exportingprogress = false; 
+         }); 
+
       }
 
       $('#reportrange').daterangepicker({
@@ -187,22 +270,19 @@
    }
 
 
-   DialogController.$inject = ['$scope', '$mdDialog', 'QueryService', 'TableService', 'data', 'ToastService'];
-   function DialogController($scope, $mdDialog, QueryService, TableService, data, ToastService) { 
+   DemographicsDialogController.$inject = ['$scope', '$mdDialog', 'QueryService', 'TableService', 'data', 'ToastService', 'ExportToastService'];
+   function DemographicsDialogController($scope, $mdDialog, QueryService, TableService, data, ToastService, ExportToastService) { 
 
       $scope.toggleTransaction = true; // for export flag show/hide
       $scope.doneloading_transaction = false;
       $scope.doneloading_profile = false; 
-      $scope.norecordText = "";
-
+      $scope.norecordText = "";    
 
       QueryService.GetCustomerTransactionHistory(data.memberID)
-         .then( function(result){
-            console.log(result);
-            if (result[0].response == "Success") {  
+         .then( function(result){ 
+            if (result[0].response == "Success") {   
                $scope.tableParams = TableService.Create(result[0].data, $scope.tableParams);   
-               $scope.doneloading_transaction = true;
-               console.log(result);
+               $scope.doneloading_transaction = true; 
             }
             else if (result[0].response == "Empty"){ 
                $scope.doneloading_transaction = true;
@@ -211,8 +291,7 @@
          }); 
 
       QueryService.GetCustomerDetails(data.email)
-         .then( function(result){
-            console.log(result);
+         .then( function(result){ 
             if (result[0].response == "Success") {  
                $scope.customer = result[0].data[0];
                $scope.doneloading_profile = true;
@@ -225,21 +304,60 @@
       $scope.ToggleTab = function(_tab){
          $scope.toggleTransaction = (_tab == 'transactions') ? true : false;
          console.log($scope.toggleTransaction);
-      }
-
-      $scope.hide = function() {
-        $mdDialog.hide();
-      };
+      } 
 
       $scope.cancel = function() {
-        $mdDialog.cancel();
+         $mdDialog.cancel();
       }; 
 
       $scope.export = function(){
-         ToastService.Show('Export Successful', '' ); 
-      }
-
+         if (data.memberID != null || data.memberID != '') {
+            $mdDialog.hide(data.memberID);            
+         }
+         else{
+            $mdDialog.hide();   
+         }
+         
+      } 
    } 
+
+   ExportDemographicsCtrl.$inject = ['$rootScope', '$scope', '$mdToast', '$mdDialog', 'data', 'ExportService', 'ToastService', 'DataLink'];
+   function ExportDemographicsCtrl($rootScope, $scope, $mdToast, $mdDialog, data, ExportService, ToastService, DataLink){
+      console.log(data);
+
+      ExportService.ExportDemographics(data.start, data.end, data.email, data.gender, data.bday, data.age.start, data.age.end)
+         .then( function(result){
+            if (result[0].response == "Success") {   
+               window.location = DataLink.merchant_domain+"reports/excel/"+result[0].filename;  
+               $mdToast.hide('Success');   
+            }
+            else if (result[0].response == "Empty"){  
+               $mdToast.cancel('Empty');   
+            }
+            else{ 
+               $mdToast.cancel(result); 
+            } 
+         });
+   }
+
+   ExportDemographicsModalCtrl.$inject = ['$rootScope', '$scope', '$mdToast', '$mdDialog', 'data', 'ExportService', 'ToastService', 'DataLink'];
+   function ExportDemographicsModalCtrl($rootScope, $scope, $mdToast, $mdDialog, data, ExportService, ToastService, DataLink){
+      console.log(data);
+
+      ExportService.ExportCustomerTransactionHistory(data)
+         .then( function(result){
+            if (result[0].response == "Success") {   
+               window.location = DataLink.merchant_domain+"reports/excel/"+result[0].filename;  
+               $mdToast.hide('Success');   
+            }
+            else if (result[0].response == "Empty"){  
+               $mdToast.cancel('Empty');   
+            }
+            else{ 
+               $mdToast.cancel(result); 
+            } 
+         });
+   }
 
 })();
 
