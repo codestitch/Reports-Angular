@@ -44,7 +44,7 @@
       service.ExportCustomerSummary = ExportCustomerSummary; 
 
       // Vouchers 
-      service.ExportRedemptionVouchers = ExportRedemptionVouchers;
+      service.ExportBranchRedemptionVouchers = ExportBranchRedemptionVouchers;
       service.ExportCustomerRedemptionVouchers = ExportCustomerRedemptionVouchers;
 
       // Json
@@ -255,14 +255,14 @@
          ----------------
          Vouchers
       */    
-      function ExportRedemptionVouchers(){
+      function ExportBranchRedemptionVouchers(startdate, enddate){
          var url = DataLink.export_link+"function=export_redemptionVoucher&startDate="+startdate+"&endDate="+enddate; 
          return $http.get(url).then(handleSuccess, function(error){ 
             ToastService.Show("An unexpected error occured", error); 
          });             
       }
 
-      function ExportCustomerRedemptionVouchers(){
+      function ExportCustomerRedemptionVouchers(startdate, enddate){
          var url = DataLink.export_link+"function=export_customerRedemptionVoucher&startDate="+startdate+"&endDate="+enddate; 
          return $http.get(url).then(handleSuccess, function(error){ 
             ToastService.Show("An unexpected error occured", error); 

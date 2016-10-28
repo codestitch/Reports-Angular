@@ -227,6 +227,20 @@
   margin-bottom: 15px;
 }  
 
+.daterangepicker .input-mini {
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    color: #555;
+    height: 30px;
+    line-height: 30px;
+    display: block;
+    vertical-align: middle;
+    margin: 0 0 5px 0;
+    padding: 0px -1px 3px 28px;
+    width: 100% !important;
+    width: 332px;
+}
+
 .imgcircle{
   width: 45px;
   height: 45px;

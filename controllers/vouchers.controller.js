@@ -3,7 +3,9 @@
 
    angular
       .module('app')
-      .controller('VouchersController', VouchersController);
+      .controller('VouchersController', VouchersController)
+      .controller('ExportBranchVoucherCtrl', ExportBranchVoucherCtrl)
+      .controller('ExportCustomerVoucherCtrl', ExportCustomerVoucherCtrl);
 
    VouchersController.$inject = ['$rootScope', 'PreloaderService', 'QueryService', 'ChartService', 'TableService', 'ToastService', '$mdDialog', '$scope', 'ExportToastService' ];
    function VouchersController($rootScope, PreloaderService, QueryService, ChartService, TableService, ToastService, $mdDialog, $scope, ExportToastService) {
@@ -26,6 +28,8 @@
       vm.GetOverview = GetOverview;
       vm.GetBranchRedemption = GetBranchRedemption;
       vm.GetCustomerRedemption = GetCustomerRedemption;
+      vm.ExportBranchRedemption = ExportBranchRedemption;
+      vm.ExportCustomerRedemption = ExportCustomerRedemption;
 
       // Initialization
       Initialize();
@@ -137,11 +141,136 @@
 
       function GetBranchRedemption(){
 
+         if (vm.daterange.branch.start == "" && vm.daterange.branch.end == "") {  
+            ToastService.Show('No Date Range Specified', 'Oops! Don\'t forget to specify a date'); 
+            return;
+         }
+         
+         vm.preloader.branch = false;
+         vm.tableParams = TableService.Empty(vm.tableParams);
+         QueryService.GetRedemptionVouchers(vm.daterange.branch.start, vm.daterange.branch.end)
+             .then( function(result){ 
+                  console.log(result);
+                  if (result[0].response == "Success") {  
+                     vm.tableParams = TableService.Create(result[0].data, vm.tableParams); 
+                     vm.totalrecord.branch = result[0].data.length;
+                  }
+                  else if (result[0].response == "Empty"){ 
+                     ToastService.Show('No Data Found', 'Oops! It seems there\' no records at the moment');
+                  }
+                  vm.preloader.branch = true;
+                  
+             });  
+
       } 
  
       function GetCustomerRedemption(){
+
+         if (vm.daterange.customer.start == "" && vm.daterange.customer.end == "") {  
+            ToastService.Show('No Date Range Specified', 'Oops! Don\'t forget to specify a date'); 
+            return;
+         }
          
+         vm.preloader.customer = false;
+         vm.tableParams_customer = TableService.Empty(vm.tableParams_customer);
+         QueryService.GetCustomerRedemptionVouchers(vm.daterange.customer.start, vm.daterange.customer.end)
+             .then( function(result){ 
+                  console.log(result);
+                  if (result[0].response == "Success") {  
+                     vm.tableParams_customer = TableService.Create(result[0].data, vm.tableParams_customer); 
+                     vm.totalrecord.customer = result[0].data.length;
+                  }
+                  else if (result[0].response == "Empty"){ 
+                     ToastService.Show('No Data Found', 'Oops! It seems there\' no records at the moment');
+                  }
+                  vm.preloader.customer = true;
+                  
+             }); 
+
       } 
+
+      function ExportBranchRedemption(){
+         if (!vm.exportingprogress) { 
+            
+            if (vm.daterange.branch.start == "" && vm.daterange.branch.end == "") {  
+               ToastService.Show('No Date Range Specified', 'Oops! Don\'t forget to specify a date'); 
+               return;
+            }
+
+            var _data = { 'daterange': vm.daterange.branch };
+
+            var confirm = $mdDialog.confirm()
+                   .title('Would you like to export searched data?')
+                   .textContent('Allows you to see the raw data you\'ve searched for.')
+                   .ariaLabel('Lucky day')
+                   .targetEvent()
+                   .ok('Yes Please')
+                   .cancel('Nope');
+
+            $mdDialog.show(confirm).then(function() { 
+               
+               vm.exportingprogress = true;  
+               ExportToastService.Init(_data, 'ExportBranchVoucherCtrl').then(
+                  function(resolve) {  
+                     ToastService.Show('Export Successful', '');
+                     vm.exportingprogress = false; 
+                  }, function(reject) {  
+                     vm.exportingprogress = false; 
+                     if (reject == "Empty") {
+                        ToastService.Show('No Data Found', 'Oops! It seems that there\'s no existing record at the moment'); 
+                     }
+                     else {
+                        ToastService.Show('Something went wrong', reject); 
+                     }
+                  }); 
+
+            }, function() {
+               vm.exportingprogress = false; 
+            });  
+         }         
+      }
+
+      function ExportCustomerRedemption(){
+         if (!vm.exportingprogress) { 
+            
+            if (vm.daterange.customer.start == "" && vm.daterange.customer.end == "") {  
+               ToastService.Show('No Date Range Specified', 'Oops! Don\'t forget to specify a date'); 
+               return;
+            }
+
+            var _data = { 'daterange': vm.daterange.customer };
+
+            var confirm = $mdDialog.confirm()
+                   .title('Would you like to export searched data?')
+                   .textContent('Allows you to see the raw data you\'ve searched for.')
+                   .ariaLabel('Lucky day')
+                   .targetEvent()
+                   .ok('Yes Please')
+                   .cancel('Nope');
+
+            $mdDialog.show(confirm).then(function() { 
+               
+               vm.exportingprogress = true;  
+               ExportToastService.Init(_data, 'ExportCustomerVoucherCtrl').then(
+                  function(resolve) {  
+                     ToastService.Show('Export Successful', '');
+                     vm.exportingprogress = false; 
+                  }, function(reject) {  
+                     vm.exportingprogress = false; 
+                     if (reject == "Empty") {
+                        ToastService.Show('No Data Found', 'Oops! It seems that there\'s no existing record at the moment'); 
+                     }
+                     else {
+                        ToastService.Show('Something went wrong', reject); 
+                     }
+                  }); 
+
+            }, function() {
+               vm.exportingprogress = false; 
+            });  
+         }
+      }
+
       
       $('#branchvoucherrange').daterangepicker({
          locale: {
@@ -149,8 +278,8 @@
          }
       },
       function(start, end, label) { 
-         vm.daterange.summary.start = start.format('YYYY/MM/DD');
-         vm.daterange.summary.end =  end.format('YYYY/MM/DD');
+         vm.daterange.branch.start = start.format('YYYY/MM/DD');
+         vm.daterange.branch.end =  end.format('YYYY/MM/DD');
          $('#branchvoucherrange span').html(start.format('MMMM D, YYYY') + ' - ' + end.format('MMMM D, YYYY'));
       });  
 
@@ -160,14 +289,53 @@
          }
       },
       function(start, end, label) { 
-         vm.daterange.perhour.start = start.format('YYYY/MM/DD');
-         vm.daterange.perhour.end =  end.format('YYYY/MM/DD');
+         vm.daterange.customer.start = start.format('YYYY/MM/DD');
+         vm.daterange.customer.end =  end.format('YYYY/MM/DD');
          $('#customervoucherrange span').html(start.format('MMMM D, YYYY') + ' - ' + end.format('MMMM D, YYYY'));
       });  
         
       Metronic.init(); // init metronic core components
       Layout.init(); // init current layout   
-    } 
+   }
+
+
+
+   ExportBranchVoucherCtrl.$inject = ['$rootScope', '$scope', '$mdToast', '$mdDialog', 'data', 'ExportService', 'ToastService', 'DataLink'];
+   function ExportBranchVoucherCtrl($rootScope, $scope, $mdToast, $mdDialog, data, ExportService, ToastService, DataLink){ 
+
+      ExportService.ExportBranchRedemptionVouchers(data.daterange.start, data.daterange.end)
+         .then( function(result){
+            if (result[0].response == "Success") {   
+               window.location = DataLink.merchant_domain+"reports/excel/"+result[0].filename;  
+               $mdToast.hide('Success');   
+            }
+            else if (result[0].response == "Empty"){  
+               $mdToast.cancel('Empty');   
+            }
+            else{ 
+               $mdToast.cancel(result); 
+            } 
+         });
+   } 
+
+   
+   ExportCustomerVoucherCtrl.$inject = ['$rootScope', '$scope', '$mdToast', '$mdDialog', 'data', 'ExportService', 'ToastService', 'DataLink'];
+   function ExportCustomerVoucherCtrl($rootScope, $scope, $mdToast, $mdDialog, data, ExportService, ToastService, DataLink){ 
+
+      ExportService.ExportCustomerRedemptionVouchers(data.daterange.start, data.daterange.end)
+         .then( function(result){
+            if (result[0].response == "Success") {   
+               window.location = DataLink.merchant_domain+"reports/excel/"+result[0].filename;  
+               $mdToast.hide('Success');   
+            }
+            else if (result[0].response == "Empty"){  
+               $mdToast.cancel('Empty');   
+            }
+            else{ 
+               $mdToast.cancel(result); 
+            } 
+         });
+   } 
 
 })();
 

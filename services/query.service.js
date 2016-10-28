@@ -439,14 +439,14 @@
          }); 
       }
 
-      function GetRedemptionVouchers(){
+      function GetRedemptionVouchers(startdate, enddate){
          var url = DataLink.report_link+"function=get_redemptionVoucher&startDate="+startdate+"&endDate="+enddate; 
          return $http.get(url).then(handleSuccess, function(error){ 
             ToastService.Show("An unexpected error occured", error); 
          });  
       }
 
-      function GetCustomerRedemptionVouchers(){
+      function GetCustomerRedemptionVouchers(startdate, enddate){
          var url = DataLink.report_link+"function=get_customerRedemptionVoucher&startDate="+startdate+"&endDate="+enddate; 
          return $http.get(url).then(handleSuccess, function(error){ 
             ToastService.Show("An unexpected error occured", error); 

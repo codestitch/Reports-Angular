@@ -64,7 +64,7 @@
                <div class="row"> 
                   <div class="col-md-12">  
                   
-                     <div id=branchvoucherrange" class="pull-left calendar-style " >
+                     <div id="branchvoucherrange" class="pull-left calendar-style " >
                        <i class="glyphicon glyphicon-calendar fa fa-calendar"></i>&nbsp;
                        <span>Select Date</span> <b class="caret"></b>
                      </div>   
@@ -86,16 +86,13 @@
                              </td>
                              <td title="'Branch'" filter="{ locname: 'text'}" sortable="'locname'" header-class="'bg-table-header-white-red'" style="text-align:center;">
                                  {{ item.locname }}
-                             </td>  
-                             <td title="'Total Amount'" filter="{ totalAmount: 'number'}" sortable="'totalAmount'" header-class="'bg-table-header-white-red'" style="text-align:center;">
-                                 <span> ₱ {{ item.totalAmount | number }} </span>
-                             </td> 
-                             <td title="'Total Member'" filter="{ totalMember: 'number'}" sortable="'totalMember'" header-class="'bg-table-header-white-red'" style="text-align:center;">
-                                 <span > {{ item.totalMember | number}} </span>
-                             </td> 
-                             <td title="'Total Transaction'" filter="{ totalTransaction: 'number'}" sortable="'totalTransaction'" header-class="'bg-table-header-white-red'" style="text-align:center;">
-                                 <span class="bold theme-font"> {{ item.totalTransaction | number}} </span>
-                             </td>   
+                             </td>
+                             <td title="'Voucher'" filter="{ name: 'text'}" sortable="'name'" header-class="'bg-table-header-white-red'" style="text-align:center;">
+                                 {{ item.name }}
+                             </td>    
+                             <td title="'Total Amount'" filter="{ total: 'number'}" sortable="'total'" header-class="'bg-table-header-white-red'" style="text-align:center;">
+                                 <span class="bold theme-font"> ₱ {{ item.total | number }} </span>
+                             </td>    
                            </tr>  
                         </table>  
                      </div> 
@@ -135,34 +132,7 @@
                      <div id="customervoucherrange" class="pull-left calendar-style " >
                        <i class="glyphicon glyphicon-calendar fa fa-calendar"></i>&nbsp;
                        <span>Select Date</span> <b class="caret"></b>
-                     </div>     
-
-                     <div class="pull-left margin-left-10"> 
-                         <div class="btn-group">
-                           <button class="btn btn-default dropdown-toggle" type="button" data-toggle="dropdown" aria-expanded="false">
-                           {{ vm.selectedresto.name }} <i class="fa fa-angle-down"></i>
-                           </button>
-                           <ul class="dropdown-menu" role="menu">
-                              <li ng-repeat="resto in vm.restos track by $index"> 
-                                 <a ng-click="vm.SelectRestaurant(resto)"> {{ resto.name }} </a> 
-                              </li> 
-                           </ul>
-                         </div>        
-                     </div>    
-
-                     <div class="pull-left margin-left-10"> 
-                         <div class="btn-group">
-                           <button class="btn btn-default dropdown-toggle" type="button" data-toggle="dropdown" aria-expanded="false">
-                           {{ vm.selectedbranch.name }} <i class="fa fa-angle-down"></i>
-                           </button>
-                           <ul class="dropdown-menu" role="menu">
-                              <li ng-repeat="branch in vm.branches track by $index"> 
-                                 <a ng-click="vm.SelectBranch(branch)"> {{ branch.name }} </a> 
-                              </li> 
-                           </ul>
-                         </div>        
-                     </div> 
-
+                     </div>      
                   </div>   
 
                   <div class="col-md-12">  
@@ -173,26 +143,26 @@
                      </div>
        
                      <div class="table-responsive">
-                        <table ng-table="vm.tableParams_perhour" class="table" show-filter="false">
+                        <table ng-table="vm.tableParams_customer" class="table" show-filter="false">
                            <tr ng-repeat="item in $data" class="even">
-                             <td title="'Date'" filter="{ dateAdded: 'text'}" sortable="'dateAdded'" header-class="'bg-table-header-white-red'"> 
-                                 {{ item.dateAdded }}
+                             <td title="'Card No.'" filter="{ qrcard: 'text'}" sortable="'qrcard'" header-class="'bg-table-header-white-red'"> 
+                                 {{ item.qrcard }}
                              </td>
-                             <td title="'Time'" filter="{ Hour: 'text'}" sortable="'Hour'" header-class="'bg-table-header-white-red'" style="text-align:center;">
-                                 {{ item.Hour }}
+                             <td title="'Email'" filter="{ email: 'text'}" sortable="'email'" header-class="'bg-table-header-white-red'" style="text-align:center;">
+                                 {{ item.email }}
                              </td>  
-                             <td title="'Members Count'" filter="{ MembersCount: 'text'}" sortable="'MembersCount'" header-class="'bg-table-header-white-red'" style="text-align:center;">
-                                 <md-button class="md-fab md-mini red-pomegranate" aria-label="Use Android" ng-click="vm.ViewTransactions($event, item)"> 
-                                       {{ item.MembersCount }}
-                                    </md-button>    
-                                 
+                             <td title="'Restaurant'" filter="{ brandname: 'text'}" sortable="'brandname'" header-class="'bg-table-header-white-red'" style="text-align:center;">
+                                 {{ item.brandname }}
+                             </td>  
+                             <td title="'Branch'" filter="{ locname: 'text'}" sortable="'locname'" header-class="'bg-table-header-white-red'" style="text-align:center;">
+                                 {{ item.locname }}
+                             </td>  
+                             <td title="'Voucher'" filter="{ name: 'text'}" sortable="'name'" header-class="'bg-table-header-white-red'" style="text-align:center;">
+                                 <span class="bold theme-font"> {{ item.name }} </span>
+                             </td>  
+                             <td title="'Transaction Date'" filter="{ dateadded: 'text'}" sortable="'dateadded'" header-class="'bg-table-header-white-red'" style="text-align:center;">
+                                 {{ item.dateadded }} 
                              </td>   
-                             <td title="'Total Loyalty Sales'" filter="{ TotalLoyaltySales: 'number'}" sortable="'TotalLoyaltySales'" header-class="'bg-table-header-white-red'" style="text-align:center;">
-                                 <span > {{ item.TotalLoyaltySales | number}} </span>
-                             </td> 
-                             <td title="'No. of Transactions'" filter="{ TotalTransactions: 'number'}" sortable="'TotalTransactions'" header-class="'bg-table-header-white-red'" style="text-align:center;">
-                                 <span class="bold theme-font"> {{ item.TotalTransactions | number}} </span>
-                             </td>  
                            </tr>  
                         </table>  
                      </div>  
