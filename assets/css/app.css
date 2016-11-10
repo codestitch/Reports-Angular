@@ -65,12 +65,14 @@
 }
 
 /* Scroll bar */
+scrollbar,
 ::-webkit-scrollbar {
   width: 9px;
   height: 9px;
 }
  
 /* Track */
+scrollbar-track,
 ::-webkit-scrollbar-track {
     -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.3); 
     -webkit-border-radius: 10px;
@@ -78,15 +80,19 @@
 }
  
 /* Handle */
+scrollbar-thumb,
 ::-webkit-scrollbar-thumb {
     -webkit-border-radius: 10px;
     border-radius: 10px;
     background: rgba(255,0,0,0.8); 
     -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.5); 
 }
+scrollbar-thumb:window-inactive,
 ::-webkit-scrollbar-thumb:window-inactive {
   background: rgba(255,0,0,0.4); 
 }
+scrollbar-thumb:vertical:hover,
+scrollbar-thumb:horizontal:hover,
 ::-webkit-scrollbar-thumb:vertical:hover,
 ::-webkit-scrollbar-thumb:horizontal:hover {
   background: rgba(255,0,0,0.4); 

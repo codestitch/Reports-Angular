@@ -352,8 +352,7 @@
                   $scope.tableParams = TableService.Create(result[0].data, $scope.tableParams); 
                   $scope.doneloading_transaction = true;
                }
-               else if (result[0].response == "Empty"){ 
-                  ToastService.Show('No Data Found', 'Oops! It seems there\' no records at the moment');
+               else if (result[0].response == "Empty"){  
                   $scope.doneloading_transaction = true;
                   $scope.norecordText = "No Records Found";
                } 
@@ -376,7 +375,7 @@
       ExportService.ExportSalesSummary(data.daterange.start, data.daterange.end)
          .then( function(result){
             if (result[0].response == "Success") {   
-               window.location = DataLink.merchant_domain+"reports/excel/"+result[0].filename;  
+               window.location = DataLink.exportfile_link+"/excel/"+result[0].filename;  
                $mdToast.hide('Success');   
             }
             else if (result[0].response == "Empty"){  
@@ -394,7 +393,7 @@
       ExportService.ExportSalesPerHour(data.daterange.start, data.daterange.end, data.branch, data.resto)
          .then( function(result){
             if (result[0].response == "Success") {   
-               window.location = DataLink.merchant_domain+"reports/excel/"+result[0].filename;  
+               window.location = DataLink.exportfile_link+"/excel/"+result[0].filename;  
                $mdToast.hide('Success');   
             }
             else if (result[0].response == "Empty"){  
@@ -412,7 +411,7 @@
       ExportService.ExportSalesPerBranch(data.sales.dateAdded, data.sales.Hour, data.location.locID, data.resto.brandID )
          .then( function(result){
             if (result[0].response == "Success") {   
-               window.location = DataLink.merchant_domain+"reports/excel/"+result[0].filename;  
+               window.location = DataLink.exportfile_link+"/excel/"+result[0].filename;  
                $mdToast.hide('Success');   
             }
             else if (result[0].response == "Empty"){  

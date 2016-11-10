@@ -156,6 +156,7 @@
                      }
                      else if (result[0].response == "Empty"){ 
                         ToastService.Show('No Data Found', 'Oops! It seems that there\'s no existing record at the moment');
+                        vm.totalrecord.history = 0;
                      }
                      else{
                         ToastService.Show('Something went wrong', result); 
@@ -173,6 +174,7 @@
                      }
                      else if (result[0].response == "Empty"){ 
                         ToastService.Show('No Data Found', 'Oops! It seems that there\'s no existing record at the moment');
+                        vm.totalrecord.history = 0;
                      }
                      else{
                         ToastService.Show('Something went wrong', result); 
@@ -190,6 +192,7 @@
                      }
                      else if (result[0].response == "Empty"){ 
                         ToastService.Show('No Data Found', 'Oops! It seems that there\'s no existing record at the moment');
+                        vm.totalrecord.history = 0;
                      }
                      else{
                         ToastService.Show('Something went wrong', result); 
@@ -320,7 +323,7 @@
          ExportService.ExportCardRegistration_Summary(data.start, data.end)
             .then(function(result){
                if (result[0].response == "Success") { 
-                  window.location = DataLink.merchant_domain+"reports/excel/"+result[0].filename; 
+                  window.location = DataLink.exportfile_link+"/excel/"+result[0].filename; 
                   $mdToast.hide('Success');  
                }
                else if(result[0].response == "Empty"){
@@ -339,7 +342,7 @@
                ExportService.ExportActive_CardHistory(data.start, data.end)
                   .then(function(result){ 
                      if (result[0].response == "Success") { 
-                        window.location = DataLink.merchant_domain+"reports/excel/"+result[0].filename;  
+                        window.location = DataLink.exportfile_link+"/excel/"+result[0].filename;  
                         $mdToast.hide('Success');  
                      }
                      else if(result[0].response == "Empty"){
@@ -358,7 +361,7 @@
                ExportService.ExportInactive_CardHistory(data.start, data.end)
                   .then(function(result){ 
                      if (result[0].response == "Success") { 
-                        window.location = DataLink.merchant_domain+"reports/excel/"+result[0].filename;   
+                        window.location = DataLink.exportfile_link+"/excel/"+result[0].filename;   
                         $mdToast.hide('Success');  
                      }
                      else if(result[0].response == "Empty"){
@@ -376,7 +379,7 @@
                ExportService.ExportExpired_CardHistory(data.start, data.end)
                   .then(function(result){ 
                      if (result[0].response == "Success") { 
-                        window.location = DataLink.merchant_domain+"reports/excel/"+result[0].filename;  
+                        window.location = DataLink.exportfile_link+"/excel/"+result[0].filename;  
                         $mdToast.hide('Success');   
                      }
                      else if(result[0].response == "Empty"){

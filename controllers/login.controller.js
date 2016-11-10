@@ -2,7 +2,7 @@
     'use strict';
 
     angular
-        .module('app')
+        .module('app') 
         .controller('LoginController', LoginController);
 
     LoginController.$inject = ['$location', 'AuthenticationService', 'ToastService'];
@@ -13,11 +13,7 @@
 
         (function initController() {
             // reset login status
-            AuthenticationService.ClearCredentials();
-
-              console.log('screen.height');
-              console.log(screen.height);
-              document.getElementById('sideImage').style.height = (screen.height - 130)+"px"; 
+            AuthenticationService.ClearCredentials(); 
         })();
 
         function login() {
@@ -34,6 +30,15 @@
                 }
             });
         };
-    }
+
+        $(".login-bg").backstretch([
+          "assets/img/login.jpg",
+          "assets/img/login2.jpg" 
+        ], {
+            fade: 750,
+            duration: 4000
+        });
+    } 
+
 
 })();

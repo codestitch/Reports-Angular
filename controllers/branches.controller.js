@@ -217,7 +217,7 @@
       ExportService.ExportBranchSummary(data.daterange.start, data.daterange.end)
          .then(function(result){
             if (result[0].response == "Success") { 
-               window.location = DataLink.merchant_domain+"reports/excel/"+result[0].filename; 
+               window.location = DataLink.exportfile_link+"/excel/"+result[0].filename; 
                $mdToast.hide('Success');  
             }
             else if(result[0].response == "Empty"){
@@ -236,7 +236,7 @@
          ExportService.ExportQuarterlySalesAll()
             .then(function(result){
                if (result[0].response == "Success") { 
-                  window.location = DataLink.merchant_domain+"reports/excel/"+result[0].filename; 
+                  window.location = DataLink.exportfile_link+"/excel/"+result[0].filename; 
                   $mdToast.hide('Success');  
                }
                else if(result[0].response == "Empty"){
@@ -251,7 +251,7 @@
          ExportService.ExportQuarterlySales()
             .then(function(result){
                if (result[0].response == "Success") { 
-                  window.location = DataLink.merchant_domain+"reports/excel/"+result[0].filename; 
+                  window.location = DataLink.exportfile_link+"/excel/"+result[0].filename; 
                   $mdToast.hide('Success');  
                }
                else if(result[0].response == "Empty"){
@@ -272,7 +272,7 @@
          ExportService.ExportQuarterlyVisitsAll()
             .then(function(result){
                if (result[0].response == "Success") { 
-                  window.location = DataLink.merchant_domain+"reports/excel/"+result[0].filename; 
+                  window.location = DataLink.exportfile_link+"/excel/"+result[0].filename; 
                   $mdToast.hide('Success');  
                }
                else if(result[0].response == "Empty"){
@@ -289,7 +289,7 @@
          ExportService.ExportQuarterlyVisits()
             .then(function(result){
                if (result[0].response == "Success") { 
-                  window.location = DataLink.merchant_domain+"reports/excel/"+result[0].filename; 
+                  window.location = DataLink.exportfile_link+"/excel/"+result[0].filename; 
                   $mdToast.hide('Success');  
                }
                else if(result[0].response == "Empty"){

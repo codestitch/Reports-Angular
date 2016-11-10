@@ -39,8 +39,8 @@
                </div>
                <div class="actions">
                   <div class="btn-group btn-group-devided" data-toggle="buttons">  
-                  <a ng-click="vm.GetSalesSummary()" class="btn btn-lg red-pomegranate"> <i class="fa fa-search"></i> Search </a>
-                  <a ng-click="vm.ExportSalesSummary()" ng-disabled="vm.exportingprogress" class="btn btn-lg red-pomegranate"> <i class="fa fa-cloud-download"></i> Export </a> 
+                  <a ng-click="vm.GetSalesSummary()" class="btn btn-lg primary-theme"> <i class="fa fa-search"></i> Search </a>
+                  <a ng-click="vm.ExportSalesSummary()" ng-disabled="vm.exportingprogress" class="btn btn-lg primary-theme"> <i class="fa fa-cloud-download"></i> Export </a> 
                   </div>
                </div>
             </div>
@@ -59,7 +59,7 @@
                   <div class="col-md-12">  
 
                      <div class="record-label"> 
-                     Total Records: <span class="label label-red-pomegranate">
+                     Total Records: <span class="label label-primary-theme">
                         {{vm.totalrecord.summary | number}} </span>
                      </div>
        
@@ -107,8 +107,8 @@
                </div>
                <div class="actions">
                   <div class="btn-group btn-group-devided" data-toggle="buttons">  
-                     <a ng-click="vm.GetSalesPerHour()" class="btn btn-lg red-pomegranate"> <i class="fa fa-search"></i> Search </a>
-                     <a ng-click="vm.ExportSalesPerHour()" ng-disabled="vm.exportingprogress" class="btn btn-lg red-pomegranate"> <i class="fa fa-cloud-download"></i> Export </a> 
+                     <a ng-click="vm.GetSalesPerHour()" class="btn btn-lg primary-theme"> <i class="fa fa-search"></i> Search </a>
+                     <a ng-click="vm.ExportSalesPerHour()" ng-disabled="vm.exportingprogress" class="btn btn-lg primary-theme"> <i class="fa fa-cloud-download"></i> Export </a> 
                   </div>
                </div>
             </div>
@@ -153,7 +153,7 @@
                   <div class="col-md-12">  
 
                      <div class="record-label"> 
-                     Total Records: <span class="label label-red-pomegranate">
+                     Total Records: <span class="label label-primary-theme">
                         {{vm.totalrecord.perhour | number}} </span>
                      </div>
        
@@ -167,7 +167,7 @@
                                  {{ item.Hour }}
                              </td>  
                              <td title="'Members Count'" filter="{ MembersCount: 'text'}" sortable="'MembersCount'" header-class="'bg-table-header-white-red'" style="text-align:center;">
-                                 <md-button class="md-fab md-mini red-pomegranate" aria-label="Use Android" ng-click="vm.ViewTransactions($event, item)"> 
+                                 <md-button class="md-fab md-mini primary-theme" aria-label="Use Android" ng-click="vm.ViewTransactions($event, item)"> 
                                        {{ item.MembersCount }}
                                     </md-button>    
                                  

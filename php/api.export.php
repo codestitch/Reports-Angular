@@ -39,7 +39,7 @@
 	$startDate = (!isset($_GET['startDate']) ) ? "" : $_GET['startDate']; 
 
 	$endDate =  (!isset($_GET['endDate']) ) ? "" : $_GET['endDate']; 
-	$locName = (!isset($_GET['locName']) ) ? "" : $_GET['locName'];  
+	$locName = (!isset($_GET['locName']) ) ? "" : filter_var($_GET['locName'], FILTER_SANITIZE_STRING, FILTER_FLAG_STRIP_HIGH);  
 	$locID = (!isset($_GET['locID']) ) ? "" : $_GET['locID'];  
 	$memberID =  (!isset($_GET['memberID']) ) ? "" : $_GET['memberID']; 
 	$startTime =  (!isset($_GET['startTime']) ) ? "" : $_GET['startTime']; 
@@ -58,35 +58,48 @@
 		/********** Registration **********/
 
 		case 'export_cardregistration_summary': 
-			$filename = $filename."_cardregistration_summary.xlsx";
+			$filename = $filename."_cardregistration.xlsx";
 
 			$sql = "SELECT  b.name as 'Restaurant', l.name as 'Branch', SUM(IF(m.activation IS NULL, 1, 0)) AS 'Total Activated', SUM(IF(m.activation IS NOT NULL, 1, 0)) AS 'Total Not Activated', SUM(IF(m.activation IS NULL, 2500, 0)) AS 'Total Sales' 
 					 FROM memberstable m INNER JOIN loctable l ON m.locid = l.locid
 					 LEFT JOIN brandtable b ON l.brandid = b.brandid
 					 WHERE DATE(m.datereg) >= '".$startDate."' AND DATE(m.datereg) <= '".$endDate."'
 					 GROUP BY b.name, l.name
-					 ORDER BY 'Total Sales' DESC"; 
+					 ORDER BY 'Total Sales' DESC";
  
-			break;
+			break; 
+
 
 		case 'export_cardhistory_active':
-			$filename = $filename."_cardhistory_active.xlsx";
-			
-			$sql = "SELECT qrcard as 'Card No.', email as 'Email', concat(fname, ' ', lname) as 'Name', dateofbirth as 'Birthday', gender as 'Gender', datereg as 'Registered Date', expiration as 'Expiration Date', servername as 'Server Name', totalpoints as 'Total Points', lasttransaction as 'Last Transaction', locid as 'Location ID' from memberstable where date(datereg) >= '".$startDate."' and date(datereg) <= '".$endDate."' and activation is null";
+			$filename = $filename."_cardhistory_active.xlsx"; 
 
+			$sql = "SELECT m.qrcard as 'Card No.', m.email as 'Email', concat(m.fname, ' ',m.lname) as 'Customer', m.dateofbirth as 'Birthday', m.gender as 'Gender', m.datereg as 'Registered Date', m.expiration as 'Expiration Date', m.servername as 'Server Name', m.totalpoints as 'Total Points', m.lasttransaction as 'Last Transaction', b.name as 'Restaurant', l.name as 'Branch'
+				from memberstable m inner join loctable l on m.locid = l.locid
+				left join brandtable b on l.brandid = b.brandid 
+				where date(m.datereg) >= '".$startDate."' and date(m.datereg) <= '".$endDate."'
+				and m.activation is null";
+ 
 			break; 
 
 		case 'export_cardhistory_inactive':
 			$filename = $filename."_cardhistory_inactive.xlsx";
 			
-			$sql = "SELECT qrcard as 'Card No.', email as 'Email', concat(fname, ' ', lname) as 'Name', dateofbirth as 'Birthday', gender as 'Gender', datereg as 'Registered Date', expiration as 'Expiration Date', servername as 'Server Name', totalpoints as 'Total Points', lasttransaction as 'Last Transaction', locid as 'Location ID' from memberstable where date(datereg) >= '".$startDate."' and date(datereg) <= '".$endDate."' and activation is not null";
+			$sql = "SELECT m.qrcard as 'Card No.', m.email as 'Email', concat(m.fname, ' ',m.lname) as 'Customer', m.dateofbirth as 'Birthday', m.gender as 'Gender', m.datereg as 'Registered Date', m.expiration as 'Expiration Date', m.servername as 'Server Name', m.totalpoints as 'Total Points', m.lasttransaction as 'Last Transaction', b.name as 'Restaurant', l.name as 'Branch' 
+				from memberstable m inner join loctable l on m.locid = l.locid
+				left join brandtable b on l.brandid = b.brandid 
+				where date(m.datereg) >= '".$startDate."' and date(m.datereg) <= '".$endDate."'
+				and m.activation is not null";
 
 			break; 
 
 		case 'export_cardhistory_expired':
 			$filename = $filename."_cardhistory_expired.xlsx";
 			
-			$sql = "SELECT qrcard as 'Card No.', email as 'Email', concat(fname, ' ', lname) as 'Name', dateofbirth as 'Birthday', gender as 'Gender', datereg as 'Registered Date', expiration as 'Expiration Date', servername as 'Server Name', totalpoints as 'Total Points', lasttransaction as 'Last Transaction', locid as 'Location ID' from memberstable where date(datereg) >= '".$startDate."' and date(datereg) <= '".$endDate."' and now() > expiration";
+			$sql = "SELECT m.qrcard as 'Card No.', m.email as 'Email', concat(m.fname, ' ',m.lname) as 'Customer', m.dateofbirth as 'Birthday', m.gender as 'Gender', m.datereg as 'Registered Date', m.expiration as 'Expiration Date', m.servername as 'Server Name', m.totalpoints as 'Total Points', m.lasttransaction as 'Last Transaction', b.name as 'Restaurant', l.name as 'Branch' 
+				from memberstable m inner join loctable l on m.locid = l.locid
+				left join brandtable b on l.brandid = b.brandid 
+				where date(m.datereg) >= '".$startDate."' and date(m.datereg) <= '".$endDate."'
+				and now() > m.expiration";
 
 			break; 
 
@@ -158,7 +171,7 @@
 			$filename = $filename."_customerTransactionHistory.xlsx";
 
 			$sql = "SELECT e.transactiontype AS 'Type', e.memberid AS 'Member\'s Account No.', e.transactionid AS 'Transaction ID', 
-						IFNULL(CONCAT(m.fname, ' ', m.lname),e.email) AS 'Member\'s Name', e.locname AS 'Branch of Purchase', e.dateAdded AS 'Date of Purchase', amount AS 'Sales Amount'
+						IFNULL(CONCAT(m.fname, ' ', m.lname),e.email) AS 'Member\'s Name', locname AS 'Branch of Purchase', dateAdded AS 'Date of Purchase', amount AS 'Sales Amount'
 						FROM earntable e INNER JOIN memberstable m ON e.memberid = m.memberid
 						WHERE e.amount > 0 AND e.memberid = '".$memberID."' ";
  
@@ -238,11 +251,11 @@
 
 			break; 
 
-		/********** Redemption **********/ 
+		/********** Redemption **********/  
 
-		case 'export_redemptionSummary':
+		case 'export_branchRedemption':
   
-			$filename = $filename."_redemptionSummary.xlsx";
+			$filename = $filename."_branchRedemption.xlsx";
 
 			$sql ="SELECT rdm.brandname as 'Restaurant', rdm.locName AS 'Branch', rdm.rcount AS 'Total Transactions', IFNULL(SUM(tmp.points),0) AS 'Total Earned Points', rdm.rpoints AS 'Total Redeemed Points'
 					FROM
@@ -264,6 +277,18 @@
 					AS tmp
 					ON rdm.locname = tmp.locname
 					GROUP BY rdm.brandname, rdm.locName"; 
+
+
+			break; 
+
+		case 'export_customerRedemption':
+  
+			$filename = $filename."_customerredemptionVoucher.xlsx";
+
+			$sql ="SELECT r.memberid as 'Member ID', m.qrcard as 'Card No.', m.email as 'Email', r.brandname as 'Restaurant', r.locname as 'Branch', r.points as 'Total Points', r.dateadded as 'Transaction Date'
+			     FROM redeemtable r INNER JOIN memberstable m ON r.memberid=m.memberid
+			     WHERE DATE(r.dateadded) >= '".$startDate."' AND DATE(r.dateadded) <= '".$endDate."' 
+			     ORDER BY m.qrcard, r.dateadded"; 
 
 
 			break; 

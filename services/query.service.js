@@ -65,6 +65,12 @@
       service.GetRedemptionVouchers = GetRedemptionVouchers;
       service.GetCustomerRedemptionVouchers = GetCustomerRedemptionVouchers;
 
+      // Redemption
+      service.GetRewardsComparison = GetRewardsComparison;
+      service.GetBranchRedemption = GetBranchRedemption;
+      service.GetBranchTransaction = GetBranchTransaction;
+      service.GetCustomerRedemption = GetCustomerRedemption;
+
       // Json
       service.GetTableRecords = GetTableRecords;
       service.GetRecord = GetRecord;
@@ -98,8 +104,8 @@
          Card Registration
       */
 
-      function GetCardRegistration_Summary(startdate, enddate){
-         var url = DataLink.report_link+"function=get_cardregistration_summary&startDate="+startdate+"&endDate="+enddate;    
+      function GetCardRegistration_Summary(startDate, endDate){
+         var url = DataLink.report_link+"function=get_cardregistration_summary&startDate="+startDate+"&endDate="+endDate;    
          return $http.get(url).then(handleSuccess, function(error){ 
             ToastService.Show("An unexpected error occured", error); 
          });  
@@ -140,22 +146,22 @@
          });  
       }
 
-      function GetActive_CardHistory(startdate, enddate){
-         var url = DataLink.report_link+"function=get_cardhistory_active&startdate="+startdate+"&enddate="+enddate;  
+      function GetActive_CardHistory(startDate, endDate){
+         var url = DataLink.report_link+"function=get_cardhistory_active&startDate="+startDate+"&endDate="+endDate;  
          return $http.get(url).then(handleSuccess, function(error){ 
             ToastService.Show("An unexpected error occured", error); 
          });  
       }
 
-      function GetInactive_CardHistory(startdate, enddate){
-         var url = DataLink.report_link+"function=get_cardhistory_inactive&startdate="+startdate+"&enddate="+enddate;  
+      function GetInactive_CardHistory(startDate, endDate){
+         var url = DataLink.report_link+"function=get_cardhistory_inactive&startDate="+startDate+"&endDate="+endDate;  
          return $http.get(url).then(handleSuccess, function(error){ 
             ToastService.Show("An unexpected error occured", error); 
          });  
       }
 
-      function GetExpired_CardHistory(startdate, enddate){
-         var url = DataLink.report_link+"function=get_cardhistory_expired&startdate="+startdate+"&enddate="+enddate;  
+      function GetExpired_CardHistory(startDate, endDate){
+         var url = DataLink.report_link+"function=get_cardhistory_expired&startDate="+startDate+"&endDate="+endDate;  
          return $http.get(url).then(handleSuccess, function(error){ 
             ToastService.Show("An unexpected error occured", error); 
          });  
@@ -169,48 +175,16 @@
 			Demographics
       */
       function GetPlatformRegistration(){
-         delete $http.defaults.headers.common['X-Requested-With'];
+         // delete $http.defaults.headers.common['X-Requested-With'];
       	var url = DataLink.report_link+"function=get_userPlatformRegistration";  
-         // var url = "https://api.getevents.co/event?&lat=41.904196&lng=12.465974";
-         // return $http({
-         //     method: 'GET',
-         //     url: url
-         // }).
-         // success(function(status) {
-         //     //your code when success
-         //     console.log(status);
-         // }).
-         // error(function(status) {
-         //     //your code when fails
-         //     console.log(status);
-         //      ToastService.Show("An unexpected error occured 1", status);
-         // });
-
          return $http.get(url).then(handleSuccess, function(error){ 
             ToastService.Show("An unexpected error occured", error); 
          });  
       }
 
       function GetAge(){
-         delete $http.defaults.headers.common['X-Requested-With'];
-      	var url = DataLink.report_link+"function=get_userAge";  
-         
-         // return $http({
-         //     method: 'GET',
-         //     url: url, 
-         //     dataType: 'json',
-         //     headers: {'Authorization': 'Token token=xxxxYYYYZzzz'}
-         // }).
-         // success(function(status) {
-         //     //your code when success
-         //     console.log(status);
-         // }).
-         // error(function(status) {
-         //     //your code when fails
-         //     console.log(status);
-         //      ToastService.Show("An unexpected error occured 2", status);
-         // });
-
+         // delete $http.defaults.headers.common['X-Requested-With'];
+      	var url = DataLink.report_link+"function=get_userAge"; 
          return $http.get(url).then(handleSuccess, function(error){ 
             ToastService.Show("An unexpected error occured", error); 
          }); 
@@ -218,28 +192,13 @@
 
       function GetGender(){
       	var url = DataLink.report_link+"function=get_userGender";   
-         
-         // return $http({
-         //     method: 'JSONP',
-         //     url: url
-         // }).
-         // success(function(status) {
-         //     //your code when success
-         //     console.log(status);
-         // }).
-         // error(function(status) {
-         //     //your code when fails
-         //     console.log(status);
-         //      ToastService.Show("An unexpected error occured 3", status);
-         // });
-
          return $http.get(url).then(handleSuccess, function(error){ 
             ToastService.Show("An unexpected error occured", error); 
          });       	
       }
 
-		function GetDemographics(startdate, enddate, email, gender, birthday, startAge, endAge){  
-			var url = DataLink.report_link+"function=get_userInformation&startDate="+startdate+"&endDate="+enddate
+		function GetDemographics(startDate, endDate, email, gender, birthday, startAge, endAge){  
+			var url = DataLink.report_link+"function=get_userInformation&startDate="+startDate+"&endDate="+endDate
 				+"&email="+email+"&gender="+gender+"&birthday="+birthday+"&startAge="+startAge+"&endAge="+endAge; 
          return $http.get(url).then(handleSuccess, function(error){ 
             ToastService.Show("An unexpected error occured", error); 
@@ -273,22 +232,22 @@
          });
       }
 
-      function GetSalesSummary(startdate, enddate){
-         var url = DataLink.report_link+"function=get_salessummary&startDate="+startdate+"&endDate="+enddate; 
+      function GetSalesSummary(startDate, endDate){
+         var url = DataLink.report_link+"function=get_salessummary&startDate="+startDate+"&endDate="+endDate; 
          return $http.get(url).then(handleSuccess, function(error){ 
             ToastService.Show("An unexpected error occured", error); 
          });         
       }
 
-      function GetSalesPerHour(startdate, enddate, locID, brandID){
-         var url = DataLink.report_link+"function=get_salesperhourly&startDate="+startdate+"&endDate="+enddate+"&locID="+locID+"&brandID="+brandID; 
+      function GetSalesPerHour(startDate, endDate, locID, brandID){
+         var url = DataLink.report_link+"function=get_salesperhourly&startDate="+startDate+"&endDate="+endDate+"&locID="+locID+"&brandID="+brandID; 
          return $http.get(url).then(handleSuccess, function(error){ 
             ToastService.Show("An unexpected error occured", error); 
          });         
       }
 
-      function GetSalesPerBranch(startdate, startTime, locID, brandID){
-         var url = DataLink.report_link+"function=get_salesperbranch&startDate="+startdate+"&startTime="+startTime+"&locID="+locID+"&brandID="+brandID; 
+      function GetSalesPerBranch(startDate, startTime, locID, brandID){
+         var url = DataLink.report_link+"function=get_salesperbranch&startDate="+startDate+"&startTime="+startTime+"&locID="+locID+"&brandID="+brandID; 
          return $http.get(url).then(handleSuccess, function(error){ 
             ToastService.Show("An unexpected error occured", error); 
          });         
@@ -336,8 +295,8 @@
          });    
       }
 
-      function GetSpendSummary(startdate, enddate){
-         var url = DataLink.report_link+"function=get_spent_summary&startDate="+startdate+"&endDate="+enddate; 
+      function GetSpendSummary(startDate, endDate){
+         var url = DataLink.report_link+"function=get_spent_summary&startDate="+startDate+"&endDate="+endDate; 
          return $http.get(url).then(handleSuccess, function(error){ 
             ToastService.Show("An unexpected error occured", error); 
          });    
@@ -364,8 +323,8 @@
          }); 
       }
 
-      function GetBranchSummary(startdate, enddate){
-         var url = DataLink.report_link+"function=get_branchsalessummary&startDate="+startdate+"&endDate="+enddate; 
+      function GetBranchSummary(startDate, endDate){
+         var url = DataLink.report_link+"function=get_branchsalessummary&startDate="+startDate+"&endDate="+endDate; 
          return $http.get(url).then(handleSuccess, function(error){ 
             ToastService.Show("An unexpected error occured", error); 
          });  
@@ -391,8 +350,8 @@
          }); 
       }
 
-      function GetCustomerSummary(startdate, enddate){
-         var url = DataLink.report_link+"function=get_customer_transactions&startDate="+startdate+"&endDate="+enddate; 
+      function GetCustomerSummary(startDate, endDate){
+         var url = DataLink.report_link+"function=get_customer_transactions&startDate="+startDate+"&endDate="+endDate; 
          return $http.get(url).then(handleSuccess, function(error){ 
             ToastService.Show("An unexpected error occured", error); 
          });  
@@ -439,19 +398,59 @@
          }); 
       }
 
-      function GetRedemptionVouchers(startdate, enddate){
-         var url = DataLink.report_link+"function=get_redemptionVoucher&startDate="+startdate+"&endDate="+enddate; 
+      function GetRedemptionVouchers(startDate, endDate){
+         var url = DataLink.report_link+"function=get_redemptionVoucher&startDate="+startDate+"&endDate="+endDate; 
          return $http.get(url).then(handleSuccess, function(error){ 
             ToastService.Show("An unexpected error occured", error); 
          });  
       }
 
-      function GetCustomerRedemptionVouchers(startdate, enddate){
-         var url = DataLink.report_link+"function=get_customerRedemptionVoucher&startDate="+startdate+"&endDate="+enddate; 
+      function GetCustomerRedemptionVouchers(startDate, endDate){
+         var url = DataLink.report_link+"function=get_customerRedemptionVoucher&startDate="+startDate+"&endDate="+endDate; 
          return $http.get(url).then(handleSuccess, function(error){ 
             ToastService.Show("An unexpected error occured", error); 
          });  
       }
+
+
+
+      /*
+         Public Functions
+         ----------------
+         Vouchers
+      */ 
+      function GetRewardsComparison(){
+         var url = DataLink.report_link+"function=get_rewards_comparison"; 
+         return $http.get(url).then(handleSuccess, function(error){ 
+            ToastService.Show("An unexpected error occured", error); 
+         }); 
+      }
+
+      function GetBranchRedemption(startDate, endDate){
+         var url = DataLink.report_link+"function=get_branchRedemption&startDate="+startDate+"&endDate="+endDate; 
+         return $http.get(url).then(handleSuccess, function(error){ 
+            ToastService.Show("An unexpected error occured", error); 
+         }); 
+
+      }
+
+      function GetBranchTransaction(startDate, endDate, locname){
+         console.log(locname);
+         var url = DataLink.report_link+"function=get_locationTransactions&startDate="+startDate+"&endDate="+endDate+"&locName="+locname; 
+         return $http.get(url).then(handleSuccess, function(error){ 
+            ToastService.Show("An unexpected error occured", error); 
+         }); 
+
+      }
+
+      function GetCustomerRedemption(startDate, endDate){
+         var url = DataLink.report_link+"function=get_customerRedemption&startDate="+startDate+"&endDate="+endDate; 
+         return $http.get(url).then(handleSuccess, function(error){ 
+            ToastService.Show("An unexpected error occured", error); 
+         }); 
+
+      }
+
 
 
 

@@ -15,28 +15,34 @@
                   <div class="widget-body">
 
 	                  <div class="widget-thumb-wrap">
-	                      <i class="widget-thumb-icon bg-green icon-bulb"></i>
+	                      <i class="widget-thumb-icon bg-green fa fa-android"></i>
 	                      <div class="widget-thumb-body">
-	                          <span class="widget-thumb-subtitle">Android</span>
-	                          <span class="widget-thumb-body-stat" data-counter="counterup" data-value="{{ vm.platform.android }}"> {{ vm.platform.android |number }}</span>
+	                           <span class="widget-thumb-subtitle">Android</span>
+	                           <span class="widget-thumb-body-stat" data-counter="counterup" data-value="{{ vm.platform.android }}">  
+	                          		<span class="count" count-to="{{vm.platform.android}}" value="0" duration="2" filter="number"></span>
+	                          	</span>
 	                      </div>
 	                  </div> 
 
 	                  <div class="margin-bottom-20"></div> 
 	                  <div class="widget-thumb-wrap">
-	                      <i class="widget-thumb-icon bg-red icon-layers"></i>
+	                      <i class="widget-thumb-icon bg-red fa fa-apple"></i>
 	                      <div class="widget-thumb-body">
-	                          <span class="widget-thumb-subtitle">IOS</span>
-	                          <span class="widget-thumb-body-stat" data-counter="counterup" data-value="{{ vm.platform.ios }}">{{ vm.platform.ios | number }}<span>
+	                          	<span class="widget-thumb-subtitle">IOS</span>
+	                          	<span class="widget-thumb-body-stat" data-counter="counterup" data-value="{{ vm.platform.ios }}"> 
+	                          		<span class="count" count-to="{{vm.platform.ios}}" value="0" duration="2" filter="number"></span> 
+                          		<span>
 	                      </div>
 	                  </div>
 
 	                  <div class="margin-bottom-20"></div> 
 	                  <div class="widget-thumb-wrap">
-	                      <i class="widget-thumb-icon bg-purple icon-layers"></i>
+	                      <i class="widget-thumb-icon bg-purple fa fa-globe"></i>
 	                      <div class="widget-thumb-body">
-	                          <span class="widget-thumb-subtitle">Web</span>
-	                          <span class="widget-thumb-body-stat" data-counter="counterup" data-value="{{ vm.platform.web }}">{{ vm.platform.web | number}}</spa>
+	                          	<span class="widget-thumb-subtitle">Web</span>
+	                          	<span class="widget-thumb-body-stat" data-counter="counterup" data-value="{{ vm.platform.web }}">
+	                          		<span class="count" count-to="{{vm.platform.web}}" value="0" duration="2" filter="number"></span>  
+	                          	</span>
 	                      </div>
 	                  </div>
 
@@ -67,26 +73,32 @@
 
                   <div class="widget-body"> 
                   	<div class="widget-thumb-wrap">
-	                       <i class="widget-thumb-icon bg-purple icon-screen-desktop"></i>
+	                       <i class="widget-thumb-icon bg-purple fa fa-male"></i>
 	                       <div class="widget-thumb-body">
 	                           <span class="widget-thumb-subtitle">Male</span>
-	                           <span class="widget-thumb-body-stat" data-counter="counterup" data-value="{{vm.gendercount.male}}">{{vm.gendercount.male | number}}</span>
+	                           <span class="widget-thumb-body-stat" data-counter="counterup" data-value="{{vm.gendercount.male}}">
+	                          		<span class="count" count-to="{{vm.gendercount.male}}" value="0" duration="2" filter="number"></span>   
+	                           </span>
 	                       </div>
 	                  </div>
 	                  <div class="margin-bottom-20"></div>
 	                  <div class="widget-thumb-wrap">
-	                      <i class="widget-thumb-icon bg-red icon-layers"></i>
+	                      <i class="widget-thumb-icon bg-red fa fa-female"></i>
 	                      <div class="widget-thumb-body">
-	                          <span class="widget-thumb-subtitle">Female</span>
-	                          <span class="widget-thumb-body-stat" data-counter="counterup" data-value="{{vm.gendercount.female}}">{{vm.gendercount.female | number}}</span>
+	                           <span class="widget-thumb-subtitle">Female</span>
+	                           <span class="widget-thumb-body-stat" data-counter="counterup" data-value="{{vm.gendercount.female}}">
+	                          		<span class="count" count-to="{{vm.gendercount.female}}" value="0" duration="2" filter="number"></span>  
+	                          	</span>
 	                      </div>
 	                  </div>
 	                  <div class="margin-bottom-20"></div>
 	                  <div class="widget-thumb-wrap">
-	                      <i class="widget-thumb-icon bg-green icon-layers"></i>
+	                      <i class="widget-thumb-icon bg-green fa fa-users"></i>
 	                      <div class="widget-thumb-body">
-	                          <span class="widget-thumb-subtitle">Total</span>
-	                          <span class="widget-thumb-body-stat" data-counter="counterup" data-value="{{vm.gendercount.male + vm.gendercount.female}}">{{vm.gendercount.male + vm.gendercount.female | number}}</span>
+	                           <span class="widget-thumb-subtitle">Total</span>
+	                           <span class="widget-thumb-body-stat" data-counter="counterup" data-value="{{vm.gendercount.male + vm.gendercount.female}}">
+	                          		<span class="count" count-to="{{vm.gendercount.male + vm.gendercount.female}}" value="0" duration="2" filter="number"></span>
+	                          	</span>
 	                      </div>
 	                  </div>
                   </div>
@@ -109,8 +121,8 @@
                </div>
                <div class="actions">
                    <div class="btn-group btn-group-devided" data-toggle="buttons">  
-								<a ng-click="vm.GetCustomerDetails()" class="btn btn-lg red-pomegranate"> <i class="fa fa-search"></i> Search </a>
-								<a ng-click="vm.ExportCustomer()" ng-disabled="vm.exportingprogress" class="btn btn-lg red-pomegranate"> <i class="fa fa-cloud-download"></i> Export </a> 
+								<a ng-click="vm.GetCustomerDetails()" class="btn btn-lg primary-theme"> <i class="fa fa-search"></i> Search </a>
+								<a ng-click="vm.ExportCustomer()" ng-disabled="vm.exportingprogress" class="btn btn-lg primary-theme"> <i class="fa fa-cloud-download"></i> Export </a> 
                    </div>
                </div>
             </div>
@@ -192,45 +204,45 @@
 						<div class="col-md-12">   
 
 							<div class="record-label"> 
-							Total Records: <span class="label label-red-pomegranate">
+							Total Records: <span class="label label-primary-theme">
 								{{vm.totalrecord | number}} </span>
 							</div>
 
                		<div class="table-responsive">
 								<table ng-table="vm.tableParams" class="table" show-filter="false">
 									<tr ng-repeat="item in $data" class="even">
-							        	  <td title="'Email'" filter="{ email: 'text'}" sortable="'email'" header-class="'bg-table-header-white-red'"> 
+							        	  <td title="'Email'" filter="{ email: 'text'}" sortable="'email'" header-class="'bg-table-header-primary'"> 
 												<img ng-if="item.image != ''" src="{{ item.image }}" width="20%" class="imgcircle" onError="this.src='assets/img/logo.png';">
 												<img ng-if="item.image == ''" src="assets/img/logo.png" width="20%" class="imgcircle">  
 								        	{{item.email}}
 								        </td>
-								        <td title="'Name'" filter="{ lname: 'text'}" sortable="'lname'" header-class="'bg-table-header-white-red'" style="text-align:center;">
+								        <td title="'Name'" filter="{ lname: 'text'}" sortable="'lname'" header-class="'bg-table-header-primary'" style="text-align:center;">
 								        		<div ng-if="item.lname == '' &&  item.fname == ''  &&  item.mname == '' "></div>
 								        		<div ng-if="item.lname != '' ||  item.fname != ''  ||  item.mname != '' ">
 								        			{{ item.name }}
 								        		</div> 
 								        </td>
-								        <td title="'Birthday'" filter="{ dateOfBirth: 'text'}" sortable="'dateOfBirth'" header-class="'bg-table-header-white-red'" style="text-align:center;">
+								        <td title="'Birthday'" filter="{ dateOfBirth: 'text'}" sortable="'dateOfBirth'" header-class="'bg-table-header-primary'" style="text-align:center;">
 								        		<span ng-if="item.dateofbirth != '0000-00-00' ">{{item.dateofbirth  | date : 'longDate' }}</span>
 								        		<span ng-if="item.dateofbirth == '0000-00-00' "> </span>
 								        </td> 
-								        <td title="'Gender'" filter="{ gender: 'text'}" sortable="'gender'" header-class="'bg-table-header-white-red'" style="text-align:center;">
+								        <td title="'Gender'" filter="{ gender: 'text'}" sortable="'gender'" header-class="'bg-table-header-primary'" style="text-align:center;">
 								        	{{item.gender }}
 								        </td>  
-								        <td title="'Mobile No.'" filter="{ mobileNum: 'text'}" sortable="'mobileNum'" header-class="'bg-table-header-white-red'" style="text-align:center;">
+								        <td title="'Mobile No.'" filter="{ mobileNum: 'text'}" sortable="'mobileNum'" header-class="'bg-table-header-primary'" style="text-align:center;">
 								        	{{item.mobileNum }}
 								        </td>   
-								        <td title="'Points'" filter="{ totalPoints: 'text'}" sortable="'totalPoints'" header-class="'bg-table-header-white-red'" style="text-align:center;">
+								        <td title="'Points'" filter="{ totalPoints: 'text'}" sortable="'totalPoints'" header-class="'bg-table-header-primary'" style="text-align:center;">
 								        	{{item.totalPoints  | number}}
 								        </td>   
-								        <td title="'Card No.'" filter="{ qrCard: 'text'}" sortable="'qrCard'" header-class="'bg-table-header-white-red'" style="text-align:center;">
+								        <td title="'Card No.'" filter="{ qrCard: 'text'}" sortable="'qrCard'" header-class="'bg-table-header-primary'" style="text-align:center;">
 								        	{{item.qrCard }}
 								        </td>   
-								        <td title="'Card Expiration'" filter="{ expiration: 'text'}" sortable="'expiration'" header-class="'bg-table-header-white-red'" style="text-align:center;">
+								        <td title="'Card Expiration'" filter="{ expiration: 'text'}" sortable="'expiration'" header-class="'bg-table-header-primary'" style="text-align:center;">
 								        	{{item.expiration | date : 'longDate' }}
 								        </td>     
-								        <td title="'Action'"  header-class="'bg-table-header-white-red'" style="text-align:center;"> 
-								        		<md-button class="md-fab md-mini red-pomegranate" aria-label="Use Android" ng-click="vm.ViewTransactions($event, item)"> 
+								        <td title="'Action'"  header-class="'bg-table-header-primary'" style="text-align:center;"> 
+								        		<md-button class="md-fab md-mini primary-theme" aria-label="Use Android" ng-click="vm.ViewTransactions($event, item)"> 
 											     	<i class="fa fa-bars"></i>
 											   </md-button>    
 								        </td>
@@ -241,7 +253,8 @@
 				      	<div layout="row" layout-sm="column" layout-align="space-around" ng-hide="vm.doneloading_transactions">
 				            <md-progress-circular md-mode="indeterminate"></md-progress-circular>
 				         </div>  
-
+				         
+                     <div class="table-footer-space"></div>
 						</div> 
 					</div>  
                 
@@ -254,4 +267,4 @@
     <!-- END PAGE CONTENT INNER -->
   </div>
 </div>
-<!-- END PAGE CONTENT -->
+<!-- END PAGE CONTENT

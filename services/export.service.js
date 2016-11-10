@@ -47,6 +47,11 @@
       service.ExportBranchRedemptionVouchers = ExportBranchRedemptionVouchers;
       service.ExportCustomerRedemptionVouchers = ExportCustomerRedemptionVouchers;
 
+      // Redemptions 
+      service.ExportBranchRedemption = ExportBranchRedemption;
+      service.ExportCustomerRedemption = ExportCustomerRedemption;
+      service.ExportBranchTransaction = ExportBranchTransaction;
+
       // Json
       service.GetTableRecords = GetTableRecords;
       service.GetRecord = GetRecord;
@@ -269,7 +274,36 @@
          });    
       }
 
- 
+   
+
+
+      /*
+         Public Functions
+         ----------------
+         Redemptions
+      */    
+      function ExportBranchRedemption(startdate, enddate){
+         var url = DataLink.export_link+"function=export_branchRedemption&startDate="+startdate+"&endDate="+enddate; 
+         console.log(url);
+         return $http.get(url).then(handleSuccess, function(error){ 
+            ToastService.Show("An unexpected error occured", error); 
+         });    
+      }
+
+      function ExportCustomerRedemption(startdate, enddate){
+         var url = DataLink.export_link+"function=export_customerRedemption&startDate="+startdate+"&endDate="+enddate; 
+         return $http.get(url).then(handleSuccess, function(error){ 
+            ToastService.Show("An unexpected error occured", error); 
+         });    
+      }
+
+      function ExportBranchTransaction(startdate, enddate, locname){
+         var url = DataLink.export_link+"function=export_locationTransactions&startDate="+startdate+"&endDate="+enddate+"&locName="+locname; 
+         return $http.get(url).then(handleSuccess, function(error){ 
+            ToastService.Show("An unexpected error occured", error); 
+         });    
+      }
+
 
       /*
          Public Functions

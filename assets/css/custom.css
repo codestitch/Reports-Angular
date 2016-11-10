@@ -16,145 +16,162 @@
     z-index: 999;
 }
 
+/* TAble */
+/*.table-responsive {
+    min-height: .01%;
+    overflow-x: visible;
+}*/
+
 /* Components-rounded.css */
+
+.page-header .page-header-menu .hor-menu .navbar-nav > .active,
+.page-header .page-header-menu .hor-menu .navbar-nav > li.active > a, 
+.page-header .page-header-menu .hor-menu .navbar-nav > li.active > a:hover, 
+.page-header .page-header-menu .hor-menu .navbar-nav > li.current > a, 
+.page-header .page-header-menu .hor-menu .navbar-nav > li.current > a:hover {
+    color: #fff;
+    background: #d83737;
+} 
+
+
 
 /***
 Red Pomegranate
 ***/
 
-.label-red-pomegranate {
+.label-primary-theme {
   background-color: #c0392b;
 }
-.label-red-pomegranate[href]:hover, .label-red-pomegranate[href]:focus {
+.label-primary-theme[href]:hover, .label-primary-theme[href]:focus {
   background-color: #c0392b;
 }
 
 /* Button */
-.red-pomegranate.btn {
+.primary-theme.btn {
   color: #FFFFFF;
   background-color: #c0392b;
 }
-.red-pomegranate.btn:hover, .red-pomegranate.btn:focus, .red-pomegranate.btn:active, .red-pomegranate.btn.active {
+.primary-theme.btn:hover, .primary-theme.btn:focus, .primary-theme.btn:active, .primary-theme.btn.active {
   color: #FFFFFF;
   background-color: #c12323;
 }
-.open .red-pomegranate.btn.dropdown-toggle {
+.open .primary-theme.btn.dropdown-toggle {
   color: #FFFFFF;
   background-color: #c12323;
 }
-.red-pomegranate.btn:active, .red-pomegranate.btn.active {
+.primary-theme.btn:active, .primary-theme.btn.active {
   background-image: none;
   background-color: #d83737;
 }
-.red-pomegranate.btn:active:hover, .red-pomegranate.btn.active:hover {
+.primary-theme.btn:active:hover, .primary-theme.btn.active:hover {
   background-color: #da3f3f;
 }
-.open .red-pomegranate.btn.dropdown-toggle {
+.open .primary-theme.btn.dropdown-toggle {
   background-image: none;
 }
-.red-pomegranate.btn.disabled, .red-pomegranate.btn.disabled:hover, .red-pomegranate.btn.disabled:focus, .red-pomegranate.btn.disabled:active, .red-pomegranate.btn.disabled.active, .red-pomegranate.btn[disabled], .red-pomegranate.btn[disabled]:hover, .red-pomegranate.btn[disabled]:focus, .red-pomegranate.btn[disabled]:active, .red-pomegranate.btn[disabled].active, fieldset[disabled] .red-pomegranate.btn, fieldset[disabled] .red-pomegranate.btn:hover, fieldset[disabled] .red-pomegranate.btn:focus, fieldset[disabled] .red-pomegranate.btn:active, fieldset[disabled] .red-pomegranate.btn.active {
+.primary-theme.btn.disabled, .primary-theme.btn.disabled:hover, .primary-theme.btn.disabled:focus, .primary-theme.btn.disabled:active, .primary-theme.btn.disabled.active, .primary-theme.btn[disabled], .primary-theme.btn[disabled]:hover, .primary-theme.btn[disabled]:focus, .primary-theme.btn[disabled]:active, .primary-theme.btn[disabled].active, fieldset[disabled] .primary-theme.btn, fieldset[disabled] .primary-theme.btn:hover, fieldset[disabled] .primary-theme.btn:focus, fieldset[disabled] .primary-theme.btn:active, fieldset[disabled] .primary-theme.btn.active {
   background-color: #c0392b;
 }
-.red-pomegranate.btn .badge {
+.primary-theme.btn .badge {
   color: #c0392b;
   background-color: #FFFFFF;
 }
 
 /* Button Strip */
-.btn.red-pomegranate-stripe {
+.btn.primary-theme-stripe {
   border-left: 3px solid #c0392b;
 }
 
 /* Portlet */
-.portlet > .portlet-body.red-pomegranate,
-.portlet.red-pomegranate {
+.portlet > .portlet-body.primary-theme,
+.portlet.primary-theme {
   background-color: #c0392b;
 }
 
-.portlet.solid.red-pomegranate > .portlet-title,
-.portlet.solid.red-pomegranate > .portlet-body {
+.portlet.solid.primary-theme > .portlet-title,
+.portlet.solid.primary-theme > .portlet-body {
   border: 0;
   color: #FFFFFF;
 }
-.portlet.solid.red-pomegranate > .portlet-title > .caption {
+.portlet.solid.primary-theme > .portlet-title > .caption {
   font-weight: 400;
 }
-.portlet.solid.red-pomegranate > .portlet-title > .caption > i {
+.portlet.solid.primary-theme > .portlet-title > .caption > i {
   color: #FFFFFF;
 }
-.portlet.solid.red-pomegranate > .portlet-title > .tools > a.remove {
+.portlet.solid.primary-theme > .portlet-title > .tools > a.remove {
   background-image: url(../img/portlet-remove-icon-white.png);
 }
-.portlet.solid.red-pomegranate > .portlet-title > .tools > a.config {
+.portlet.solid.primary-theme > .portlet-title > .tools > a.config {
   background-image: url(../img/portlet-config-icon-white.png);
 }
-.portlet.solid.red-pomegranate > .portlet-title > .tools > a.reload {
+.portlet.solid.primary-theme > .portlet-title > .tools > a.reload {
   background-image: url(../img/portlet-reload-icon-white.png);
 }
-.portlet.solid.red-pomegranate > .portlet-title > .tools > a.expand {
+.portlet.solid.primary-theme > .portlet-title > .tools > a.expand {
   background-image: url(../img/portlet-expand-icon-white.png);
 }
-.portlet.solid.red-pomegranate > .portlet-title > .tools > a.collapse {
+.portlet.solid.primary-theme > .portlet-title > .tools > a.collapse {
   background-image: url(../img/portlet-collapse-icon-white.png);
 }
-.portlet.solid.red-pomegranate > .portlet-title > .tools > a.fullscreen {
+.portlet.solid.primary-theme > .portlet-title > .tools > a.fullscreen {
   color: #fdfdfd;
 }
 
-.portlet.box.red-pomegranate {
+.portlet.box.primary-theme {
   border: 1px solid #ea9595;
   border-top: 0;
 }
-.portlet.box.red-pomegranate > .portlet-title {
+.portlet.box.primary-theme > .portlet-title {
   background-color: #c0392b;
 }
-.portlet.box.red-pomegranate > .portlet-title > .caption {
+.portlet.box.primary-theme > .portlet-title > .caption {
   color: #FFFFFF;
 }
-.portlet.box.red-pomegranate > .portlet-title > .caption > i {
+.portlet.box.primary-theme > .portlet-title > .caption > i {
   color: #FFFFFF;
 }
-.portlet.box.red-pomegranate > .portlet-title > .actions .btn-default {
+.portlet.box.primary-theme > .portlet-title > .actions .btn-default {
   background: transparent !important;
   background-color: transparent !important;
   border: 1px solid #f4c8c8;
   color: #f8dddd;
 }
-.portlet.box.red-pomegranate > .portlet-title > .actions .btn-default > i {
+.portlet.box.primary-theme > .portlet-title > .actions .btn-default > i {
   color: #fbeaea;
 }
-.portlet.box.red-pomegranate > .portlet-title > .actions .btn-default:hover, .portlet.box.red-pomegranate > .portlet-title > .actions .btn-default:focus, .portlet.box.red-pomegranate > .portlet-title > .actions .btn-default:active, .portlet.box.red-pomegranate > .portlet-title > .actions .btn-default.active {
+.portlet.box.primary-theme > .portlet-title > .actions .btn-default:hover, .portlet.box.primary-theme > .portlet-title > .actions .btn-default:focus, .portlet.box.primary-theme > .portlet-title > .actions .btn-default:active, .portlet.box.primary-theme > .portlet-title > .actions .btn-default.active {
   border: 1px solid #fdf3f3;
   color: white;
 }
 
 /* Statistic Block */
-.dashboard-stat.red-pomegranate {
+.dashboard-stat.primary-theme {
   background-color: #c0392b;
 }
-.dashboard-stat.red-pomegranate.dashboard-stat-light:hover {
+.dashboard-stat.primary-theme.dashboard-stat-light:hover {
   background-color: #df5959;
 }
-.dashboard-stat.red-pomegranate .visual > i {
+.dashboard-stat.primary-theme .visual > i {
   color: #FFFFFF;
   opacity: 0.1;
   filter: alpha(opacity=10);
 }
-.dashboard-stat.red-pomegranate .details .number {
+.dashboard-stat.primary-theme .details .number {
   color: #FFFFFF;
 }
-.dashboard-stat.red-pomegranate .details .desc {
+.dashboard-stat.primary-theme .details .desc {
   color: #FFFFFF;
   opacity: 1;
   filter: alpha(opacity=100);
 }
-.dashboard-stat.red-pomegranate .more {
+.dashboard-stat.primary-theme .more {
   color: #FFFFFF;
   background-color: #df5959;
 }
 
 /* General Element */
-.bg-red-pomegranate {
+.bg-primary-theme {
   border-color: #c0392b !important;
   background-image: none !important;
   background-color: #c0392b !important;
@@ -162,11 +179,11 @@ Red Pomegranate
 }
 
 /* General Text & Icon Font Colors */
-.font-red-pomegranate {
+.font-primary-theme {
   color: #c0392b !important;
 }
 
-.progress-bar.red-pomegranate {
+.progress-bar.primary-theme {
   background: #c0392b !important;
   color: #FFFFFF !important;
 }
@@ -213,7 +230,7 @@ Red Pomegranate
   background-color: rgba(230, 230, 229, 0.96);
 }
 
-/*Button*/
+/* material ui Button */
 .md-button.md-fab { 
 	min-width: 0;
 	width: 5.6rem;
@@ -229,10 +246,11 @@ Red Pomegranate
     width: 35px;
     height: 35px;
 } 
-.md-button.red-pomegranate{ 
+
+.md-button.primary-theme{ 
   	background-color: #c0392b;
 }
-.md-button.red-pomegranate:not([disabled]):hover{ 
+.md-button.primary-theme:not([disabled]):hover{ 
   	background-color: #da0d0d;
   	color: #FFFFFF;
 }
@@ -240,11 +258,28 @@ Red Pomegranate
   color : rgb(187, 187, 187);
   background-color: rgba(230, 230, 229, 0.96);
 }
+
+.md-button.primary-theme-pills{
+  background-color: #fff;
+    border: 1px solid #c0392b;
+    color: black;
+}
+.md-button.primary-theme-pills:not([disabled]):hover{
+  background-color: #ec8d8d;
+    border: 1px solid #c0392b;
+    color: black;
+}
+.table-pills{
+      border-radius: 20px !important;
+    width: 100% !important;
+    padding: 0;
+    height: 25px !important;
+}
 /*Toolbar*/
 .md-toolbar{ 
   	background-color: #c0392b;
 }
-.md-toolbar.red-pomegranate{ 
+.md-toolbar.primary-theme{ 
   	background-color: #c0392b;
 }
 .md-toolbar.md-default-theme{

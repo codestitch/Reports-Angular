@@ -2,10 +2,12 @@
     'use strict';
 
     angular
-        .module('app', ['ngRoute', 'ngCookies', 'ngTable', 'ngAnimate', 'ngMaterial', 'ngMessages', 'material.svgAssetsCache'])
+        .module('app', ['ngRoute', 'ngCookies', 'ngTable', 'ngAnimate', 'ngMaterial', 'ngMessages', 'material.svgAssetsCache', 'countTo'])
+        
         .config(config)
         .constant('DataLink', {
             "merchant_domain" : "http://192.168.1.9/jproject/bistro/",
+            "exportfile_link" : "http://192.168.1.9/jproject/bistro/reports",
             "report_link" : "php/api.data.php?", 
             "export_link" : "php/api.export.php?"
         })
@@ -73,7 +75,7 @@
             .when('/redemption', { 
                 cache: false,
                 controller: 'RedemptionController',
-                templateUrl: 'views/redemption.view.html',
+                templateUrl: 'views/redemptions.view.html',
                 activetab: 'redemption',
                 controllerAs: 'vm'
             })
@@ -142,5 +144,6 @@
 
         $rootScope.$route = $route;   
     }  
+
 
 })();

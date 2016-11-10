@@ -1,0 +1,50 @@
+<md-dialog aria-label="Customer Information">
+  <form ng-cloak>
+    <md-toolbar class="pomegranate">
+      <div class="md-toolbar-tools">
+        <h2>Branch Redemption Transactions</h2>
+        <span flex></span>
+        <md-button class="md-icon-button" ng-click="cancel()">
+          <md-icon md-svg-src="img/icons/ic_close_24px.svg" aria-label="Close dialog"></md-icon>
+        </md-button>
+      </div>
+    </md-toolbar>
+
+    <md-dialog-content>
+      <div class="md-dialog-content">
+         <div layout="row" layout-sm="column" layout-align="space-around" ng-hide="doneloading_transaction">
+            <md-progress-circular md-mode="indeterminate"></md-progress-circular>
+         </div>
+
+         <div class="empty-element" >{{ norecordText }}</div>
+
+         <table ng-table="tableParams" class="table" show-filter="false" ng-show="doneloading_transaction && norecordText =='' ">
+             <tr ng-repeat="item in $data" class="even">  
+              <td title="'Member ID'" filter="{ memberid: 'text'}" sortable="'memberid'" header-class="'bg-table-header-white-red'">
+               {{item.memberid }}
+              </td> 
+              <td title="'Email'" filter="{ points: 'text'}" sortable="'points'" header-class="'bg-table-header-white-red'">
+               {{item.points }}
+              </td>  
+              <td title="'Amount'" filter="{ redeemedSnaps: 'text'}" sortable="'redeemedSnaps'" header-class="'bg-table-header-white-red'" style="text-align:center;">
+               {{item.redeemedSnaps | number }}
+              </td> 
+             </tr>
+         </table>  
+
+      </div> 
+    </md-dialog-content>
+
+    <md-dialog-actions layout="row"> 
+      <md-button ng-click="export()" class="primary" md-autofocus>
+         Export
+      </md-button>
+      <span flex></span> 
+      <md-button ng-click="cancel()">
+        Close
+      </md-button>
+    </md-dialog-actions>
+
+  </form>
+
+</md-dialog>

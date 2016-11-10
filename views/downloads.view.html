@@ -4,8 +4,8 @@
     <div class="row">
       <div class="col-md-12">  
 
-      	<!-- START OVERVIEW -->
-      	<div class="row widget-row">
+        <!-- START OVERVIEW -->
+        <div class="row widget-row">
            <div class="col-md-6">
                <!-- BEGIN WIDGET THUMB -->
                <div class="widget-thumb widget-bg-color-white text-uppercase margin-bottom-20 "> 
@@ -13,6 +13,7 @@
                      <h4 class="widget-thumb-heading">Total Downloads for <span class="font-red-sunglo">{{vm.yeartoday}}</span>  </h4>  
                   </div>
                   <div class="widget-body">
+                     <div id="noDatadiv" class="hide-element">No Data Yet</div>
                      <div id="yearlyChart" class="chart"></div>
                   </div>
                </div>
@@ -25,12 +26,13 @@
                      <h4 class="widget-thumb-heading">Total Downloads for <span class="font-red-sunglo">{{vm.monthtoday}}</span> </h4> 
                   </div>
                   <div class="widget-body">
+                     <div id="noDatadiv2" class="hide-element">No Data Yet</div>
                      <div id="monthlyChart" class="chart"></div>
                   </div> 
                </div>
                <!-- END WIDGET THUMB -->
            </div>  
-       	</div> 
+        </div> 
 
 
       </div>

@@ -4,8 +4,8 @@
     <div class="row">
       <div class="col-md-12">  
 
-      	<!-- START OVERVIEW -->
-      	<div class="row widget-row">
+        <!-- START OVERVIEW -->
+        <div class="row widget-row">
            <div class="col-md-12">
                <!-- BEGIN WIDGET THUMB -->
                <div class="widget-thumb widget-bg-color-white text-uppercase margin-bottom-20 ">
@@ -35,13 +35,14 @@
                      <div class="row">
 
                          <div class="col-lg-3 col-md-3 col-sm-6 col-xs-12">
-                          <div class="dashboard-stat red-pomegranate">
+                          <div class="dashboard-stat primary-theme">
                             <div class="visual">
                               <i class="fa fa-dollar"></i>
                             </div>
                             <div class="details">
                               <div class="number">
-                                {{ (vm.spent.totalSales == '' ) ? 0 : vm.spent.totalSales }}
+                                 <span ng-if="vm.spent.totalSales != ''" class="count" count-to="{{vm.spent.totalSales}}" value="0" duration="2" filter="currency" params="₱"></span> 
+                                 <span ng-if="vm.spent.totalSales == ''" class="count" count-to="=" value="0" duration="2" filter="currency" params="₱"></span>
                               </div>
                               <div class="desc">
                                   Total Sales
@@ -52,13 +53,14 @@
                           </div>
                         </div>
                         <div class="col-lg-3 col-md-3 col-sm-6 col-xs-12">
-                          <div class="dashboard-stat red-pomegranate">
+                          <div class="dashboard-stat primary-theme">
                             <div class="visual">
                               <i class="fa fa-users"></i>
                             </div>
                             <div class="details">
                               <div class="number"> 
-                                ₱ {{ (vm.spent.totalMember == '' ) ? 0 : vm.spent.totalMember }}
+                                 <span ng-if="vm.spent.totalMember != ''" class="count" count-to="{{vm.spent.totalMember}}" value="0" duration="2" filter="number"></span> 
+                                 <span ng-if="vm.spent.totalMember == ''" class="count" count-to="=" value="0" duration="2" filter="number"></span> 
                               </div>
                               <div class="desc">
                                  Total Member
@@ -69,13 +71,14 @@
                           </div>
                         </div>
                         <div class="col-lg-3 col-md-3 col-sm-6 col-xs-12">
-                          <div class="dashboard-stat red-pomegranate">
+                          <div class="dashboard-stat primary-theme">
                             <div class="visual">
                               <i class="fa fa-globe"></i>
                             </div>
                             <div class="details">
                               <div class="number"> 
-                                 {{ (vm.spent.totalTransaction == '' ) ? 0 : vm.spent.totalTransaction }}
+                                 <span ng-if="vm.spent.totalTransaction != ''" class="count" count-to="{{vm.spent.totalTransaction}}" value="0" duration="2" filter="number"></span> 
+                                 <span ng-if="vm.spent.totalTransaction == ''" class="count" count-to="=" value="0" duration="2" filter="number"></span>  
                               </div>
                               <div class="desc">
                                 Total Transaction
@@ -86,13 +89,14 @@
                           </div>
                         </div>
                         <div class="col-lg-3 col-md-3 col-sm-6 col-xs-12">
-                          <div class="dashboard-stat red-pomegranate">
+                          <div class="dashboard-stat primary-theme">
                             <div class="visual">
                               <i class="fa fa-money"></i>
                             </div>
                             <div class="details">
                               <div class="number"> 
-                                {{ (vm.spent.averageSpend == '' ) ? 0 : vm.spent.averageSpend }}
+                                 <span ng-if="vm.spent.averageSpend != ''" class="count" count-to="{{vm.spent.averageSpend}}" value="0" duration="2" filter="currency" params="₱"></span> 
+                                 <span ng-if="vm.spent.averageSpend == ''" class="count" count-to="=" value="0" duration="2" filter="currency" params="₱"></span> 
                               </div>
                               <div class="desc">
                                  Average Spend
@@ -110,7 +114,7 @@
                </div>
                <!-- END WIDGET THUMB -->
            </div> 
-       	</div> 
+        </div> 
          <!-- END OVERVIEW -->
 
 
@@ -124,8 +128,8 @@
                </div>
                <div class="actions">
                   <div class="btn-group btn-group-devided" data-toggle="buttons">  
-                  <a ng-click="vm.GetSpendSummary()" class="btn btn-lg red-pomegranate"> <i class="fa fa-search"></i> Search </a>
-                  <a ng-click="vm.ExportSpendSummary()" ng-disabled="vm.exportingprogress" class="btn btn-lg red-pomegranate"> <i class="fa fa-cloud-download"></i> Export </a> 
+                  <a ng-click="vm.GetSpendSummary()" class="btn btn-lg primary-theme"> <i class="fa fa-search"></i> Search </a>
+                  <a ng-click="vm.ExportSpendSummary()" ng-disabled="vm.exportingprogress" class="btn btn-lg primary-theme"> <i class="fa fa-cloud-download"></i> Export </a> 
                   </div>
                </div>
             </div>
@@ -144,28 +148,28 @@
                   <div class="col-md-12">  
 
                      <div class="record-label"> 
-                     Total Records: <span class="label label-red-pomegranate">
+                     Total Records: <span class="label label-primary-theme">
                         {{vm.totalrecord.summary | number}} </span>
                      </div>
        
                      <div class="table-responsive">
                         <table ng-table="vm.tableParams" class="table" show-filter="false">
                            <tr ng-repeat="item in $data" class="even">
-                             <td title="'Email'" filter="{ email: 'text'}" sortable="'email'" header-class="'bg-table-header-white-red'"> 
+                             <td title="'Email'" filter="{ email: 'text'}" sortable="'email'" header-class="'bg-table-header-primary'"> 
                                  <img ng-if="item.image != ''" src="{{ item.image }}" width="20%" class="imgcircle">
                                  <img ng-if="item.image == ''" src="assets/img/logo.png" width="20%" class="imgcircle">
                                 {{ item.email }}
                              </td>
-                             <td title="'Card No.'" filter="{ qrcard: 'text'}" sortable="'qrcard'" header-class="'bg-table-header-white-red'" style="text-align:center;">
+                             <td title="'Card No.'" filter="{ qrcard: 'text'}" sortable="'qrcard'" header-class="'bg-table-header-primary'" style="text-align:center;">
                                  {{ item.qrcard }}
                              </td>  
-                             <td title="'Total Spend'" filter="{ totalSpend: 'number'}" sortable="'totalSpend'" header-class="'bg-table-header-white-red'" style="text-align:center;">
+                             <td title="'Total Spend'" filter="{ totalSpend: 'number'}" sortable="'totalSpend'" header-class="'bg-table-header-primary'" style="text-align:center;">
                                  <span class="bold theme-font"> ₱ {{ item.totalSpend | number }} </span>
                              </td> 
-                             <td title="'Total Transaction'" filter="{ totalTransaction: 'number'}" sortable="'totalTransaction'" header-class="'bg-table-header-white-red'" style="text-align:center;">
+                             <td title="'Total Transaction'" filter="{ totalTransaction: 'number'}" sortable="'totalTransaction'" header-class="'bg-table-header-primary'" style="text-align:center;">
                                  <span > {{ item.totalTransaction | number}} </span>
                              </td> 
-                             <td title="'Average Spend'" filter="{ averageSpend: 'text'}" sortable="'averageSpend'" header-class="'bg-table-header-white-red'" style="text-align:center;">
+                             <td title="'Average Spend'" filter="{ averageSpend: 'text'}" sortable="'averageSpend'" header-class="'bg-table-header-primary'" style="text-align:center;">
                                  <span class="bold theme-font"> ₱ {{ item.averageSpend | number}} </span>
                              </td>   
                            </tr>  
